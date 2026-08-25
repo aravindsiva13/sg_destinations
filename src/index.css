@@ -1,0 +1,612 @@
+@import 'tailwindcss';
+
+/* Fonts (self-hosted via Fontsource) */
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/500.css';
+@import '@fontsource/playfair-display/600.css';
+@import '@fontsource/playfair-display/700.css';
+@import '@fontsource/playfair-display/400-italic.css';
+@import '@fontsource/playfair-display/500-italic.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+
+/* =========================================================
+   Design tokens — Shraddha Garden
+   ========================================================= */
+@theme {
+  /* Brand palette */
+  --color-cream: #f4efe6;
+  --color-cream-2: #f6f1e7;
+  --color-paper: #fbf8f2;
+
+  --color-forest: #2e4b2e;
+  --color-forest-2: #33502f;
+  --color-forest-deep: #1f3320;
+
+  --color-charcoal: #1a1a1a;
+  --color-charcoal-2: #171513;
+
+  --color-ink: #23211c;
+  --color-muted: #7a766c;
+
+  --color-terracotta: #a6763f;
+  --color-terracotta-2: #8a6a3b;
+
+  --color-line: #e3dcce;
+
+  /* Type families */
+  --font-serif: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Radii */
+  --radius-card: 12px;
+
+  /* Container */
+  --breakpoint-3xl: 110rem;
+}
+
+/* =========================================================
+   Base
+   ========================================================= */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  ::selection {
+    background: var(--color-forest);
+    color: var(--color-cream);
+  }
+
+  /* Accessible focus ring */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-terracotta);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+/* =========================================================
+   Utilities / reusable patterns
+   ========================================================= */
+@layer components {
+  .eyebrow {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--color-terracotta);
+    letter-spacing: 0.04em;
+  }
+
+  .tag-label {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+
+  .container-pad {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-pad {
+      padding-inline: 2rem;
+    }
+  }
+
+  .link-underline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Marquee (bespoke effect) */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* =========================================================
+   Animation & interaction system (8 layers)
+   - Inspired by instituteofhealth.com.
+   - Uses ONLY the existing design tokens above. No new colors,
+     fonts, or radii are introduced.
+
+   animation-only tokens — added here because the site does not
+   already define motion-curve variables. These do not override
+   any existing variable.
+   ========================================================= */
+:root {
+  --anim-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-swift: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ── Custom scrollbar ─────────────────────────────────────
+   On-brand scrollbar using existing tokens — forest thumb on a
+   soft cream track, pill-rounded with an inset gap. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-forest) var(--color-cream-2);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-forest);
+  border-radius: 100px;
+  /* Border in the track colour + padding-box clip gives the thumb a
+     slim, inset pill look without changing its hit area. */
+  border: 3px solid var(--color-cream-2);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-forest-deep);
+}
+::-webkit-scrollbar-corner {
+  background: var(--color-cream-2);
+}
+
+/* ── Smooth scrolling (Lenis) ─────────────────────────────
+   Recommended baseline styles. `.lenis.lenis-smooth` forces
+   scroll-behavior:auto so it overrides the site's html{scroll-behavior:
+   smooth}, which would otherwise conflict with Lenis. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ── Layer 1: Custom magnetic cursor ──────────────────────
+   Native pointer is hidden only while the custom cursor is
+   active (class toggled by JS on the public site, never admin). */
+body.has-custom-cursor,
+body.has-custom-cursor *,
+body.has-custom-cursor *::before,
+body.has-custom-cursor *::after {
+  cursor: none !important;
+}
+
+#site-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-terracotta);
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.35s var(--anim-spring),
+    height 0.35s var(--anim-spring),
+    opacity 0.3s ease;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+
+#site-cursor.is-hovering {
+  width: 52px;
+  height: 52px;
+  mix-blend-mode: normal;
+}
+
+#site-cursor.is-hovering .cursor-label {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.cursor-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-cream);
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 0.2s var(--anim-spring),
+    transform 0.2s var(--anim-spring);
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.1;
+  padding: 2px;
+  user-select: none;
+}
+
+#site-cursor.is-hidden {
+  opacity: 0;
+}
+
+/* Click-shrink is applied via JS inside the position transform (the JS owns
+   `transform` every frame, so a CSS transform here would be ignored and a
+   transform-transition would smear the cursor while the button is held). */
+
+/* ── Layer 2: Sticky scroll panel ─────────────────────────
+   Drives the featured Stays section on the Home page.
+
+   NOTE: this section must NOT set `overflow` (hidden/clip/auto) — any
+   overflow on an ancestor of a `position: sticky` element silently
+   disables the sticky pinning, which would let the left column scroll
+   away. Image overflow is already clipped per-frame (.sp-frame). */
+.scroll-panel-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 768px) {
+  .scroll-panel-wrap {
+    padding-inline: 2rem;
+  }
+}
+
+.sp-left {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 60px 60px 0;
+  gap: 14px;
+}
+
+.sp-fade {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: sp-fade-in 0.45s var(--anim-spring) both;
+}
+
+@keyframes sp-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sp-index {
+  font-family: var(--font-serif);
+  font-size: 72px;
+  line-height: 1;
+  color: var(--color-ink);
+  opacity: 0.12;
+}
+
+.sp-tag {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+  margin: 0;
+}
+
+.sp-title {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 4.5vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.sp-desc {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-muted);
+  max-width: 380px;
+  margin: 0;
+}
+
+.sp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sp-chip {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border: 1.5px solid var(--color-line);
+  border-radius: 100px;
+  color: var(--color-muted);
+}
+
+.sp-meta {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--color-muted);
+}
+.sp-meta strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.sp-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-terracotta);
+  text-decoration: none;
+  margin-top: 4px;
+  transition: opacity 0.2s ease;
+}
+.sp-cta:hover {
+  opacity: 0.6;
+}
+
+.sp-track {
+  position: absolute;
+  left: -1px;
+  top: 15%;
+  bottom: 15%;
+  width: 1.5px;
+  background: var(--color-line);
+  border-radius: 2px;
+}
+
+.sp-fill {
+  width: 100%;
+  height: 0%;
+  background: var(--color-terracotta);
+  border-radius: 2px;
+  transition: height 0.25s var(--anim-ease);
+}
+
+.sp-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.sp-item {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0 40px 60px;
+}
+
+/* Frame handles the active fade/scale; inner img handles parallax
+   (Layer 7), so the two transforms never collide. */
+.sp-frame {
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1.5px solid var(--color-line);
+  opacity: 0.35;
+  transform: translateY(28px) scale(0.97);
+  transition:
+    opacity 0.55s var(--anim-spring),
+    transform 0.55s var(--anim-spring);
+}
+
+.sp-item.is-active .sp-frame {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 768px) {
+  .scroll-panel-wrap {
+    grid-template-columns: 1fr;
+  }
+  .sp-left {
+    position: relative;
+    height: auto;
+    padding: 40px 0 0;
+  }
+  .sp-item {
+    height: auto;
+    padding: 28px 0;
+  }
+  .sp-track {
+    display: none;
+  }
+}
+
+/* ── Layers 3: Staggered scroll reveals ───────────────────
+   Gated behind `.reveal-ready` (added by JS) so content is
+   never stuck invisible without JS or under reduced motion. */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s var(--anim-spring),
+    transform 0.6s var(--anim-spring);
+}
+.reveal-ready [data-reveal].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-ready [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s var(--anim-spring),
+    transform 0.5s var(--anim-spring);
+}
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(2) { transition-delay: 50ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(3) { transition-delay: 100ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(4) { transition-delay: 150ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(5) { transition-delay: 200ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(6) { transition-delay: 250ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(7) { transition-delay: 300ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(8) { transition-delay: 350ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(9) { transition-delay: 400ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(10) { transition-delay: 450ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(11) { transition-delay: 500ms; opacity: 1; transform: translateY(0); }
+.reveal-ready [data-reveal-stagger].is-revealed > *:nth-child(n + 12) { transition-delay: 550ms; opacity: 1; transform: translateY(0); }
+
+/* ── Layer 4: Word-by-word hero reveal ────────────────────
+   Spans are only created by JS, so no JS = plain heading. */
+.word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.05;
+}
+.word-inner {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(110%);
+  transition:
+    transform 0.7s var(--anim-spring),
+    opacity 0.4s var(--anim-ease);
+}
+.word-inner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Layer 6: Page transitions (SPA route-in fade) ────────── */
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+main.page-enter {
+  animation: page-in 0.45s var(--anim-spring) both;
+}
+
+/* ── Layer 7: Image parallax on cards ─────────────────────── */
+.parallax-card {
+  overflow: hidden;
+  position: relative;
+}
+.parallax-card .parallax-img {
+  width: 100%;
+  height: 125%;
+  margin-top: -12.5%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+}
+
+/* Reduced motion: neutralise the JS-driven layers so nothing is
+   left hidden or moving. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-ready [data-reveal],
+  .reveal-ready [data-reveal-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .sp-frame {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .word-inner {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

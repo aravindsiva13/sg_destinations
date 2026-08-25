@@ -1,0 +1,389 @@
+// Shraddha Garden — data model (SQLite via Prisma)
+// Enums are stored as strings (SQLite has no native enum); allowed values are
+// enforced in application code via the constants in src/constants.ts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         String   @default("CUSTOMER") // SUPER_ADMIN | MANAGER | FRONT_DESK | CUSTOMER
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  bookings      Booking[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+  resetTokens   PasswordResetToken[]
+}
+
+/// A one-time password-reset link. Expires quickly and is consumed on use.
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Session-revocation sweep: "revoke all tokens for a user".
+  @@index([userId])
+}
+
+model Stay {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  name          String
+  badge         String?
+  pricePerNight Int
+  rating        Float    @default(4.8)
+  shortIntro    String
+  description   String // JSON array of paragraphs
+  heroImage     String
+  gallery       String // JSON array of urls
+  amenities     String // JSON array of { label, icon }
+  capacity      Int      @default(2)
+  beds          String   @default("1 Double Bed")
+  inventory     Int      @default(1)
+  featured      Boolean  @default(false)
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  bookings  Booking[]
+  rateRules RateRule[]
+  blocks    DateBlock[]
+}
+
+/// Seasonal / dynamic pricing rule. Applies a price (or a % / flat modifier on
+/// the base) to a date range, optionally per-stay (null stayId => all stays).
+model RateRule {
+  id        String   @id @default(cuid())
+  name      String
+  stayId    String?
+  stay      Stay?    @relation(fields: [stayId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  // kind: "FIXED" (price = amount), "PERCENT" (base * amount%), "DELTA" (base + amount)
+  kind      String   @default("PERCENT")
+  amount    Int
+  minStay   Int      @default(1)
+  priority  Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Pricing resolution scans active rules overlapping the stay's date window.
+  @@index([stayId, startDate])
+  @@index([active, startDate, endDate])
+}
+model DateBlock {
+  id        String   @id @default(cuid())
+  stayId    String
+  stay      Stay     @relation(fields: [stayId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  // Availability checks scan overlapping ranges per stay.
+  @@index([stayId, startDate])
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  stayId        String
+  stay          Stay     @relation(fields: [stayId], references: [id])
+  userId        String?
+  user          User?    @relation(fields: [userId], references: [id])
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  checkIn       DateTime
+  checkOut      DateTime
+  nights        Int
+  guests        Int      @default(2)
+  amount        Int
+  status        String   @default("PENDING") // PENDING | RESERVED | CONFIRMED | CHECKED_IN | CHECKED_OUT | CANCELLED
+  paymentStatus String   @default("UNPAID") // UNPAID | PARTIAL | PAID | REFUNDED
+  // Advance-payment tracking. amountPaid accumulates captured payments;
+  // balanceDue = amount − amountPaid (the amount still to collect).
+  amountPaid    Int      @default(0)
+  balanceDue    Int      @default(0)
+  source        String   @default("Website") // Website | Phone | Walk-in | OTA
+  notes         String?
+  // Price breakdown. `amount` stays the pre-tax grand total (room − discount +
+  // food + add-ons). The parts below make the composition auditable.
+  roomAmount    Int      @default(0)
+  foodAmount    Int      @default(0)
+  addonsAmount  Int      @default(0)
+  discount      Int      @default(0)
+  // Selected food / add-on line items: JSON array of { kind, refId, name, unitPrice, qty }.
+  extras        String   @default("[]")
+  // Timestamps for one-off scheduled emails (null = not yet sent).
+  reminderSentAt      DateTime?
+  reviewRequestSentAt DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  payments Payment[]
+
+  // Lookup paths: guest search by email, admin lists by date/status, and the
+  // availability overlap scan (stayId + check-in date).
+  @@index([stayId, checkIn])
+  @@index([customerEmail])
+  @@index([checkIn])
+  @@index([status])
+  @@index([createdAt])
+}
+
+/// A payment attempt/record against a booking, via a gateway (or the mock).
+model Payment {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider  String // mock | razorpay
+  orderId   String? // gateway order id
+  paymentId String? // gateway payment id
+  refundId  String?
+  amount    Int
+  currency  String   @default("INR")
+  status    String   @default("CREATED") // CREATED | PAID | FAILED | REFUNDED
+  method    String? // card | upi | netbanking | wallet | mock
+  last4     String?
+  fee       Int      @default(0)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The booking drawer lists a booking's payment history.
+  @@index([bookingId, createdAt])
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  occasion  String?
+  guests    Int?
+  message   String?
+  status    String   @default("NEW") // NEW | CONTACTED | CLOSED
+  source    String   @default("Enquiry Form")
+  assignee  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Lead-board filters invert on status; newest-first listing.
+  @@index([status, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  actor     String
+  action    String
+  entity    String
+  entityId  String?
+  createdAt DateTime @default(now())
+
+  // Audit-log browsing (entity filter + page) and per-user history.
+  @@index([entity, createdAt])
+  @@index([createdAt])
+  @@index([userId])
+}
+
+/// Generic marketing content, discriminated by `type`. Drives the Amenities,
+/// Dining, Events and Offers pages from one engine. JSON columns are stored as
+/// strings (SQLite) and parsed at the API boundary.
+model ContentItem {
+  id         String   @id @default(cuid())
+  type       String // AMENITY | DINING | EVENT | OFFER
+  slug       String
+  title      String
+  category   String?
+  icon       String? // line-icon name (amenities)
+  excerpt    String
+  body       String // JSON array of paragraphs
+  heroImage  String
+  gallery    String   @default("[]") // JSON array of urls
+  tags       String   @default("[]") // JSON array of strings
+  priceLabel String? // e.g. "₹1,200" or "06:00 AM – 09:00 PM"
+  meta       String   @default("{}") // JSON: { whatToExpect[], quickFacts{}, timings, bestFor[] }
+  featured   Boolean  @default(false)
+  published  Boolean  @default(true)
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Public lists filter by type + published, ordered by sortOrder.
+  @@unique([type, slug])
+  @@index([type, published, sortOrder])
+}
+
+/// A section of the food menu (e.g. "Dosai Varieties", "Mutton Varieties").
+model MenuCategory {
+  id        String   @id @default(cuid())
+  name      String
+  note      String? // optional sub-label, e.g. "Per Kg" or serving notes
+  published Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items MenuItem[]
+}
+
+/// A single dish on the menu, belonging to a category. Price is whole rupees.
+model MenuItem {
+  id         String       @id @default(cuid())
+  categoryId String
+  category   MenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name       String
+  price      Int
+  veg        Boolean? // true = veg, false = non-veg, null = unspecified
+  available  Boolean      @default(true)
+  sortOrder  Int          @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A payment attempt/record against a booking, via a gateway (or the mock).
+/// Admin-managed home content: announcement bar, hero slides, promo banners.
+model Banner {
+  id        String    @id @default(cuid())
+  type      String // ANNOUNCEMENT | HERO | PROMO
+  title     String
+  subtitle  String?
+  imageUrl  String?
+  ctaLabel  String?
+  ctaHref   String?
+  active    Boolean   @default(true)
+  sortOrder Int       @default(0)
+  startDate DateTime?
+  endDate   DateTime? // PROMO uses this for the countdown timer
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Home sections fetch per type, live-first, then by sortOrder.
+  @@index([type, active, sortOrder])
+}
+
+/// Guest reviews / testimonials, moderated before they appear publicly.
+model Review {
+  id        String   @id @default(cuid())
+  author    String
+  email     String?
+  stayId    String?
+  rating    Int      @default(5)
+  title     String?
+  body      String
+  status    String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  reply     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Public feed (APPROVED, newest first) and moderation filter by status.
+  @@index([status, createdAt])
+}
+model Media {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  folder    String?
+  createdAt DateTime @default(now())
+}
+
+/// Key/value site configuration (taxes, contact info, feature flags…).
+model SiteSetting {
+  key       String   @id
+  value     String // JSON-encoded
+  updatedAt DateTime @updatedAt
+}
+
+/// A bookable extra shown during the booking flow — either complimentary
+/// (free) or priced. Admin-managed. `price` is whole rupees; when
+/// `complimentary` is true the price is ignored and the item is free.
+model Addon {
+  id            String   @id @default(cuid())
+  name          String
+  description   String?
+  price         Int      @default(0)
+  complimentary Boolean  @default(false)
+  category      String? // optional grouping label
+  active        Boolean  @default(true)
+  sortOrder     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+/// A marketing-email subscriber. `token` backs a one-click unsubscribe link;
+/// `subscribed=false` suppresses all future promotional sends to this address.
+model Subscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  subscribed     Boolean   @default(true)
+  token          String    @unique
+  source         String    @default("signup") // signup | checkout | import
+  createdAt      DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+/// A promotional email campaign (manual or auto-triggered), with a send record.
+model Campaign {
+  id             String    @id @default(cuid())
+  subject        String
+  heading        String?
+  body           String // paragraphs separated by blank lines
+  ctaLabel       String?
+  ctaHref        String?
+  status         String    @default("DRAFT") // DRAFT | SENDING | SENT | FAILED
+  recipientCount Int       @default(0)
+  sentCount      Int       @default(0)
+  trigger        String    @default("manual") // manual | auto:offer
+  createdAt      DateTime  @default(now())
+  sentAt         DateTime?
+}
+
+/// Promo / discount codes applied at checkout.
+model Coupon {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  description String?
+  kind        String    @default("PERCENT") // PERCENT | FLAT
+  value       Int
+  minAmount   Int       @default(0)
+  maxDiscount Int? // cap for PERCENT discounts
+  startDate   DateTime?
+  endDate     DateTime?
+  usageLimit  Int? // total redemptions allowed
+  usedCount   Int       @default(0)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

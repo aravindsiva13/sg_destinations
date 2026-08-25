@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shraddha Garden Resort — Product Documentation & Client Presentation Dossier</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#f4efe6;--paper:#fbf8f2;--line:#e3dcce;
+  --forest:#2e4b2e;--forest-deep:#1f3320;
+  --terracotta:#a6763f;--ink:#23211c;--charcoal:#1a1a1a;--muted:#7a766c;
+  --gold:#c9a84c;--good:#2f7d4f;--warn:#c08a2d;--bad:#b0413a;
+  --font-serif:'Playfair Display',Georgia,serif;
+  --font-sans:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:15px}
+body{font-family:var(--font-sans);color:var(--ink);background:#ded7c8;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,h5{font-family:var(--font-serif);font-weight:600;line-height:1.18;color:var(--forest-deep)}
+p{margin:.5rem 0}
+strong{color:var(--charcoal)}
+a{color:var(--terracotta)}
+small{color:var(--muted)}
+
+/* Page model for print */
+.page{background:var(--paper);width:210mm;min-height:296mm;margin:8mm auto;padding:22mm 20mm;box-shadow:0 6px 26px rgba(0,0,0,.18);position:relative;page-break-after:always}
+.page:last-child{page-break-after:auto}
+.page-num{position:absolute;bottom:12mm;right:20mm;font-size:.72rem;color:var(--muted);letter-spacing:.08em}
+.page-tag{position:absolute;top:12mm;left:20mm;font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--terracotta)}
+.page-tag.r{left:auto;right:20mm;color:var(--muted)}
+
+@media print{
+  body{background:#fff}
+  .page{margin:0;box-shadow:none;width:auto;min-height:auto;padding:16mm 15mm}
+  .no-print{display:none}
+}
+
+/* Cover */
+.cover{background:linear-gradient(155deg,var(--forest-deep),var(--forest) 60%,#3a5a37);color:var(--cream);display:flex;flex-direction:column;justify-content:space-between}
+.cover h1,.cover h2,.cover h3{color:var(--cream)}
+.cover .eyebrow{font-family:var(--font-serif);font-style:italic;color:var(--gold);font-size:1.3rem}
+.cover-name{font-size:3.6rem;line-height:1.05;margin:.4rem 0}
+.cover .rule{height:2px;width:80px;background:var(--gold);margin:1.4rem 0}
+.cover .meta{border-top:1px solid rgba(255,255,255,.25);padding-top:1.2rem;font-size:.82rem;color:#d9d2c2;letter-spacing:.03em}
+.cover .badge{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:.3rem .8rem;border-radius:40px;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase}
+
+/* Section divider */
+.divider{background:linear-gradient(160deg,var(--forest),var(--forest-deep));color:var(--cream);display:flex;flex-direction:column;justify-content:center}
+.divider h2{color:var(--cream);font-size:3rem;border:none}
+.divider .no{font-size:6rem;color:rgba(201,168,76,.35);font-family:var(--font-serif)}
+.divider p{color:#d9d2c2;max-width:70%}
+
+h2.sec{font-size:1.9rem;border-bottom:2px solid var(--terracotta);padding-bottom:.4rem;margin:0 0 1rem}
+h3.sub{font-size:1.3rem;margin:1.5rem 0 .4rem;color:var(--terracotta)}
+h4{font-size:1rem;margin:1rem 0 .2rem;color:var(--charcoal);font-family:var(--font-sans);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.eyebrow{font-family:var(--font-serif);font-style:italic;color:var(--terracotta);font-size:1.05rem}
+
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.8rem}
+th,td{border:1px solid var(--line);padding:.42rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--forest);color:var(--cream);font-weight:600;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+tr:nth-child(even) td{background:#f6f1e7}
+td.c,th.c{text-align:center}
+
+ul,ol{margin:.4rem 0 .8rem 1.2rem}
+li{margin:.18rem 0}
+.lead{font-size:1.05rem;color:var(--charcoal)}
+.callout{border-left:4px solid var(--terracotta);background:#f2ecdf;padding:.8rem 1rem;margin:1rem 0;border-radius:0 8px 8px 0}
+.callout.good{border-color:var(--good)}
+.callout.bad{border-color:var(--bad)}
+.callout.warn{border-color:var(--warn)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.card{border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem;background:#fff}
+.card h4{margin-top:0}
+.pill{display:inline-block;background:var(--forest);color:var(--cream);border-radius:30px;padding:.12rem .6rem;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;margin:.1rem}
+.pill.t{background:var(--terracotta)}
+.pill.g{background:var(--gold);color:var(--charcoal)}
+.score{font-weight:700}
+.s-hi{color:var(--good)}.s-mid{color:var(--warn)}.s-lo{color:var(--bad)}
+.kpi{display:flex;gap:.8rem;flex-wrap:wrap;margin:1rem 0}
+.kpi .box{flex:1;min-width:120px;border:1px solid var(--line);border-radius:10px;padding:.7rem;text-align:center;background:#fff}
+.kpi .box b{font-size:1.5rem;color:var(--forest);font-family:var(--font-serif);display:block}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:.4rem;margin:1rem 0;font-size:.72rem}
+.flow .node{border:1.5px solid var(--forest);border-radius:8px;padding:.4rem .6rem;background:#fff;text-align:center;font-weight:600}
+.flow .arr{color:var(--terracotta);font-weight:700}
+.toc a{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:.28rem 0;color:var(--ink);font-size:.86rem}
+.toc a b{color:var(--terracotta)}
+.qa{font-size:.78rem}
+.qa td:first-child{font-weight:600;width:28%;color:var(--charcoal)}
+.risk td.c{font-weight:700}
+.rl{color:#fff;padding:.05rem .4rem;border-radius:4px;font-size:.68rem}
+.rl.h{background:var(--bad)}.rl.m{background:var(--warn)}.rl.l{background:var(--good)}
+.two-col{column-count:2;column-gap:1.4rem;font-size:.8rem}
+.mini{font-size:.76rem}
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="page cover">
+  <div>
+    <span class="badge">Enterprise Product Dossier</span>
+    <p class="eyebrow" style="margin-top:2.5rem">Confidential — prepared for client presentation</p>
+    <h1 class="cover-name">Shraddha Garden<br>Resort</h1>
+    <div class="rule"></div>
+    <p style="font-size:1.15rem;color:#e7e0d0;max-width:80%">Complete Product Analysis, Feature Documentation, Architecture Review, Product Audit &amp; Presentation Playbook</p>
+    <p style="margin-top:1rem;color:var(--gold);font-style:italic;font-family:var(--font-serif);font-size:1.2rem">"A sanctuary of celebration and stays"</p>
+  </div>
+  <div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.4rem">
+      <span class="badge">Public Site</span><span class="badge">Admin Portal</span><span class="badge">REST API</span><span class="badge">Payments</span><span class="badge">RBAC</span>
+    </div>
+    <div class="meta">
+      <div>Document type &nbsp;·&nbsp; Product &amp; Technical Documentation + Investor/Client Walkthrough</div>
+      <div>Version &nbsp;·&nbsp; 1.0 &nbsp;&nbsp;|&nbsp;&nbsp; Date &nbsp;·&nbsp; 09 July 2026 &nbsp;&nbsp;|&nbsp;&nbsp; Status &nbsp;·&nbsp; For Review</div>
+      <div>Product &nbsp;·&nbsp; Shraddha Garden Resort — Coimbatore, Tamil Nadu, India</div>
+      <div>Prepared by &nbsp;·&nbsp; Product &amp; Solution Architecture Practice</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOC ============ -->
+<section class="page">
+  <span class="page-tag">Shraddha Garden Resort</span><span class="page-tag r">Product Dossier v1.0</span>
+  <h2 class="sec">Table of Contents</h2>
+  <div class="toc">
+    <a href="#s0"><span>0 &nbsp; Executive Summary</span><b>03</b></a>
+    <a href="#s1"><span>1 &nbsp; Product Overview &amp; Business Context</span><b>04</b></a>
+    <a href="#s2"><span>2 &nbsp; System Map, Routes &amp; User Roles</span><b>05</b></a>
+    <a href="#s3"><span>3 &nbsp; Public Website — Screen-by-Screen Documentation</span><b>06</b></a>
+    <a href="#s4"><span>4 &nbsp; The Booking &amp; Payment Engine</span><b>12</b></a>
+    <a href="#s5"><span>5 &nbsp; Admin Portal — Screen-by-Screen Documentation</span><b>14</b></a>
+    <a href="#s6"><span>6 &nbsp; Shared UI Component &amp; Text Catalogue</span><b>22</b></a>
+    <a href="#s7"><span>7 &nbsp; Technical Architecture (Plain Language)</span><b>24</b></a>
+    <a href="#s8"><span>8 &nbsp; Functional Analysis — Input / Process / Output</span><b>26</b></a>
+    <a href="#s9"><span>9 &nbsp; Product Audit — Gaps &amp; Missing Features</span><b>27</b></a>
+    <a href="#s10"><span>10 &nbsp; Negative Analysis — Risks (Brutally Honest)</span><b>29</b></a>
+    <a href="#s11"><span>11 &nbsp; Risk Matrix</span><b>30</b></a>
+    <a href="#s12"><span>12 &nbsp; Production Readiness Scorecard</span><b>31</b></a>
+    <a href="#s13"><span>13 &nbsp; Future Roadmap &amp; Timeline</span><b>32</b></a>
+    <a href="#s14"><span>14 &nbsp; Business Benefits &amp; ROI</span><b>34</b></a>
+    <a href="#s15"><span>15 &nbsp; 100 Client Questions &amp; Answers</span><b>35</b></a>
+    <a href="#s16"><span>16 &nbsp; Presentation Scripts (10 / 30 / 60 min)</span><b>39</b></a>
+    <a href="#s17"><span>17 &nbsp; Conclusion &amp; Recommendation</span><b>42</b></a>
+  </div>
+  <div class="callout"><strong>How to read this document.</strong> It is written for a non-technical decision-maker. Business meaning comes first in plain English; a short <em>“In technical terms”</em> note follows wherever it builds confidence. Nothing on the screen is assumed to be understood — every page, panel, button, label and message is named and explained.</div>
+  <p class="mini"><strong>Scope note:</strong> This dossier documents the product as implemented in the codebase (React public site, React admin portal, Express/Prisma/SQLite API). Where behaviour is inferred from the code rather than observed live, it is marked “inferred”.</p>
+  <div class="page-num">02</div>
+</section>
+
+<!-- ============ 0 EXEC SUMMARY ============ -->
+<section class="page" id="s0">
+  <span class="page-tag">Executive Summary</span><span class="page-tag r">Section 0</span>
+  <h2 class="sec">0 · Executive Summary</h2>
+  <p class="lead">Shraddha Garden Resort is a complete, production-grade digital platform for a luxury garden resort in Coimbatore. It is not a brochure website — it is an <strong>end-to-end hospitality operating system</strong> with three connected parts working as one product.</p>
+  <div class="grid2" style="margin-top:1rem">
+    <div class="card"><h4>1 · The Guest Website</h4><p class="mini">A beautifully designed public site where guests discover the property, browse stays and amenities, explore dining and events, read offers, and <strong>book and pay online</strong> in a guided multi-step flow. Guests can create an account and view their bookings.</p></div>
+    <div class="card"><h4>2 · The Admin Portal</h4><p class="mini">A secure staff back-office (<code>/admin</code>) to run the business day-to-day: bookings, availability &amp; pricing, stays, marketing content, coupons, banners, reviews, enquiries, media, reports, users, payments and settings — with role-based permissions.</p></div>
+    <div class="card"><h4>3 · The API &amp; Data Layer</h4><p class="mini">A secure server that holds all data, enforces the rules (who can do what, valid booking states, correct prices), talks to the payment gateway, and sends automated emails. The website and admin both rely on it.</p></div>
+    <div class="card"><h4>Commercial Position</h4><p class="mini">Replaces a stack of separate tools (website builder + booking engine + CRM + CMS + spreadsheets) with <strong>one owned platform</strong>, removing per-booking commissions charged by travel portals (OTAs).</p></div>
+  </div>
+  <div class="kpi">
+    <div class="box"><b>25+</b>screens / routes</div>
+    <div class="box"><b>4</b>user roles (RBAC)</div>
+    <div class="box"><b>40+</b>API endpoints</div>
+    <div class="box"><b>2</b>payment providers</div>
+    <div class="box"><b>16</b>content models</div>
+  </div>
+  <h3 class="sub">The one-paragraph pitch (read aloud)</h3>
+  <p>“Shraddha Garden Resort now has its own online front door and its own control room. Guests can find the property, fall in love with it, and book a stay with real online payment — in minutes, from a phone. Behind the scenes, your team manages every booking, price, offer and enquiry from a single secure dashboard, with a full history of who changed what. Because you own the platform, every direct booking avoids the 15–25% commission that booking portals charge — and the same system is ready to grow into multiple properties.”</p>
+  <div class="callout good"><strong>Overall verdict.</strong> The product is <strong>feature-complete for a single-property direct-booking business</strong> and demonstrably well-architected (RBAC, server-authoritative payments, audit logging, state-machine-guarded bookings). The primary gaps before large-scale production are operational hardening — database scale, automated tests, monitoring and file-upload storage — detailed in Sections 9–12.</p>
+  <div class="page-num">03</div>
+</section>
+
+<!-- ============ 1 OVERVIEW ============ -->
+<section class="page" id="s1">
+  <span class="page-tag">Product Overview</span><span class="page-tag r">Section 1</span>
+  <h2 class="sec">1 · Product Overview &amp; Business Context</h2>
+  <p><strong>Product name:</strong> Shraddha Garden Resort &nbsp;·&nbsp; <strong>Tagline:</strong> <em>“A sanctuary of celebration and stays.”</em> &nbsp;·&nbsp; <strong>Location:</strong> Coimbatore, Tamil Nadu, India.</p>
+  <p><strong>Contact identity carried across the product:</strong> email <code>hello@shraddhagarden.com</code>, phone <code>+91 98765 43210</code>, address “Coimbatore, Tamil Nadu, India”. Copyright line: “© 2024 Shraddha Garden Resort. Unforgettable Memories.”</p>
+
+  <h3 class="sub">What business problem it solves</h3>
+  <table>
+    <tr><th>Before (typical resort)</th><th>After (this platform)</th></tr>
+    <tr><td>Bookings by phone/WhatsApp; details lost in chats</td><td>Structured online booking with a unique code, stored centrally</td></tr>
+    <tr><td>Depends on OTAs (MakeMyTrip, Booking.com) that take 15–25% commission</td><td>Commission-free direct bookings on an owned channel</td></tr>
+    <tr><td>Prices and availability tracked in spreadsheets</td><td>Live availability + seasonal/dynamic rate rules + blocked dates</td></tr>
+    <tr><td>Marketing content changes need a web developer</td><td>Staff edit amenities, dining, events, offers, banners themselves</td></tr>
+    <tr><td>No record of who changed a booking or price</td><td>Full audit log of every admin change</td></tr>
+    <tr><td>Enquiries lost in an inbox</td><td>Leads inbox with status, assignee &amp; convert-to-booking</td></tr>
+  </table>
+
+  <h3 class="sub">Who uses it</h3>
+  <table>
+    <tr><th>Persona</th><th>Where</th><th>What they do</th></tr>
+    <tr><td><strong>Guest / prospect</strong></td><td>Public website</td><td>Browse, enquire, book, pay, create account, view own bookings, leave a review</td></tr>
+    <tr><td><strong>Front Desk</strong></td><td>Admin portal</td><td>View bookings, move booking status (check-in/out), handle enquiries &amp; reviews</td></tr>
+    <tr><td><strong>Manager</strong></td><td>Admin portal</td><td>Everything Front Desk can, plus manage stays, pricing, content, coupons, banners, media, reports, settings, payments, refunds</td></tr>
+    <tr><td><strong>Super Admin</strong></td><td>Admin portal</td><td>Everything, plus create/manage staff &amp; roles, edit payment secrets, delete stays, and view the Audit Log</td></tr>
+  </table>
+
+  <h3 class="sub">Technology at a glance (plain language)</h3>
+  <div class="grid2">
+    <div class="card mini"><h4>Front end (what people see)</h4>React 18 + Vite + TypeScript, styled with Tailwind CSS. Smooth animations (Framer Motion). Charts (Recharts) and data tables (TanStack) in the admin. Fast, responsive on phone/tablet/desktop.</div>
+    <div class="card mini"><h4>Back end (the engine)</h4>Node.js + Express server. Prisma toolkit over a SQLite database. Security via JWT tokens, bcrypt password hashing, and Zod input validation. Payments abstracted behind a provider layer (Mock &amp; Razorpay).</div>
+  </div>
+  <div class="callout"><strong>Design system.</strong> A single set of brand tokens (colours cream/forest/terracotta/gold, Playfair Display + Inter typefaces, rounded “card” corners) is defined once and reused everywhere, so the public site and the admin portal feel like one premium brand.</div>
+  <div class="page-num">04</div>
+</section>
+
+<!-- ============ 2 SYSTEM MAP ============ -->
+<section class="page" id="s2">
+  <span class="page-tag">System Map</span><span class="page-tag r">Section 2</span>
+  <h2 class="sec">2 · System Map, Routes &amp; User Roles</h2>
+  <h3 class="sub">2.1 High-level architecture</h3>
+  <div class="flow">
+    <span class="node">Guest / Staff<br>browser</span><span class="arr">→</span>
+    <span class="node">React apps<br>(Public + Admin)</span><span class="arr">→</span>
+    <span class="node">Express API<br>(rules + auth)</span><span class="arr">→</span>
+    <span class="node">Prisma</span><span class="arr">→</span>
+    <span class="node">SQLite DB</span>
+  </div>
+  <div class="flow">
+    <span class="node">Express API</span><span class="arr">→</span><span class="node">Payment gateway<br>(Mock / Razorpay)</span>
+    <span class="arr">&nbsp;&nbsp;·&nbsp;&nbsp;</span><span class="node">Express API</span><span class="arr">→</span><span class="node">Email (SMTP)<br>scheduler</span>
+  </div>
+
+  <h3 class="sub">2.2 Public routes</h3>
+  <table class="mini">
+    <tr><th>Path</th><th>Screen</th><th>One-line purpose</th></tr>
+    <tr><td><code>/</code></td><td>Home</td><td>Hero, brand story, “Sixteen ways”, steps, dining teaser, dismissible announcement bar</td></tr>
+    <tr><td><code>/about</code></td><td>About Us</td><td>Overlapping photos, stats, on-site list, team</td></tr>
+    <tr><td><code>/amenities</code></td><td>Amenities list</td><td>Filter tabs + 16-item grid + alternating features</td></tr>
+    <tr><td><code>/amenities/:slug</code></td><td>Amenity detail</td><td>Gallery, “What to expect”, Quick Facts sidebar</td></tr>
+    <tr><td><code>/stays</code></td><td>Stays list</td><td>Sort dropdown + stay cards (data-driven)</td></tr>
+    <tr><td><code>/stays/:slug</code></td><td>Stay detail</td><td>Gallery, amenities, accordions, sticky booking widget</td></tr>
+    <tr><td><code>/dining</code></td><td>Dining</td><td>Cuisines, signature spreads, chef note</td></tr>
+    <tr><td><code>/events</code></td><td>Events</td><td>Hero, event types, gallery, steps</td></tr>
+    <tr><td><code>/offers</code></td><td>Offers/Packages</td><td>Promo packages (content type OFFER)</td></tr>
+    <tr><td><code>/reserve</code> · <code>/enquiry</code></td><td>Reserve/Enquiry</td><td>Enquiry form → leads inbox</td></tr>
+    <tr><td><code>/book</code></td><td>Booking flow</td><td>Multi-step dates → availability → add-ons → details+coupon → review → confirmation</td></tr>
+    <tr><td><code>/signin</code></td><td>Sign in / up</td><td>Customer account (email + password)</td></tr>
+    <tr><td><code>/account</code></td><td>My Account</td><td>Profile + My Bookings</td></tr>
+    <tr><td><code>*</code></td><td>404 Not Found</td><td>On-theme fallback for unknown links</td></tr>
+  </table>
+
+  <h3 class="sub">2.3 Admin routes &amp; who can open them</h3>
+  <table class="mini">
+    <tr><th>Path</th><th>Screen</th><th>Minimum role</th></tr>
+    <tr><td><code>/admin/login</code></td><td>Staff sign-in</td><td>Public</td></tr>
+    <tr><td><code>/admin</code></td><td>Dashboard (KPIs + charts)</td><td>Front Desk+</td></tr>
+    <tr><td><code>/admin/bookings</code></td><td>Bookings + detail drawer</td><td>Front Desk+</td></tr>
+    <tr><td><code>/admin/enquiries</code></td><td>Enquiries (leads inbox)</td><td>Front Desk+</td></tr>
+    <tr><td><code>/admin/reviews</code></td><td>Reviews moderation</td><td>Front Desk+</td></tr>
+    <tr><td><code>/admin/stays</code></td><td>Stays (delete = Super Admin)</td><td>Front Desk+ view / Manager+ edit</td></tr>
+    <tr><td><code>/admin/availability</code></td><td>Availability &amp; Pricing</td><td>Manager+</td></tr>
+    <tr><td><code>/admin/amenities · dining · menu · events · offers</code></td><td>Content CMS</td><td>Manager+</td></tr>
+    <tr><td><code>/admin/coupons · banners · media</code></td><td>Coupons / Banners / Media</td><td>Manager+</td></tr>
+    <tr><td><code>/admin/reports</code></td><td>Reports + CSV export</td><td>Manager+</td></tr>
+    <tr><td><code>/admin/users</code></td><td>Users &amp; Staff</td><td>Manager+ view / Super Admin manage</td></tr>
+    <tr><td><code>/admin/settings · email · payments</code></td><td>Settings / Email / Payments</td><td>Manager+ (secrets = Super Admin)</td></tr>
+    <tr><td><code>/admin/audit</code></td><td>Audit Log</td><td>Super Admin only</td></tr>
+  </table>
+  <div class="callout"><strong>Security gate.</strong> Every admin screen sits behind <code>ProtectedRoute</code>: not-signed-in visitors are redirected to the login, and a role that lacks permission can never reach the page even by typing the URL.</div>
+  <div class="page-num">05</div>
+</section>
+
+<!-- ============ SECTION 3 DIVIDER ============ -->
+<section class="page divider">
+  <div class="no">03</div>
+  <h2>Public Website</h2>
+  <p>Screen-by-screen documentation of everything a guest sees — every page, panel, button, label, message, and state.</p>
+</section>
+
+<!-- ============ 3 PUBLIC SCREENS ============ -->
+<section class="page" id="s3">
+  <span class="page-tag">Public Website</span><span class="page-tag r">Section 3</span>
+  <h2 class="sec">3 · Public Website — Screen by Screen</h2>
+
+  <h3 class="sub">3.0 Global chrome — present on every public page</h3>
+  <h4>Announcement bar (top)</h4>
+  <p class="mini">A thin strip above the header showing the current promotional message, driven by admin “Announcement” banners. It is <strong>dismissible</strong> — a close (×) button hides it for the visitor. <em>Business value:</em> push a seasonal message (“Monsoon offer — 20% off”) site-wide without a developer.</p>
+  <h4>Header / navigation</h4>
+  <p class="mini">Sticky header that is transparent over the hero image and turns solid on scroll. Left: <strong>Shraddha Garden</strong> wordmark (links home). Centre/right: nav links — <strong>Home · About · Amenities · Stays · Dining · Events · Offers</strong>. A primary <strong>“Reserve”/“Book”</strong> call-to-action. On mobile, an animated hamburger opens a full menu with body-scroll lock. <em>Every label</em> here maps to a route in §2.2.</p>
+  <h4>Footer</h4>
+  <p class="mini">Brand block with the tagline “A sanctuary of celebration and stays, blending modern luxury with natural serenity.”, quick links (mirroring the nav), contact details (email, phone, address), and the copyright line. Present on every public page as the closing landmark.</p>
+  <h4>Universal states</h4>
+  <p class="mini">Data-driven pages (Stays, Amenities, Dining, Events, Offers) each render three explicit states via a shared <code>PublicState</code> helper: <span class="pill">Loading</span> a pulsing placeholder, <span class="pill">Empty</span> a friendly “nothing here yet” message, and <span class="pill">Error</span> a retry message if the API is unreachable. A <code>ScrollToTop</code> behaviour resets scroll on every navigation.</p>
+
+  <h3 class="sub">3.1 Home <code>/</code></h3>
+  <p><strong>Purpose:</strong> the emotional first impression and the primary funnel into booking. <strong>Who:</strong> every first-time visitor. <strong>Why it exists:</strong> convert curiosity into an enquiry or booking.</p>
+  <table class="mini">
+    <tr><th>Component</th><th>Content / labels</th><th>Business value</th></tr>
+    <tr><td>Hero</td><td>Full-bleed image, resort name, tagline, primary CTA</td><td>Premium first impression; immediate route to book</td></tr>
+    <tr><td>Tradition band</td><td>Brand narrative copy, eyebrow “Discover”</td><td>Establishes the “celebration + stays” positioning</td></tr>
+    <tr><td>“Sixteen ways” grid</td><td>Showcase of the 16 amenities</td><td>Communicates breadth of the property at a glance</td></tr>
+    <tr><td>Steps band</td><td>01 Call &amp; reserve · 02 Plan the day · 03 Celebrate (with descriptions)</td><td>Reduces friction — shows how easy booking an event is</td></tr>
+    <tr><td>Dining teaser</td><td>Eyebrow “Celebrate”, dining preview, CTA</td><td>Cross-sells the F&amp;B experience</td></tr>
+    <tr><td>Stats / social proof</td><td>Numeric highlights (StatsRow)</td><td>Builds trust with figures</td></tr>
+  </table>
+
+  <h3 class="sub">3.2 About Us <code>/about</code></h3>
+  <p><strong>Purpose:</strong> tell the property’s story and introduce the people. <strong>Components:</strong> overlapping hero photos, a stats row, an “on-site” list of what the estate offers, and a <strong>team section</strong> — Eloise Vance (Estate Director), Marcus Hume (Head of Celebrations), Sophia Lin (Guest Experience Lead), each on a TeamCard with role and photo. <em>Value:</em> humanises a high-consideration purchase (weddings/stays) and builds confidence.</p>
+
+  <h3 class="sub">3.3 Amenities list <code>/amenities</code></h3>
+  <p><strong>Purpose:</strong> browse everything the property offers. <strong>Components:</strong> category <strong>filter tabs</strong>, a <strong>16-item grid</strong> of amenity cards, and alternating feature blocks. The 16 amenities documented in data are: Swimming Pool, Water Fall, Water Sprinklers, Water Snow, Water Fountain, Traditional Pump Set, Theatre House, Tower House, Wood House, Jividha, Kudil, Chillax Bay, Garden, Coconut Farm, Shuttle Court, and Camp Fire with DJ. Each card links to its detail page. <em>Value:</em> a scannable “menu of experiences” that drives interest and time-on-site.</p>
+
+  <h3 class="sub">3.4 Amenity detail <code>/amenities/:slug</code></h3>
+  <p><strong>Purpose:</strong> deep-dive on one amenity. <strong>Components:</strong> a <strong>gallery</strong>, a “What to expect” narrative, and a <strong>Quick Facts sidebar</strong> (timings, best-for, etc. from the content <code>meta</code>). A <strong>breadcrumb</strong> shows Home / Amenities / (this amenity). Unknown slugs fall through to the 404 page. <em>Value:</em> sells the individual experience and supports SEO with dedicated pages.</p>
+  <div class="page-num">06</div>
+</section>
+
+<section class="page">
+  <span class="page-tag">Public Website</span><span class="page-tag r">Section 3</span>
+
+  <h3 class="sub">3.5 Stays list <code>/stays</code></h3>
+  <p><strong>Purpose:</strong> the accommodation catalogue and the top of the room-booking funnel. <strong>Components:</strong> a <strong>sort dropdown</strong> and a grid of <strong>StayCards</strong>. Each card shows hero image, name, an optional <strong>badge</strong> (e.g. “Featured”), star <strong>rating</strong>, a short intro, price-per-night (formatted in Indian Rupees, e.g. “₹12,000”), and a link into the detail page. Seeded stays include <strong>Wood House</strong>, <strong>Tower House Suite</strong>, and <strong>Kudil Cottage</strong>. Fully data-driven with loading/empty/error states.</p>
+
+  <h3 class="sub">3.6 Stay detail <code>/stays/:slug</code></h3>
+  <p><strong>Purpose:</strong> convince and convert on a specific room. It is the most commercially important public page.</p>
+  <table class="mini">
+    <tr><th>Component</th><th>What it does</th></tr>
+    <tr><td>Gallery</td><td>Hero + multiple photos of the stay</td></tr>
+    <tr><td>Overview</td><td>Name, rating, capacity, beds (e.g. “1 Double Bed”), short intro, full description paragraphs</td></tr>
+    <tr><td>Amenities list</td><td>Per-stay amenity chips with icons</td></tr>
+    <tr><td>Accordions</td><td>Expandable sections (policies, details) — accessible with aria-expanded</td></tr>
+    <tr><td><strong>Sticky Booking Widget</strong></td><td>Date pickers + guests + price → launches the booking flow; stays visible as the user scrolls</td></tr>
+  </table>
+
+  <h3 class="sub">3.7 Dining <code>/dining</code></h3>
+  <p><strong>Purpose:</strong> present the food &amp; beverage experience. <strong>Components:</strong> cuisine cards and signature spreads (data-driven, content type DINING) — <strong>The Garden Grill, Saapadu Thali, Authentic Tamil, Live Grill &amp; BBQ, Continental &amp; More</strong> — plus a chef’s note. <em>Value:</em> F&amp;B is a major on-site revenue driver and a wedding differentiator.</p>
+
+  <h3 class="sub">3.8 Events <code>/events</code></h3>
+  <p><strong>Purpose:</strong> sell the property as a celebrations venue. <strong>Components:</strong> image hero, <strong>event-type cards</strong> — <strong>Weddings, Birthdays, Corporate, Get-togethers</strong> — a gallery, and a steps band mirroring the home “01/02/03” process. A CTA routes to the enquiry form. <em>Value:</em> events are typically the highest-value bookings.</p>
+
+  <h3 class="sub">3.9 Offers / Packages <code>/offers</code></h3>
+  <p><strong>Purpose:</strong> merchandise promotional packages (content type OFFER), each with an image, title, excerpt, price label, and CTA. <em>Value:</em> lets marketing run seasonal campaigns that staff manage themselves in the admin.</p>
+
+  <h3 class="sub">3.10 Reserve / Enquiry <code>/reserve</code> · <code>/enquiry</code></h3>
+  <p><strong>Purpose:</strong> capture a lead when the guest is not ready to pay online (typical for weddings). <strong>Form fields:</strong> Name, Email, Phone, Occasion, Guests, Message. On submit it creates an <strong>Enquiry</strong> that appears in the admin leads inbox. <strong>Validation:</strong> required fields and format checks; a success confirmation and error handling. <em>Value:</em> no lead is lost to a forgotten inbox.</p>
+
+  <h3 class="sub">3.11 Sign in / Sign up <code>/signin</code></h3>
+  <p><strong>Purpose:</strong> let guests create an account so their bookings are saved to a profile. <strong>Fields:</strong> Full name, Email, Phone, Password (sign-up); Email + Password (sign-in). A demo account is provided (<code>guest@example.com / Guest@123</code>). <em>Technical note:</em> issues the same secure JWT token pair as staff, but with the CUSTOMER role — so a customer can never reach the admin.</p>
+
+  <h3 class="sub">3.12 My Account <code>/account</code></h3>
+  <p><strong>Purpose:</strong> the guest’s self-service area. <strong>Components:</strong> “Your account” profile block and a <strong>“My bookings”</strong> list, matched to the signed-in email. <strong>Empty state:</strong> “You don’t have any bookings yet.” with a “Browse stays” button. <em>Value:</em> reduces “what’s my booking?” calls to the front desk.</p>
+
+  <h3 class="sub">3.13 404 Not Found <code>*</code></h3>
+  <p><strong>Purpose:</strong> gracefully handle mistyped or dead links with an on-brand page and a “Back home” action, instead of a broken browser error. Reached by any unknown URL, including unknown stay/amenity slugs.</p>
+  <div class="page-num">07</div>
+</section>
+
+<!-- ============ 4 BOOKING ENGINE ============ -->
+<section class="page divider">
+  <div class="no">04</div>
+  <h2>Booking &amp; Payment Engine</h2>
+  <p>The commercial heart of the platform — a multi-step guided flow with a real pricing engine and server-authoritative payments.</p>
+</section>
+
+<section class="page" id="s4">
+  <span class="page-tag">Booking Engine</span><span class="page-tag r">Section 4</span>
+  <h2 class="sec">4 · The Booking &amp; Payment Engine <code>/book</code></h2>
+  <p class="lead">This is the single most important workflow in the product. It converts a browser into a paying guest without any staff involvement.</p>
+  <h3 class="sub">4.1 The six steps (with exact on-screen labels)</h3>
+  <div class="flow">
+    <span class="node">1 · When are you<br>visiting?</span><span class="arr">→</span>
+    <span class="node">2 · Availability<br>&amp; stay select</span><span class="arr">→</span>
+    <span class="node">3 · Make it<br>special (add-ons)</span><span class="arr">→</span>
+    <span class="node">4 · Your details<br>+ coupon</span><span class="arr">→</span>
+    <span class="node">5 · Review &amp;<br>confirm</span><span class="arr">→</span>
+    <span class="node">6 · Booking<br>confirmed</span>
+  </div>
+  <table class="mini">
+    <tr><th>Step</th><th>On-screen text &amp; controls</th><th>What happens</th></tr>
+    <tr><td>1 · Dates</td><td>“Book your stay”, “When are you visiting?”, <strong>Check-in</strong> / <strong>Check-out</strong> pickers, “Select a stay…” dropdown</td><td>Captures dates &amp; stay; a <code>Stepper</code> shows progress</td></tr>
+    <tr><td>2 · Availability</td><td>Per-night price quote, availability confirmation</td><td>Calls <code>POST /availability/check</code> — real price per night incl. rate rules &amp; blocked dates</td></tr>
+    <tr><td>3 · Add-ons</td><td>“Make it special”, “Optional extras — add what you’d like.”</td><td>Optional up-sells added to the total</td></tr>
+    <tr><td>4 · Details</td><td>“Your details” — Full name, Email, Phone, Special requests; “Coupon code” field</td><td>Coupon validated live via <code>POST /coupons/validate</code></td></tr>
+    <tr><td>5 · Review</td><td>“Review &amp; confirm”, line items, <strong>GST breakdown</strong>, “Total”, “Test payment”/“Reserve”</td><td>Creates a PENDING booking, opens the payment gateway</td></tr>
+    <tr><td>6 · Confirmation</td><td>“Booking confirmed”, booking code, “Browse more stays” / “Back home”</td><td>Shown only after the server confirms payment</td></tr>
+  </table>
+
+  <h3 class="sub">4.2 The pricing engine (why the number is trustworthy)</h3>
+  <p class="mini">The price is calculated on the <strong>server</strong>, never in the browser. It starts from the stay’s base price-per-night, applies any matching <strong>rate rule</strong> for those dates (FIXED = set price, PERCENT = ±% of base, DELTA = ± flat amount, honouring minimum-stay and a priority order), rejects <strong>blocked dates</strong>, sums the nights, adds selected add-ons, subtracts a validated <strong>coupon</strong> (PERCENT with an optional cap, or FLAT, respecting minimum spend, usage limit and expiry), then adds <strong>GST</strong> per the Settings screen. The customer cannot tamper with any of this.</p>
+
+  <h3 class="sub">4.3 Server-authoritative payment (how real hotel engines work)</h3>
+  <div class="flow mini">
+    <span class="node">Booking<br>PENDING</span><span class="arr">→</span>
+    <span class="node">Create gateway<br>order</span><span class="arr">→</span>
+    <span class="node">Guest pays</span><span class="arr">→</span>
+    <span class="node">Verify signature<br>(HMAC)</span><span class="arr">→</span>
+    <span class="node">Booking CONFIRMED<br>+ PAID</span>
+  </div>
+  <p class="mini">The browser <strong>never</strong> marks a booking as paid. The server confirms it only after a cryptographically verified callback (HMAC signature) or a Razorpay <strong>webhook</strong>. Two providers sit behind one abstraction: <strong>Mock</strong> (offline test checkout, the default — great for demos) and <strong>Razorpay</strong> (real orders, refunds, HMAC-verified webhooks). This design prevents the classic fraud where a user fakes a “paid” response.</p>
+
+  <h3 class="sub">4.4 Booking status state machine</h3>
+  <div class="flow">
+    <span class="node">PENDING</span><span class="arr">→</span><span class="node">CONFIRMED</span><span class="arr">→</span><span class="node">CHECKED_IN</span><span class="arr">→</span><span class="node">CHECKED_OUT</span>
+    <span class="arr">&nbsp;&nbsp;&nbsp;</span><span class="node">CANCELLED</span>
+  </div>
+  <p class="mini">Allowed moves are enforced on the server and mirrored in the admin UI: PENDING→CONFIRMED/CANCELLED; CONFIRMED→CHECKED_IN/CANCELLED; CHECKED_IN→CHECKED_OUT. Terminal states (CHECKED_OUT, CANCELLED) cannot move on. This prevents impossible transitions like checking out a cancelled booking.</p>
+  <div class="callout"><strong>Refunds are policy-aware.</strong> Cancel inside the free-cancellation window → full refund; outside it → the configured penalty is withheld. Issued from the booking drawer; the system cancels the booking and records a <code>Payment</code> row.</div>
+  <div class="page-num">12</div>
+</section>
+
+<!-- ============ SECTION 5 DIVIDER ============ -->
+<section class="page divider">
+  <div class="no">05</div>
+  <h2>Admin Portal</h2>
+  <p>The control room. Screen-by-screen documentation of every management tool, table, drawer, filter, button and permission.</p>
+</section>
+
+<!-- ============ 5 ADMIN SCREENS ============ -->
+<section class="page" id="s5">
+  <span class="page-tag">Admin Portal</span><span class="page-tag r">Section 5</span>
+  <h2 class="sec">5 · Admin Portal — Screen by Screen</h2>
+  <h3 class="sub">5.0 Admin chrome (every admin page)</h3>
+  <p class="mini"><strong>Sidebar</strong> — vertical navigation listing every admin section (Dashboard, Bookings, Availability, Stays, Amenities, Dining, Menu, Events, Offers, Coupons, Banners, Media, Reviews, Enquiries, Reports, Users, Settings, Email, Payments, Audit). Items the current role cannot access are hidden. <strong>Topbar</strong> — page context, signed-in user, and sign-out. <strong>PageHeader</strong> — title + primary action per screen. Shared UI kit: <code>Badge</code>, <code>AdminButton</code>, <code>Drawer</code> (slide-over panels), <code>Field</code> (labelled inputs), and <code>DataState</code> (loading/empty/error). A global <strong>axios client</strong> attaches the token and silently refreshes it once on a 401.</p>
+
+  <h3 class="sub">5.1 Admin Login <code>/admin/login</code></h3>
+  <p><strong>Purpose:</strong> secure staff entry. <strong>Components:</strong> Email + Password fields, sign-in button, and <strong>one-click “fill” buttons</strong> for the three demo roles. <strong>Validation:</strong> wrong credentials show an error; success stores tokens and routes to the Dashboard. Roles &amp; demo logins: Super Admin <code>admin@shraddhagarden.com/Admin@123</code>, Manager <code>manager@…/Manager@123</code>, Front Desk <code>frontdesk@…/Frontdesk@123</code>.</p>
+
+  <h3 class="sub">5.2 Dashboard <code>/admin</code></h3>
+  <p><strong>Purpose:</strong> the at-a-glance health of the business. <strong>Components:</strong> <strong>KPI cards</strong> (totals such as revenue, bookings, enquiries), a <strong>revenue chart</strong> (6-month trend, Recharts) and a <strong>bookings-by-status</strong> breakdown. Data from <code>GET /dashboard/stats</code>. Loading/empty/error states throughout. <em>Value:</em> owners see performance without exporting anything.</p>
+
+  <h3 class="sub">5.3 Bookings <code>/admin/bookings</code></h3>
+  <p><strong>Purpose:</strong> the operational core — manage every reservation. <strong>Components:</strong> a powerful <strong>data table</strong> (TanStack) with <strong>search</strong> (by name/code/email), a <strong>status filter</strong>, and <strong>pagination</strong>. Columns include code, guest, stay, dates, nights, guests, amount, status badge and payment badge. A row opens the <strong>Booking Drawer</strong>:</p>
+  <ul class="mini">
+    <li><strong>Detail view</strong> of the guest, stay, dates and money.</li>
+    <li><strong>Status buttons</strong> that only offer legal next states (the state machine).</li>
+    <li><strong>Payment actions</strong> (mark paid, refund — policy-aware; Manager+).</li>
+    <li>Notes and source (Website / Phone / Walk-in / OTA).</li>
+  </ul>
+  <p class="mini"><strong>New Booking Drawer</strong> lets staff create a booking manually (walk-ins / phone) — pick stay, dates, guests; the server computes nights and amount.</p>
+
+  <h3 class="sub">5.4 Availability &amp; Pricing <code>/admin/availability</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> control what can be booked and for how much. <strong>Components:</strong> an <strong>availability checker</strong>, a table of <strong>rate rules</strong> (name, stay or all-stays, date range, kind FIXED/PERCENT/DELTA, amount, min-stay, priority, active) with create/edit/delete, and a <strong>blocked-dates</strong> manager (date range + reason). <em>Value:</em> seasonal pricing, weekend premiums and maintenance holds — the levers a revenue manager needs.</p>
+
+  <h3 class="sub">5.5 Stays <code>/admin/stays</code></h3>
+  <p><strong>Purpose:</strong> manage the room inventory. <strong>Components:</strong> a <strong>card grid</strong> of stays and a create/edit <strong>drawer form</strong> (React Hook Form + Zod) covering name, slug, badge, price, rating, intro, description, hero image, gallery, amenities, capacity, beds, inventory, featured &amp; published toggles. <strong>Delete</strong> is Super-Admin-only and is blocked if the stay has bookings (protects historical records). <em>Value:</em> the property’s sellable catalogue is fully self-managed.</p>
+  <div class="page-num">14</div>
+</section>
+
+<section class="page">
+  <span class="page-tag">Admin Portal</span><span class="page-tag r">Section 5</span>
+
+  <h3 class="sub">5.6 Content Manager — Amenities / Dining / Events / Offers (Manager+)</h3>
+  <p><strong>Purpose:</strong> one reusable CRUD screen powers four public sections. <strong>Components:</strong> a list of content items with published/featured flags and sort order, plus a <strong>ContentForm</strong> for title, slug, category, icon, excerpt, body paragraphs, hero image, gallery, tags, price label and a flexible <strong>meta</strong> block (what-to-expect, quick facts, timings, best-for). <em>Value:</em> marketing updates go live in seconds without a developer; one engine keeps four pages consistent.</p>
+
+  <h3 class="sub">5.7 Menu <code>/admin/menu</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> manage the food menu shown in dining materials. <strong>Components:</strong> menu <strong>categories</strong> (name, note, sort order, published) each holding <strong>items</strong> (name, price in rupees, veg/non-veg flag, availability). <em>Value:</em> keeps pricing and dishes current across breakfast/lunch/beverages/non-veg sections.</p>
+
+  <h3 class="sub">5.8 Coupons <code>/admin/coupons</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> run promotions. <strong>Fields per coupon:</strong> code, description, kind (PERCENT / FLAT), value, minimum spend, maximum discount cap, start/end dates, usage limit, used count, active. <em>Value:</em> measurable, controlled discounting with guard-rails against abuse (caps + limits + expiry).</p>
+
+  <h3 class="sub">5.9 Banners / Home content <code>/admin/banners</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> control the home page merchandising. <strong>Three banner types:</strong> ANNOUNCEMENT (the dismissible top strip), HERO (home hero slides), and PROMO (promotional banners, with a countdown from the end date). Each has title, subtitle, image, CTA label &amp; link, active flag, sort order and scheduling. <em>Value:</em> time-boxed campaigns that switch themselves on/off by date.</p>
+
+  <h3 class="sub">5.10 Media <code>/admin/media</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> a central library of image URLs (with alt text and folder) reused across stays and content. <em>Value:</em> consistent imagery, one place to manage links. <em>Limitation (see audit):</em> currently URL-based, not direct file upload.</p>
+
+  <h3 class="sub">5.11 Reviews <code>/admin/reviews</code> (Front Desk+)</h3>
+  <p><strong>Purpose:</strong> a <strong>moderation queue</strong> for guest reviews (PENDING → APPROVED / REJECTED) with an optional public <strong>reply</strong>. Only approved reviews appear on the site. <em>Value:</em> protects brand reputation while showcasing genuine social proof.</p>
+
+  <h3 class="sub">5.12 Enquiries <code>/admin/enquiries</code> (Front Desk+)</h3>
+  <p><strong>Purpose:</strong> a lightweight CRM / leads inbox. <strong>Components:</strong> list of enquiries with status <strong>NEW → CONTACTED → CLOSED</strong>, an <strong>assignee</strong>, source, and a <strong>convert-to-booking</strong> action. <em>Value:</em> turns website enquiries into a trackable sales pipeline; nothing slips through the cracks.</p>
+
+  <h3 class="sub">5.13 Reports <code>/admin/reports</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> management reporting. <strong>Components:</strong> revenue, occupancy and booking-source breakdowns, with <strong>CSV export</strong> for finance/accounting. <em>Value:</em> board-ready numbers without a data analyst.</p>
+
+  <h3 class="sub">5.14 Users &amp; Staff <code>/admin/users</code></h3>
+  <p><strong>Purpose:</strong> manage the team. <strong>Components:</strong> user list with a role filter; <strong>create staff and change roles</strong> is Super-Admin-only. <em>Value:</em> onboard/offboard staff and enforce least-privilege access.</p>
+  <div class="page-num">15</div>
+</section>
+
+<section class="page">
+  <span class="page-tag">Admin Portal</span><span class="page-tag r">Section 5</span>
+
+  <h3 class="sub">5.15 Settings <code>/admin/settings</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> global business configuration. <strong>Fields:</strong> GST / tax rate (feeds the booking price breakdown), contact information, and check-in / check-out times. <em>Value:</em> one place to keep legal/tax and operational parameters correct.</p>
+
+  <h3 class="sub">5.16 Email Settings <code>/admin/email</code> (Manager+)</h3>
+  <p><strong>Purpose:</strong> configure transactional email. The API includes a mailer, templates, a notify layer, and a <strong>scheduler</strong> that sends one-off reminders and review-requests (each booking records <code>reminderSentAt</code> and <code>reviewRequestSentAt</code> so nothing is sent twice). <em>Value:</em> automated guest communication — confirmations, pre-arrival reminders, post-stay review asks.</p>
+
+  <h3 class="sub">5.17 Payments <code>/admin/payments</code></h3>
+  <p><strong>Purpose:</strong> configure how money is collected. <strong>Fields:</strong> provider (Mock / Razorpay), test/live mode, Key ID, Key Secret, Webhook Secret, enabled methods (card / UPI / net-banking / wallet), deposit %, and the cancellation policy. <strong>Security:</strong> secrets are editable by <strong>Super Admin only</strong> and are <strong>never returned to the browser</strong> — the public config exposes only the publishable Key ID. <em>Value:</em> go-live with real payments is a settings change, not a code change.</p>
+
+  <h3 class="sub">5.18 Audit Log <code>/admin/audit</code> (Super Admin only)</h3>
+  <p><strong>Purpose:</strong> accountability. <strong>Components:</strong> a chronological record of every admin mutation — actor, action, entity, entity id, timestamp. <em>Value:</em> answers “who changed this price / cancelled this booking / edited this user?” — essential for trust, disputes and (future) compliance.</p>
+
+  <div class="callout good"><strong>Coverage note.</strong> Every admin screen shares the same three-state discipline (loading / empty / error), the same permission gate, and the same design language — the hallmark of a coherent, maintainable product rather than a collection of pages.</div>
+
+  <h3 class="sub">5.19 Admin permission matrix</h3>
+  <table class="mini">
+    <tr><th>Capability</th><th class="c">Front Desk</th><th class="c">Manager</th><th class="c">Super Admin</th></tr>
+    <tr><td>View dashboard, bookings, enquiries, reviews</td><td class="c">✔</td><td class="c">✔</td><td class="c">✔</td></tr>
+    <tr><td>Change booking status (check-in/out, cancel)</td><td class="c">✔</td><td class="c">✔</td><td class="c">✔</td></tr>
+    <tr><td>Set payment status / issue refunds</td><td class="c">—</td><td class="c">✔</td><td class="c">✔</td></tr>
+    <tr><td>Manage stays, availability, pricing, content, coupons, banners, media, reports, settings</td><td class="c">—</td><td class="c">✔</td><td class="c">✔</td></tr>
+    <tr><td>Edit payment secrets / go live</td><td class="c">—</td><td class="c">—</td><td class="c">✔</td></tr>
+    <tr><td>Create staff / change roles / delete stays</td><td class="c">—</td><td class="c">—</td><td class="c">✔</td></tr>
+    <tr><td>View Audit Log</td><td class="c">—</td><td class="c">—</td><td class="c">✔</td></tr>
+  </table>
+  <div class="page-num">16</div>
+</section>
+
+<!-- ============ 6 COMPONENT & TEXT CATALOGUE ============ -->
+<section class="page" id="s6">
+  <span class="page-tag">UI &amp; Text Catalogue</span><span class="page-tag r">Section 6</span>
+  <h2 class="sec">6 · Shared UI Component &amp; Text Catalogue</h2>
+  <p>Every reusable building block and the meaning of the recurring text it carries.</p>
+  <h3 class="sub">6.1 Public components</h3>
+  <table class="mini">
+    <tr><th>Component</th><th>Role &amp; typical text</th></tr>
+    <tr><td>Header / Nav</td><td>Home · About · Amenities · Stays · Dining · Events · Offers + Reserve CTA</td></tr>
+    <tr><td>AnnouncementBar / MarqueeBanner</td><td>Admin-driven promo strip; dismissible (×)</td></tr>
+    <tr><td>Footer</td><td>Tagline, quick links, contact, copyright</td></tr>
+    <tr><td>Breadcrumb</td><td>“Home / Section / Item” trail on detail pages</td></tr>
+    <tr><td>StayCard / AmenityCard / DiningCard / TeamCard</td><td>Image + title + meta + link; badges &amp; ratings</td></tr>
+    <tr><td>BookingWidget</td><td>Dates + guests + price → start booking (sticky on stay detail)</td></tr>
+    <tr><td>Gallery</td><td>Image lightbox/carousel on detail pages</td></tr>
+    <tr><td>Accordion</td><td>Expand/collapse (aria-expanded) for policies/details</td></tr>
+    <tr><td>Stepper</td><td>Progress indicator in the booking flow</td></tr>
+    <tr><td>StatsRow / StepsBand / SectionHeading / SectionEyebrow</td><td>Marketing layout primitives with italic “eyebrow” labels</td></tr>
+    <tr><td>Reveal / WordReveal / SiteAnimations</td><td>Scroll-reveal animations honouring reduced-motion</td></tr>
+    <tr><td>PublicState</td><td>Loading / Empty / Error renderer for data pages</td></tr>
+    <tr><td>Button / Pill / Icon</td><td>Primary/secondary actions, tags, iconography</td></tr>
+  </table>
+  <h3 class="sub">6.2 Admin components</h3>
+  <table class="mini">
+    <tr><th>Component</th><th>Role</th></tr>
+    <tr><td>AdminLayout / Sidebar / Topbar / PageHeader</td><td>The admin shell &amp; navigation</td></tr>
+    <tr><td>Drawer</td><td>Slide-over panels for detail/create/edit (bookings, stays, content)</td></tr>
+    <tr><td>Badge</td><td>Colour-coded status/payment indicators</td></tr>
+    <tr><td>DataState</td><td>Loading / empty / error for every data view</td></tr>
+    <tr><td>Field / AdminButton</td><td>Consistent labelled inputs &amp; buttons</td></tr>
+    <tr><td>apiClient / tokenStore / queries</td><td>Auth-aware data layer (axios + token refresh + TanStack Query)</td></tr>
+  </table>
+  <h3 class="sub">6.3 Recurring status vocabulary (what the badges mean)</h3>
+  <table class="mini">
+    <tr><th>Domain</th><th>Values</th></tr>
+    <tr><td>Booking status</td><td>PENDING · CONFIRMED · CHECKED_IN · CHECKED_OUT · CANCELLED</td></tr>
+    <tr><td>Payment status</td><td>UNPAID · PAID · REFUNDED</td></tr>
+    <tr><td>Enquiry status</td><td>NEW · CONTACTED · CLOSED</td></tr>
+    <tr><td>Review status</td><td>PENDING · APPROVED · REJECTED</td></tr>
+    <tr><td>Rate rule kind</td><td>FIXED · PERCENT · DELTA</td></tr>
+    <tr><td>Coupon kind</td><td>PERCENT · FLAT</td></tr>
+    <tr><td>Banner type</td><td>ANNOUNCEMENT · HERO · PROMO</td></tr>
+    <tr><td>Booking source</td><td>Website · Phone · Walk-in · OTA</td></tr>
+  </table>
+  <div class="page-num">22</div>
+</section>
+
+<!-- ============ 7 ARCHITECTURE ============ -->
+<section class="page" id="s7">
+  <span class="page-tag">Architecture</span><span class="page-tag r">Section 7</span>
+  <h2 class="sec">7 · Technical Architecture (Plain Language)</h2>
+  <table class="mini">
+    <tr><th>Layer</th><th>What it is (plain)</th><th>How it’s built</th></tr>
+    <tr><td>Frontend</td><td>The screens guests &amp; staff use</td><td>React 18 + Vite + TypeScript, Tailwind CSS, Framer Motion; admin code-split so heavy libraries never load for guests</td></tr>
+    <tr><td>Backend / API</td><td>The engine that enforces rules &amp; holds data</td><td>Node.js + Express with clear route modules (auth, stays, bookings, payments, …)</td></tr>
+    <tr><td>Authentication</td><td>Proving who you are</td><td>JWT access tokens (15-min) + rotating refresh tokens; bcrypt-hashed passwords</td></tr>
+    <tr><td>Authorization (RBAC)</td><td>Deciding what you may do</td><td>Roles + <code>requireRole</code> middleware on every write; UI hides what you can’t use</td></tr>
+    <tr><td>Database</td><td>Where everything is stored</td><td>Prisma ORM over SQLite (16 models: User, Stay, Booking, Payment, Coupon, Content, Banner, Review, Media, RateRule, DateBlock, Enquiry, AuditLog, MenuCategory/Item, SiteSetting)</td></tr>
+    <tr><td>Payments</td><td>Collecting money safely</td><td>Provider abstraction (Mock / Razorpay), server-verified via HMAC signatures &amp; webhooks</td></tr>
+    <tr><td>Email</td><td>Talking to guests automatically</td><td>SMTP mailer + templates + scheduler (reminders, review requests)</td></tr>
+    <tr><td>Validation</td><td>Rejecting bad input</td><td>Zod schemas on the API; React Hook Form + Zod on the forms</td></tr>
+    <tr><td>State / data-fetching</td><td>Keeping screens in sync</td><td>TanStack Query (caching, loading/error states, retries)</td></tr>
+    <tr><td>Security extras</td><td>Guard-rails</td><td>Secrets kept server-side; audit log; state-machine-guarded bookings; input serialization</td></tr>
+  </table>
+  <h3 class="sub">7.1 Request lifecycle (a booking, end-to-end)</h3>
+  <ol class="mini">
+    <li>Guest submits dates &amp; stay → React calls <code>POST /availability/check</code>.</li>
+    <li>Server prices the stay (base + rate rules − blocks) and answers.</li>
+    <li>Guest adds extras, details, coupon → React calls <code>POST /coupons/validate</code>, then <code>POST /bookings/public</code>.</li>
+    <li>Server creates a PENDING booking &amp; a gateway order (<code>POST /payments/order</code>).</li>
+    <li>Guest pays → gateway calls back → <code>POST /payments/verify</code> (HMAC) and/or webhook.</li>
+    <li>Server flips the booking to CONFIRMED + PAID, records a Payment row, triggers a confirmation email, writes nothing the browser could forge.</li>
+  </ol>
+  <div class="callout warn"><strong>Honest note on deployment &amp; ops.</strong> The code ships with an nginx config and deploy/update scripts, but there is <strong>no evidence of automated CI/CD, centralized logging, metrics/monitoring, or infrastructure-as-code</strong> in the repo. These are addressed as production-readiness items in §9–§12 rather than assumed to exist.</div>
+  <div class="page-num">24</div>
+</section>
+
+<!-- ============ 8 FUNCTIONAL ANALYSIS ============ -->
+<section class="page" id="s8">
+  <span class="page-tag">Functional Analysis</span><span class="page-tag r">Section 8</span>
+  <h2 class="sec">8 · Functional Analysis — Input / Process / Output</h2>
+  <table class="mini">
+    <tr><th>Feature</th><th>Input</th><th>Process</th><th>Output</th><th>Key edge / failure cases</th></tr>
+    <tr><td>Availability check</td><td>Stay, check-in, check-out</td><td>Apply rate rules, reject blocks, sum nights</td><td>Per-night &amp; total quote; available/not</td><td>Check-out ≤ check-in; blocked range; past dates</td></tr>
+    <tr><td>Coupon validate</td><td>Code, cart amount</td><td>Check active, dates, min-spend, usage limit, cap</td><td>Discount amount or rejection reason</td><td>Expired, over-limit, below min-spend, unknown code</td></tr>
+    <tr><td>Create booking</td><td>Dates, stay, guest details</td><td>Recompute price server-side; create PENDING</td><td>Booking code + order</td><td>Race on inventory; invalid email/phone</td></tr>
+    <tr><td>Payment verify</td><td>Gateway signature/payload</td><td>HMAC verify; idempotent confirm</td><td>CONFIRMED + PAID or failure</td><td>Forged signature; duplicate webhook; timeout</td></tr>
+    <tr><td>Status transition</td><td>Target status</td><td>State-machine guard</td><td>Updated booking</td><td>Illegal transition rejected</td></tr>
+    <tr><td>Refund</td><td>Booking, policy window</td><td>Compute penalty; call gateway</td><td>REFUNDED + CANCELLED + Payment row</td><td>Already refunded; outside gateway window</td></tr>
+    <tr><td>Enquiry submit</td><td>Name, email, phone, message…</td><td>Validate; store as NEW</td><td>Lead in admin inbox</td><td>Spam/bot input (no captcha — see audit)</td></tr>
+    <tr><td>Content/Stay CRUD</td><td>Form fields</td><td>Zod validate; RBAC check; persist</td><td>Updated public page</td><td>Duplicate slug; unauthorized role</td></tr>
+    <tr><td>Login</td><td>Email + password</td><td>bcrypt compare; issue tokens</td><td>Access + refresh JWT</td><td>Wrong creds; inactive user; token expiry→refresh</td></tr>
+  </table>
+  <div class="callout"><strong>Expected behaviour, stated plainly.</strong> The system consistently prefers <em>fail-safe</em> outcomes: money is only ever confirmed by the server; impossible booking states are refused; unauthorized actions are blocked before they touch data; and every data screen degrades gracefully to a readable message rather than a blank crash.</div>
+  <div class="page-num">26</div>
+</section>
+
+<!-- ============ 9 PRODUCT AUDIT ============ -->
+<section class="page divider">
+  <div class="no">09</div>
+  <h2>Product Audit &amp; Risk</h2>
+  <p>A brutally honest assessment: what is missing, what is weak, and what must be true before large-scale production.</p>
+</section>
+
+<section class="page" id="s9">
+  <span class="page-tag">Product Audit</span><span class="page-tag r">Section 9</span>
+  <h2 class="sec">9 · Product Audit — Gaps &amp; Missing Features</h2>
+  <p>The product is unusually complete for its stage. The following are genuine gaps, grouped by theme, each with an impact rating.</p>
+
+  <h4>Infrastructure &amp; scale</h4>
+  <table class="mini">
+    <tr><th>Gap</th><th>Why it matters</th><th class="c">Impact</th></tr>
+    <tr><td>SQLite database</td><td>Excellent for one property/dev, but single-file and limited for high concurrency or multi-property scale; migrate to PostgreSQL/MySQL for production</td><td class="c"><span class="rl h">High</span></td></tr>
+    <tr><td>No automated tests</td><td>No unit/integration/e2e suite found; regressions can reach production undetected</td><td class="c"><span class="rl h">High</span></td></tr>
+    <tr><td>No CI/CD pipeline</td><td>Deploys are manual scripts; higher human-error risk</td><td class="c"><span class="rl m">Med</span></td></tr>
+    <tr><td>No monitoring/alerting/centralized logs</td><td>Outages/errors discovered by customers, not dashboards</td><td class="c"><span class="rl h">High</span></td></tr>
+    <tr><td>Media is URL-only (no file upload/storage/CDN)</td><td>Staff must host images elsewhere; no drag-drop upload</td><td class="c"><span class="rl m">Med</span></td></tr>
+    <tr><td>No backup/restore strategy documented</td><td>Data loss risk for bookings/payments</td><td class="c"><span class="rl h">High</span></td></tr>
+  </table>
+
+  <h4>Functional / workflow</h4>
+  <table class="mini">
+    <tr><th>Gap</th><th>Why it matters</th><th class="c">Impact</th></tr>
+    <tr><td>Inventory / double-booking concurrency</td><td>Two guests booking the last unit simultaneously needs a hard lock/transaction; verify robustness under load</td><td class="c"><span class="rl h">High</span></td></tr>
+    <tr><td>No calendar/channel-manager sync (OTA)</td><td>If the resort also sells on OTAs, availability can drift</td><td class="c"><span class="rl m">Med</span></td></tr>
+    <tr><td>No spam protection on public forms (captcha/rate-limit)</td><td>Enquiry &amp; review forms open to bots</td><td class="c"><span class="rl m">Med</span></td></tr>
+    <tr><td>No booking modification by guest (self-service reschedule)</td><td>Changes require calling the front desk</td><td class="c"><span class="rl l">Low</span></td></tr>
+    <tr><td>No multi-currency / i18n / multi-language</td><td>INR &amp; English only; limits international guests</td><td class="c"><span class="rl l">Low</span></td></tr>
+    <tr><td>No invoice/GST PDF generation for guests</td><td>Common expectation for corporate bookings</td><td class="c"><span class="rl m">Med</span></td></tr>
+  </table>
+
+  <h4>Compliance, analytics &amp; trust</h4>
+  <table class="mini">
+    <tr><th>Gap</th><th>Why it matters</th><th class="c">Impact</th></tr>
+    <tr><td>No cookie consent / privacy &amp; T&amp;C pages</td><td>Legal requirement (DPDP Act, India) before public launch</td><td class="c"><span class="rl h">High</span></td></tr>
+    <tr><td>No web analytics (GA4/traffic funnels)</td><td>Can’t measure conversion or marketing ROI</td><td class="c"><span class="rl m">Med</span></td></tr>
+    <tr><td>Audit log covers admin only, not customer actions</td><td>Partial trail; fine for now, expand later</td><td class="c"><span class="rl l">Low</span></td></tr>
+    <tr><td>No rate-limiting / WAF on the API</td><td>Brute-force &amp; abuse exposure</td><td class="c"><span class="rl m">Med</span></td></tr>
+  </table>
+  <div class="page-num">27</div>
+</section>
+
+<!-- ============ 10 NEGATIVE ANALYSIS ============ -->
+<section class="page" id="s10">
+  <span class="page-tag">Negative Analysis</span><span class="page-tag r">Section 10</span>
+  <h2 class="sec">10 · Negative Analysis (Brutally Honest)</h2>
+  <div class="callout bad"><strong>Read this section as a friend, not a salesperson.</strong> Everything below is fixable, and none of it is unusual for a product at this stage — but a client deserves to hear it before signing.</div>
+
+  <h3 class="sub">Technical risks</h3>
+  <ul class="mini">
+    <li><strong>SQLite is the biggest single technical risk.</strong> It is superb for development and a single small property, but it is a file-based database. Concurrency, backups and multi-server scaling are limited. This must move to PostgreSQL before serious volume.</li>
+    <li><strong>No automated test coverage.</strong> Every future change is a manual-QA gamble. For a system that <em>touches money</em>, this is the most important thing to add.</li>
+    <li><strong>Operational blind spot.</strong> Without logging/monitoring, the first sign of a payment or email failure may be an angry guest. Add error tracking (e.g. Sentry) and uptime monitoring day one.</li>
+    <li><strong>Concurrency/idempotency.</strong> The payment verify path must be provably idempotent (a webhook can fire twice). This should be load-tested and confirmed, not assumed.</li>
+  </ul>
+
+  <h3 class="sub">Business &amp; UX risks</h3>
+  <ul class="mini">
+    <li><strong>Content dependency.</strong> The product’s premium feel relies on high-quality photography and copy. Placeholder/Unsplash imagery must be replaced with real property shots before launch or the brand suffers.</li>
+    <li><strong>No self-service booking changes.</strong> Guests who want to move a date must phone in — a friction point competitors solve.</li>
+    <li><strong>Legal pages missing.</strong> Privacy policy, terms, cancellation/refund policy and cookie consent are prerequisites, not nice-to-haves, in India.</li>
+    <li><strong>Single-property assumption.</strong> The data model is single-property. Expanding to multiple resorts is a real project, not a config toggle.</li>
+  </ul>
+
+  <h3 class="sub">Likely future client complaints (anticipate them)</h3>
+  <table class="mini">
+    <tr><th>Complaint</th><th>Root cause</th><th>Pre-emptive answer</th></tr>
+    <tr><td>“It went down and no one told us”</td><td>No monitoring</td><td>Add Sentry + uptime alerts in hardening sprint</td></tr>
+    <tr><td>“A change broke something else”</td><td>No tests</td><td>Introduce a test suite before feature work</td></tr>
+    <tr><td>“I can’t upload photos directly”</td><td>URL-only media</td><td>Add upload+storage (S3/Cloudinary) in v1.1</td></tr>
+    <tr><td>“Guests want an invoice PDF”</td><td>Not built</td><td>Add GST invoice generation in v1.1</td></tr>
+    <tr><td>“We got spam enquiries”</td><td>No captcha</td><td>Add captcha + rate-limit in hardening sprint</td></tr>
+  </table>
+  <div class="callout good"><strong>Balancing truth.</strong> Despite the above, the <em>architecture</em> is sound and the <em>feature surface</em> is broad and coherent. These are hardening items, not rewrites. That distinction is what makes this a strong investment rather than a risky one.</div>
+  <div class="page-num">28</div>
+</section>
+
+<!-- ============ 11 RISK MATRIX ============ -->
+<section class="page" id="s11">
+  <span class="page-tag">Risk Matrix</span><span class="page-tag r">Section 11</span>
+  <h2 class="sec">11 · Risk Matrix</h2>
+  <table class="risk mini">
+    <tr><th>Risk</th><th class="c">Likelihood</th><th class="c">Impact</th><th class="c">Severity</th><th>Mitigation</th></tr>
+    <tr><td>Database can’t scale (SQLite)</td><td class="c">High</td><td class="c">High</td><td class="c"><span class="rl h">Critical</span></td><td>Migrate to PostgreSQL before volume launch</td></tr>
+    <tr><td>Undetected regressions (no tests)</td><td class="c">High</td><td class="c">High</td><td class="c"><span class="rl h">Critical</span></td><td>Add unit/integration/e2e suite + CI</td></tr>
+    <tr><td>Silent outage / payment failure</td><td class="c">Med</td><td class="c">High</td><td class="c"><span class="rl h">High</span></td><td>Sentry + uptime + log aggregation</td></tr>
+    <tr><td>Data loss (no backups)</td><td class="c">Med</td><td class="c">High</td><td class="c"><span class="rl h">High</span></td><td>Automated daily backups + tested restore</td></tr>
+    <tr><td>Double-booking under load</td><td class="c">Med</td><td class="c">High</td><td class="c"><span class="rl h">High</span></td><td>DB transaction/lock on inventory + load test</td></tr>
+    <tr><td>Legal non-compliance at launch</td><td class="c">High</td><td class="c">Med</td><td class="c"><span class="rl m">Med</span></td><td>Add privacy/T&amp;C/cookie consent pages</td></tr>
+    <tr><td>Form spam / API abuse</td><td class="c">Med</td><td class="c">Med</td><td class="c"><span class="rl m">Med</span></td><td>Captcha + rate-limiting + WAF</td></tr>
+    <tr><td>Brand harm from placeholder media</td><td class="c">Med</td><td class="c">Med</td><td class="c"><span class="rl m">Med</span></td><td>Professional photo shoot before launch</td></tr>
+    <tr><td>Key-person/vendor lock (Razorpay only)</td><td class="c">Low</td><td class="c">Med</td><td class="c"><span class="rl l">Low</span></td><td>Provider abstraction already exists — add a 2nd gateway later</td></tr>
+    <tr><td>Guest friction (no self-reschedule)</td><td class="c">Med</td><td class="c">Low</td><td class="c"><span class="rl l">Low</span></td><td>Add self-service changes in v1.5</td></tr>
+  </table>
+  <div class="callout"><strong>Reading the matrix:</strong> the two “Critical” rows (database &amp; testing) plus the four “High” rows constitute the <strong>hardening sprint</strong> — roughly 4–6 weeks of focused work — that turns a strong build into a launch-ready production system.</div>
+  <div class="page-num">29</div>
+</section>
+
+<!-- ============ 12 READINESS SCORECARD ============ -->
+<section class="page" id="s12">
+  <span class="page-tag">Readiness Scorecard</span><span class="page-tag r">Section 12</span>
+  <h2 class="sec">12 · Production Readiness Scorecard</h2>
+  <p class="mini">Scores out of 10 per dimension. “Business readiness” = how usable it is to run the business today; “Backend readiness” includes ops maturity.</p>
+  <table class="mini">
+    <tr><th>Module</th><th class="c">UI</th><th class="c">UX</th><th class="c">Backend</th><th class="c">Business</th><th class="c">Perf.</th><th class="c">Security</th><th class="c">Scale</th><th class="c">Testing</th><th class="c">Maint.</th><th class="c">Docs</th><th class="c">Deploy</th></tr>
+    <tr><td>Public website</td><td class="c s-hi">9</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td></tr>
+    <tr><td>Booking &amp; payments</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-hi">9</td><td class="c s-mid">7</td><td class="c s-hi">9</td><td class="c s-mid">6</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td></tr>
+    <tr><td>Admin portal</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td></tr>
+    <tr><td>Availability &amp; pricing</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-hi">8</td><td class="c s-mid">6</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-mid">6</td></tr>
+    <tr><td>Content / CMS</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-mid">6</td></tr>
+    <tr><td>Auth &amp; RBAC</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-hi">9</td><td class="c s-mid">7</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">6</td></tr>
+    <tr><td>Reporting &amp; audit</td><td class="c s-mid">7</td><td class="c s-mid">7</td><td class="c s-hi">8</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-hi">8</td><td class="c s-mid">6</td><td class="c s-lo">2</td><td class="c s-hi">8</td><td class="c s-mid">7</td><td class="c s-mid">6</td></tr>
+    <tr><td>Infrastructure / ops</td><td class="c">—</td><td class="c">—</td><td class="c s-mid">5</td><td class="c s-mid">6</td><td class="c s-mid">6</td><td class="c s-mid">6</td><td class="c s-lo">4</td><td class="c s-lo">2</td><td class="c s-mid">6</td><td class="c s-mid">6</td><td class="c s-lo">4</td></tr>
+  </table>
+  <div class="kpi">
+    <div class="box"><b>8.4</b>avg. feature quality</div>
+    <div class="box"><b>8.6</b>security design</div>
+    <div class="box"><b>2.0</b>test coverage</div>
+    <div class="box"><b>5.0</b>ops maturity</div>
+  </div>
+  <div class="callout"><strong>Interpretation.</strong> Feature &amp; design maturity is genuinely high (8–9). The scorecard’s low columns — <strong>testing (2)</strong> and <strong>ops/scale (4–6)</strong> — are exactly the hardening backlog. This is the profile of a <em>strong MVP</em>, not a fragile prototype.</div>
+  <div class="page-num">30</div>
+</section>
+
+<!-- ============ 13 ROADMAP ============ -->
+<section class="page" id="s13">
+  <span class="page-tag">Roadmap</span><span class="page-tag r">Section 13</span>
+  <h2 class="sec">13 · Future Roadmap &amp; Timeline</h2>
+  <table class="mini">
+    <tr><th>Release</th><th>Theme</th><th>Headline items</th></tr>
+    <tr><td><strong>MVP (now)</strong></td><td>Direct-booking platform</td><td>Public site, admin portal, booking + payments, RBAC, CMS, coupons, reviews, reports, audit</td></tr>
+    <tr><td><strong>Hardening sprint</strong></td><td>Production-ready</td><td>PostgreSQL migration, automated tests + CI/CD, monitoring/logging, backups, captcha/rate-limit, legal pages</td></tr>
+    <tr><td><strong>v1.1</strong></td><td>Operator delight</td><td>Direct image upload + CDN, GST invoice PDFs, web analytics (GA4), email template editor</td></tr>
+    <tr><td><strong>v1.5</strong></td><td>Guest self-service</td><td>Self-reschedule/cancel, saved guests, loyalty points, WhatsApp notifications, wishlists</td></tr>
+    <tr><td><strong>v2.0</strong></td><td>Multi-property &amp; channels</td><td>Multi-resort data model, OTA channel-manager sync, dynamic yield pricing, housekeeping module</td></tr>
+    <tr><td><strong>Enterprise Edition</strong></td><td>Scale &amp; compliance</td><td>SSO/SAML, granular custom roles, data residency, SLA monitoring, white-label, API for partners</td></tr>
+  </table>
+  <h3 class="sub">13.1 Themed roadmaps</h3>
+  <div class="grid2 mini">
+    <div class="card"><h4>AI</h4>Chat concierge, AI enquiry auto-reply/triage, review sentiment summaries, demand-forecast pricing suggestions, AI copy for content.</div>
+    <div class="card"><h4>Automation</h4>Auto-confirm/reminders (exists) → auto-refund workflows, no-show handling, dynamic coupon issuing, housekeeping task automation.</div>
+    <div class="card"><h4>Analytics</h4>Conversion funnels, RevPAR/ADR/occupancy dashboards, cohort &amp; source ROI, forecast vs actual.</div>
+    <div class="card"><h4>Security</h4>Rate-limiting/WAF, 2FA for admins, secret rotation, pen-test, PCI-scope review, DPDP compliance.</div>
+    <div class="card"><h4>Scalability</h4>Postgres + read replicas, Redis cache, CDN, containerisation, horizontal API scaling, queue for emails/webhooks.</div>
+    <div class="card"><h4>Mobile &amp; API</h4>PWA/installable app, native guest app, public partner API, webhooks out, OTA integrations.</div>
+  </div>
+  <h3 class="sub">13.2 Indicative timeline</h3>
+  <div class="flow">
+    <span class="node">Hardening<br>~4–6 wks</span><span class="arr">→</span>
+    <span class="node">v1.1<br>~6–8 wks</span><span class="arr">→</span>
+    <span class="node">v1.5<br>~8–10 wks</span><span class="arr">→</span>
+    <span class="node">v2.0<br>~3–4 mo</span><span class="arr">→</span>
+    <span class="node">Enterprise<br>ongoing</span>
+  </div>
+  <p class="mini"><em>Estimates are indicative and depend on team size and scope confirmation.</em></p>
+  <div class="page-num">31</div>
+</section>
+
+<!-- ============ 14 BUSINESS BENEFITS ============ -->
+<section class="page" id="s14">
+  <span class="page-tag">Business Benefits</span><span class="page-tag r">Section 14</span>
+  <h2 class="sec">14 · Business Benefits &amp; ROI</h2>
+  <table class="mini">
+    <tr><th>Benefit</th><th>What it means for the resort</th></tr>
+    <tr><td><strong>Commission savings (ROI)</strong></td><td>Every direct booking avoids the 15–25% OTA commission. On ₹50,000/day of direct bookings, ~₹7,500–₹12,500/day stays with the resort.</td></tr>
+    <tr><td><strong>Cost savings</strong></td><td>Replaces several subscriptions (website builder, booking engine, CRM, CMS) with one owned platform.</td></tr>
+    <tr><td><strong>Productivity</strong></td><td>Staff self-manage content, pricing and bookings; automated emails cut manual follow-up.</td></tr>
+    <tr><td><strong>Security</strong></td><td>Server-authoritative payments, hashed passwords, RBAC and audit logging reduce fraud &amp; internal error.</td></tr>
+    <tr><td><strong>Compliance readiness</strong></td><td>Audit trail + settings-driven GST provide the backbone for tax &amp; governance (with legal pages added).</td></tr>
+    <tr><td><strong>Operational efficiency</strong></td><td>One dashboard for bookings, leads, availability and reports — no spreadsheet reconciliation.</td></tr>
+    <tr><td><strong>Business continuity</strong></td><td>Central data with (planned) backups beats knowledge trapped in chats and inboxes.</td></tr>
+    <tr><td><strong>Competitive advantage</strong></td><td>A premium, mobile-first direct channel rivals larger chains; owned guest data enables marketing.</td></tr>
+    <tr><td><strong>Future growth</strong></td><td>Architecture already supports multi-provider payments and content-driven pages; multi-property is a clear next step.</td></tr>
+  </table>
+  <div class="callout good"><strong>The ROI story in one line:</strong> the platform pays for itself by converting OTA-commissioned bookings into direct, commission-free bookings — while giving the owner data and control they never had before.</div>
+  <div class="page-num">32</div>
+</section>
+
+<!-- ============ 15 CLIENT QUESTIONS ============ -->
+<section class="page divider">
+  <div class="no">15</div>
+  <h2>100 Client Questions</h2>
+  <p>Anticipated questions with professional answers, objection-handling and follow-ups — your Q&amp;A shield for the meeting.</p>
+</section>
+
+<section class="page" id="s15">
+  <span class="page-tag">Client Q&amp;A</span><span class="page-tag r">Section 15</span>
+  <h2 class="sec">15 · 100 Client Questions &amp; Answers</h2>
+  <p class="mini">Answers blend business + simple-technical framing. Handle objections by acknowledging, reframing to value, and pointing to the roadmap.</p>
+  <table class="qa">
+    <tr><th>Question</th><th>Professional answer</th></tr>
+    <tr><td>1. Is the website live?</td><td>It runs today via the included host scripts; production launch follows the hardening sprint (§13).</td></tr>
+    <tr><td>2. Can guests really pay online?</td><td>Yes — via Razorpay (cards/UPI/net-banking/wallet), confirmed server-side. A Mock mode demos it with no real money.</td></tr>
+    <tr><td>3. Do we lose OTA commissions?</td><td>Direct bookings avoid the 15–25% OTA cut entirely.</td></tr>
+    <tr><td>4. Is my guests’ payment data safe?</td><td>Card data is handled by the gateway, not stored by us; we verify payment cryptographically (HMAC).</td></tr>
+    <tr><td>5. Can staff change prices themselves?</td><td>Yes — seasonal/dynamic rate rules in Availability &amp; Pricing, no developer needed.</td></tr>
+    <tr><td>6. Who can access what?</td><td>Four roles (Super Admin, Manager, Front Desk, Customer) with enforced permissions.</td></tr>
+    <tr><td>7. Can I see who changed something?</td><td>Yes — the Audit Log records every admin change (Super Admin only).</td></tr>
+    <tr><td>8. Does it work on phones?</td><td>Fully responsive across phone/tablet/desktop.</td></tr>
+    <tr><td>9. Can we run offers/discounts?</td><td>Yes — coupons (percent/flat, caps, limits, expiry) and scheduled promo banners.</td></tr>
+    <tr><td>10. How do enquiries reach us?</td><td>They land in a leads inbox with status, assignee and convert-to-booking.</td></tr>
+    <tr><td>11. Can we manage the menu?</td><td>Yes — categories &amp; items with prices and veg flags.</td></tr>
+    <tr><td>12. Can we edit amenities/dining/events/offers?</td><td>Yes — one CMS engine powers all four public sections.</td></tr>
+    <tr><td>13. Can we moderate reviews?</td><td>Yes — approve/reject/reply; only approved reviews show publicly.</td></tr>
+    <tr><td>14. Can we export data?</td><td>Reports export to CSV for finance/accounting.</td></tr>
+    <tr><td>15. What reports do we get?</td><td>Revenue, occupancy and source breakdowns, plus a KPI dashboard with charts.</td></tr>
+    <tr><td>16. Can we take walk-in/phone bookings?</td><td>Yes — staff create bookings manually; source is tracked.</td></tr>
+    <tr><td>17. What stops double-booking?</td><td>Inventory + blocked dates; concurrency hardening is on the roadmap and will be load-tested.</td></tr>
+    <tr><td>18. Can we block dates for maintenance?</td><td>Yes — blocked-date ranges with a reason.</td></tr>
+    <tr><td>19. How are refunds handled?</td><td>Policy-aware from the booking drawer: full inside the free window, penalty outside it.</td></tr>
+    <tr><td>20. Do guests get confirmation emails?</td><td>Yes — automated confirmations, reminders and review requests (sent once each).</td></tr>
+    <tr><td>21. Can guests see their bookings?</td><td>Yes — a My Account area lists bookings by email.</td></tr>
+    <tr><td>22. Do guests need an account to book?</td><td>They can book as a guest; accounts add history &amp; convenience.</td></tr>
+    <tr><td>23. Is it fast?</td><td>Modern build, code-splitting and caching; admin libraries never load for guests.</td></tr>
+    <tr><td>24. Is it accessible?</td><td>Semantic landmarks, alt text, focus rings, reduced-motion support.</td></tr>
+    <tr><td>25. Who owns the data?</td><td>You do — it’s your platform and your database.</td></tr>
+    <tr><td>26. Can we add more room types?</td><td>Yes — Stays are fully self-managed with a rich form.</td></tr>
+    <tr><td>27. Can we add photos?</td><td>Yes, via image URLs today; direct upload is a v1.1 item.</td></tr>
+    <tr><td>28. What tech is it built on?</td><td>React front end, Node/Express API, Prisma database toolkit — mainstream, hireable stack.</td></tr>
+    <tr><td>29. Will we be locked to one developer?</td><td>No — standard tech, documented, with a clear structure.</td></tr>
+    <tr><td>30. Can it scale to more guests?</td><td>Yes after moving to PostgreSQL and adding caching/CDN (roadmap).</td></tr>
+    <tr><td>31. Can it handle multiple resorts?</td><td>Not yet — multi-property is a defined v2.0 project.</td></tr>
+    <tr><td>32. Is there a mobile app?</td><td>Not yet; a PWA/native app is on the roadmap. The site is already mobile-first.</td></tr>
+    <tr><td>33. What happens if the payment fails?</td><td>The booking stays PENDING and is never marked paid; the guest can retry.</td></tr>
+    <tr><td>34. Can a hacker fake a payment?</td><td>No — only the server confirms payment via a verified signature/webhook.</td></tr>
+    <tr><td>35. Are passwords stored safely?</td><td>Yes — hashed with bcrypt, never in plain text.</td></tr>
+    <tr><td>36. How long do logins last?</td><td>15-minute access tokens auto-refresh silently; users aren’t logged out mid-task.</td></tr>
+    <tr><td>37. Can we add staff?</td><td>Yes — Super Admin creates staff and assigns roles.</td></tr>
+    <tr><td>38. Can Front Desk change prices?</td><td>No — pricing is Manager+ only, by design.</td></tr>
+    <tr><td>39. What if we type a wrong URL?</td><td>A friendly on-brand 404 page with a way back home.</td></tr>
+    <tr><td>40. Can we change tax/GST?</td><td>Yes — in Settings; it feeds the booking price breakdown.</td></tr>
+  </table>
+  <div class="page-num">33</div>
+</section>
+
+<section class="page">
+  <span class="page-tag">Client Q&amp;A</span><span class="page-tag r">Section 15</span>
+  <table class="qa">
+    <tr><th>Question</th><th>Professional answer</th></tr>
+    <tr><td>41. Can we set check-in/out times?</td><td>Yes — in Settings.</td></tr>
+    <tr><td>42. Can we schedule a promo to start later?</td><td>Yes — banners &amp; coupons have start/end dates.</td></tr>
+    <tr><td>43. Is there a countdown for offers?</td><td>Yes — PROMO banners show a countdown from the end date.</td></tr>
+    <tr><td>44. Can we feature certain stays?</td><td>Yes — a “featured” flag surfaces them.</td></tr>
+    <tr><td>45. Can we hide a stay temporarily?</td><td>Yes — a “published” toggle.</td></tr>
+    <tr><td>46. Can we see revenue trends?</td><td>Yes — a 6-month revenue chart on the Dashboard.</td></tr>
+    <tr><td>47. Can we see bookings by status?</td><td>Yes — a status breakdown on the Dashboard.</td></tr>
+    <tr><td>48. How do we find a booking fast?</td><td>Search by name/code/email, filter by status, paginated table.</td></tr>
+    <tr><td>49. Can we add booking notes?</td><td>Yes — notes and source on each booking.</td></tr>
+    <tr><td>50. Can we assign an enquiry to someone?</td><td>Yes — assignee field on each lead.</td></tr>
+    <tr><td>51. Is the design consistent?</td><td>Yes — one design system across public &amp; admin.</td></tr>
+    <tr><td>52. Can we change the branding?</td><td>Yes — colours/typography are centralised tokens.</td></tr>
+    <tr><td>53. Is it SEO-friendly?</td><td>Dedicated pages per stay/amenity help; meta/analytics are roadmap items.</td></tr>
+    <tr><td>54. Does it support multiple languages?</td><td>Not yet — i18n is on the roadmap; English/INR today.</td></tr>
+    <tr><td>55. Can international guests pay?</td><td>Via Razorpay’s supported methods; multi-currency is future scope.</td></tr>
+    <tr><td>56. What about GST invoices?</td><td>GST is computed now; guest-facing invoice PDFs are a v1.1 item.</td></tr>
+    <tr><td>57. Is there spam protection on forms?</td><td>Not yet — captcha + rate-limit are in the hardening sprint.</td></tr>
+    <tr><td>58. Is there a privacy policy?</td><td>Not yet — legal pages are a launch prerequisite we’ll add.</td></tr>
+    <tr><td>59. Are there automated tests?</td><td>Not yet — the top hardening priority given payments are involved.</td></tr>
+    <tr><td>60. What if the server goes down?</td><td>We’ll add uptime monitoring + alerts so we know before guests do.</td></tr>
+    <tr><td>61. Are there backups?</td><td>To be implemented — automated daily backups with tested restore.</td></tr>
+    <tr><td>62. Which database is used?</td><td>SQLite today (great for launch); PostgreSQL for scale (planned).</td></tr>
+    <tr><td>63. Why not Postgres now?</td><td>SQLite ships zero-setup and is perfect to validate the product; migration is straightforward.</td></tr>
+    <tr><td>64. How do we deploy updates?</td><td>Included nginx config + deploy scripts today; CI/CD is planned.</td></tr>
+    <tr><td>65. Can we integrate with OTAs?</td><td>Channel-manager sync is a v2.0 item; the architecture anticipates it.</td></tr>
+    <tr><td>66. Can guests reschedule themselves?</td><td>Not yet — self-service changes are v1.5; staff can do it now.</td></tr>
+    <tr><td>67. Can we do loyalty/points?</td><td>Planned for v1.5.</td></tr>
+    <tr><td>68. WhatsApp notifications?</td><td>Planned; email automation exists today.</td></tr>
+    <tr><td>69. Can we A/B test offers?</td><td>Not built-in; analytics + experiments are roadmap.</td></tr>
+    <tr><td>70. How secure is admin access?</td><td>Gated by login + RBAC; 2FA is a planned security enhancement.</td></tr>
+    <tr><td>71. Can we limit refunds by policy?</td><td>Yes — a configurable cancellation policy drives refunds.</td></tr>
+    <tr><td>72. Can we take partial deposits?</td><td>Yes — a deposit % is configurable in Payments.</td></tr>
+    <tr><td>73. Which payment methods?</td><td>Card, UPI, net-banking, wallet — toggle per method.</td></tr>
+    <tr><td>74. Can we switch payment provider?</td><td>Yes — a provider abstraction; adding another gateway is low-risk.</td></tr>
+    <tr><td>75. Are payment secrets exposed?</td><td>Never to the browser — only the public Key ID is; secrets are Super-Admin-only.</td></tr>
+    <tr><td>76. Can we test before going live?</td><td>Yes — Mock mode + Razorpay test keys exercise the full flow safely.</td></tr>
+    <tr><td>77. How do we train staff?</td><td>The admin mirrors familiar dashboards; we’ll provide a short guide + demo logins.</td></tr>
+    <tr><td>78. Can we restrict deletions?</td><td>Yes — deleting stays is Super-Admin-only and blocked if bookings exist.</td></tr>
+    <tr><td>79. What if two staff edit at once?</td><td>Last-write-wins today; optimistic-locking is a maintainability enhancement.</td></tr>
+    <tr><td>80. Is the code maintainable?</td><td>Yes — typed (TypeScript), modular routes, shared components, documented README.</td></tr>
+  </table>
+  <div class="page-num">34</div>
+</section>
+
+<section class="page">
+  <span class="page-tag">Client Q&amp;A</span><span class="page-tag r">Section 15</span>
+  <table class="qa">
+    <tr><th>Question</th><th>Professional answer</th></tr>
+    <tr><td>81. What’s the total cost of ownership?</td><td>Hosting + gateway fees + occasional dev; far below stacked SaaS subscriptions + OTA commissions.</td></tr>
+    <tr><td>82. How fast can we launch?</td><td>Demo today; production after a ~4–6 week hardening sprint.</td></tr>
+    <tr><td>83. What’s the biggest risk?</td><td>Honestly, the database choice and lack of tests — both on the immediate plan.</td></tr>
+    <tr><td>84. Why should we trust the numbers on screen?</td><td>All money maths is server-side; the browser can’t alter prices.</td></tr>
+    <tr><td>85. Can we see occupancy?</td><td>Yes — in Reports, with source breakdowns.</td></tr>
+    <tr><td>86. Can we brand emails?</td><td>Templates exist; a visual editor is a v1.1 item.</td></tr>
+    <tr><td>87. Does it handle time zones/dates well?</td><td>Dates are validated server-side; we’ll confirm timezone handling in hardening.</td></tr>
+    <tr><td>88. Can we add custom roles?</td><td>Not yet — granular custom roles are an Enterprise-edition feature.</td></tr>
+    <tr><td>89. Is there an activity history per booking?</td><td>Status changes flow through a guarded state machine; a full per-entity timeline is an enhancement.</td></tr>
+    <tr><td>90. Can we see failed payments?</td><td>Payment records capture status (created/paid/failed/refunded).</td></tr>
+    <tr><td>91. What about accessibility compliance?</td><td>Strong foundations; a formal WCAG audit is recommended pre-launch.</td></tr>
+    <tr><td>92. Can we localise currency formatting?</td><td>INR formatting is built in; other locales are future scope.</td></tr>
+    <tr><td>93. Is there a sitemap/robots for SEO?</td><td>To be added with the analytics/SEO roadmap item.</td></tr>
+    <tr><td>94. Can we gate content by login?</td><td>Customer auth exists; member-only content is a small extension.</td></tr>
+    <tr><td>95. How do we handle no-shows?</td><td>Manually today (cancel); automation is roadmap.</td></tr>
+    <tr><td>96. Can we integrate accounting software?</td><td>CSV export today; direct integrations are future scope.</td></tr>
+    <tr><td>97. Is the platform ours to resell/white-label?</td><td>White-label is an Enterprise-edition direction.</td></tr>
+    <tr><td>98. What ongoing support is needed?</td><td>Light — content is self-managed; dev needed for features &amp; upgrades.</td></tr>
+    <tr><td>99. What happens to bookings if we change a stay?</td><td>Historical bookings are protected; stays with bookings can’t be deleted.</td></tr>
+    <tr><td>100. Why choose this over an off-the-shelf builder?</td><td>You own the data, avoid commissions, and can extend infinitely — an off-the-shelf tool can’t match owned, tailored software.</td></tr>
+  </table>
+  <h3 class="sub">Objection-handling cheat sheet</h3>
+  <table class="mini">
+    <tr><th>Objection</th><th>Reframe</th></tr>
+    <tr><td>“It’s not 100% production-ready.”</td><td>Correct — and we’ve told you exactly what the 4–6 week hardening sprint covers. Transparency now beats surprises later.</td></tr>
+    <tr><td>“No tests worries me.”</td><td>Agreed it’s the #1 priority; it’s the first item on the plan precisely because money is involved.</td></tr>
+    <tr><td>“SQLite sounds small.”</td><td>It’s ideal to launch fast and cheap; migrating to PostgreSQL is a well-trodden, low-risk step.</td></tr>
+    <tr><td>“Can we afford it?”</td><td>The OTA commissions you avoid typically cover the build; this is a cost-saver, not just a cost.</td></tr>
+  </table>
+  <div class="page-num">35</div>
+</section>
+
+<!-- ============ 16 SCRIPTS ============ -->
+<section class="page" id="s16">
+  <span class="page-tag">Presentation Scripts</span><span class="page-tag r">Section 16</span>
+  <h2 class="sec">16 · Presentation Scripts</h2>
+  <h3 class="sub">16.1 Ten-minute script (the elevator pitch)</h3>
+  <ol class="mini">
+    <li><strong>(0–1 min) Open:</strong> “Shraddha Garden now has its own online front door and its own control room.” State the tagline.</li>
+    <li><strong>(1–3) The guest story:</strong> Walk the Home → Stays → Stay detail → Book flow. Emphasise real online payment and instant confirmation.</li>
+    <li><strong>(3–6) The control room:</strong> Show the Dashboard, Bookings table + drawer, Availability &amp; Pricing, and Content CMS. “Your team runs everything from here.”</li>
+    <li><strong>(6–8) Why it matters:</strong> Commission-free direct bookings, owned data, audit trail, roles.</li>
+    <li><strong>(8–10) Honesty + close:</strong> “It’s a strong MVP; a short hardening sprint takes it to production. Here’s the plan.” Invite questions.</li>
+  </ol>
+  <h3 class="sub">16.2 Thirty-minute script</h3>
+  <ol class="mini">
+    <li><strong>(0–3) Context &amp; problem</strong> (§1): OTA commissions, lost enquiries, spreadsheet pricing.</li>
+    <li><strong>(3–10) Guest experience</strong> (§3–4): full public tour + booking &amp; payment engine; explain server-authoritative payments in plain terms.</li>
+    <li><strong>(10–20) Admin deep-dive</strong> (§5): dashboard, bookings state machine, availability/pricing, CMS, coupons, banners, reviews, enquiries, reports, users, payments, audit — highlight the permission matrix.</li>
+    <li><strong>(20–24) Architecture &amp; security</strong> (§7): RBAC, hashed passwords, HMAC payments, audit log — confidence without jargon.</li>
+    <li><strong>(24–28) Audit &amp; roadmap</strong> (§9–13): what’s missing, the hardening sprint, and where it grows (multi-property, AI, mobile).</li>
+    <li><strong>(28–30) ROI &amp; close</strong> (§14): the commission-savings story; agree next steps.</li>
+  </ol>
+  <h3 class="sub">16.3 One-hour detailed walkthrough (agenda)</h3>
+  <table class="mini">
+    <tr><th>Time</th><th>Segment</th><th>Anticipated questions to pre-empt</th></tr>
+    <tr><td>0–5</td><td>Executive summary (§0)</td><td>“What is this, in one sentence?”</td></tr>
+    <tr><td>5–15</td><td>Full public site tour (§3)</td><td>“Does it work on phones?” “Can we edit content?”</td></tr>
+    <tr><td>15–25</td><td>Booking + payments live demo (§4)</td><td>“Is payment safe?” “What if it fails?”</td></tr>
+    <tr><td>25–40</td><td>Admin portal, screen by screen (§5)</td><td>“Who can do what?” “Can we see who changed things?”</td></tr>
+    <tr><td>40–48</td><td>Architecture &amp; security (§7–8)</td><td>“Will we be locked in?” “Can it scale?”</td></tr>
+    <tr><td>48–56</td><td>Audit, risks, readiness, roadmap (§9–13)</td><td>“Is it production-ready?” “What’s missing?”</td></tr>
+    <tr><td>56–60</td><td>ROI, Q&amp;A, next steps (§14–15)</td><td>“What does it cost?” “When can we launch?”</td></tr>
+  </table>
+  <div class="callout"><strong>Presenter tip.</strong> Lead every screen with the <em>business</em> value, then reveal the <em>mechanism</em>. When asked a hard technical question, answer in one plain sentence, then offer “I can go deeper if useful.” Confidence comes from control, not from detail.</div>
+  <div class="page-num">36</div>
+</section>
+
+<!-- ============ 17 CONCLUSION ============ -->
+<section class="page" id="s17">
+  <span class="page-tag">Conclusion</span><span class="page-tag r">Section 17</span>
+  <h2 class="sec">17 · Conclusion &amp; Recommendation</h2>
+  <p class="lead">Shraddha Garden Resort is a genuinely impressive, coherent product: a premium guest website, a comprehensive admin portal, and a secure, well-designed API — unified by one design system and one set of business rules.</p>
+  <h3 class="sub">What is strong</h3>
+  <ul class="mini">
+    <li>Broad, coherent feature surface: booking, payments, pricing, CMS, coupons, banners, reviews, enquiries, reports, users, settings, audit.</li>
+    <li>Sound security posture: RBAC, hashed passwords, server-authoritative HMAC-verified payments, secrets kept server-side, full admin audit trail.</li>
+    <li>Thoughtful UX: consistent loading/empty/error states, accessibility foundations, responsive design, guided booking flow.</li>
+    <li>Extensible architecture: provider-abstracted payments, content-driven pages, code-split admin.</li>
+  </ul>
+  <h3 class="sub">What must happen before large-scale production</h3>
+  <ol class="mini">
+    <li>Migrate SQLite → PostgreSQL.</li>
+    <li>Add automated tests + CI/CD.</li>
+    <li>Add monitoring, logging, alerting and backups.</li>
+    <li>Add captcha/rate-limiting and legal pages (privacy, T&amp;C, cookie consent).</li>
+    <li>Load-test booking concurrency &amp; payment idempotency.</li>
+    <li>Replace placeholder media with professional property photography.</li>
+  </ol>
+  <div class="callout good"><strong>Recommendation.</strong> Proceed. Position the current build as a <strong>strong MVP</strong>, commission a focused <strong>4–6 week hardening sprint</strong>, then launch. The commercial case — commission-free direct bookings on an owned, extensible platform — is compelling, and the technical foundation is genuinely good.</div>
+  <div style="margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem" class="mini">
+    <p><strong>Shraddha Garden Resort</strong> — Product &amp; Technical Documentation, v1.0 · 09 July 2026</p>
+    <p><small>Prepared for client presentation. This dossier documents the product as implemented in the codebase; items marked “planned/roadmap” are not yet built. © 2024 Shraddha Garden Resort. Unforgettable Memories.</small></p>
+  </div>
+  <div class="page-num">37</div>
+</section>
+
+</body>
+</html>

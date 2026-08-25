@@ -1,0 +1,49 @@
+========================================================
+ SHRADDHA GARDEN — HOW TO PUT YOUR WEBSITE ONLINE
+========================================================
+
+TO START THE WEBSITE
+--------------------
+1. Double-click:  START-WEBSITE.bat
+2. Wait about 15 seconds.
+3. A black window opens and shows your live link, like:
+
+       YOUR WEBSITE IS LIVE  🎉
+       https://something-random.trycloudflare.com
+
+4. That link is your website. Share it or open it in a browser.
+   - Menu page:   <link>/dining
+   - Admin login: <link>/admin
+       email:    admin@shraddhagarden.com
+       password: Admin@123   (change it after logging in)
+
+5. The link is ALSO saved in the file:  WEBSITE-LINK.txt
+   (open it any time to copy the current link)
+
+KEEP THE BLACK WINDOW OPEN while you want the site online.
+
+
+TO STOP THE WEBSITE
+-------------------
+- Simply CLOSE the black window, OR
+- Double-click:  STOP-WEBSITE.bat
+
+
+IMPORTANT THINGS TO KNOW
+------------------------
+* The website only works while:
+    - this computer is ON and awake, and
+    - the black window is open, and
+    - you have internet.
+  If you close the laptop or shut down, the site goes offline.
+
+* The link CHANGES every time you start it. Each start gives a new
+  random link, so re-share it / check WEBSITE-LINK.txt after starting.
+
+* Your data (menu, bookings, etc.) is saved on this computer and is
+  NOT lost between restarts — only the link changes.
+
+* For a permanent link that stays online 24/7 even with the laptop
+  closed, you need real cloud hosting (AWS, etc.). Ask Claude to help
+  when you're ready.
+========================================================

@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHRADDHA GARDAN AND RESORT — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cream:#f4efe6;--cream-2:#f6f1e7;--paper:#fbf8f2;--line:#e3dcce;
+  --forest:#2e4b2e;--forest-2:#33502f;--forest-deep:#1f3320;
+  --terracotta:#a6763f;--terracotta-2:#8a6a3b;
+  --ink:#23211c;--charcoal:#1a1a1a;--charcoal-2:#171513;--muted:#7a766c;
+  --gold:#c9a84c;--gold-light:#d4b96a;--gold-dark:#a88a35;
+  --radius:12px;
+  --font-serif:'Playfair Display','Cormorant Garamond',Georgia,serif;
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:var(--font-sans);color:var(--ink);background:var(--cream);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ═══════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════ */
+h1,h2,h3,h4,h5{font-family:var(--font-serif);font-weight:500;letter-spacing:-0.01em;line-height:1.15}
+h1{font-size:clamp(2.8rem,6vw,5rem)}
+h2{font-size:clamp(2rem,4vw,3.2rem)}
+h3{font-size:clamp(1.4rem,2.5vw,1.8rem)}
+h4{font-size:1.15rem}
+.serif-italic{font-family:var(--font-serif);font-style:italic}
+.text-muted{color:var(--muted)}
+.text-gold{color:var(--gold)}
+.text-forest{color:var(--forest)}
+.text-terracotta{color:var(--terracotta)}
+.text-sm{font-size:0.8rem;letter-spacing:0.04em}
+.text-xs{font-size:0.7rem;letter-spacing:0.06em}
+.uppercase{text-transform:uppercase}
+.tracking-wide{letter-spacing:0.12em}
+.tracking-wider{letter-spacing:0.2em}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════ */
+.menu-page{min-height:100vh;position:relative;display:flex;flex-direction:column;overflow:hidden}
+.menu-page--cream{background:var(--cream)}
+.menu-page--paper{background:var(--paper)}
+.menu-page--dark{background:var(--charcoal-2);color:var(--cream)}
+.menu-page--forest{background:var(--forest-deep);color:var(--cream)}
+.page-inner{max-width:960px;width:100%;margin:0 auto;padding:3rem 2rem}
+.page-inner--wide{max-width:1100px}
+
+/* ═══════════════════════════════════════
+   COVER PAGE
+   ═══════════════════════════════════════ */
+.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;text-align:center;color:#fff}
+.cover-bg{position:absolute;inset:0;z-index:0}
+.cover-bg img{width:100%;height:100%;object-fit:cover}
+.cover-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(23,21,19,0.7) 0%,rgba(23,21,19,0.5) 40%,rgba(23,21,19,0.8) 100%);z-index:1}
+.cover-content{position:relative;z-index:2;padding:2rem}
+.cover-logo{width:80px;height:80px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;backdrop-filter:blur(10px);background:rgba(201,168,76,0.1)}
+.cover-logo svg{width:36px;height:36px;fill:var(--gold)}
+.cover-name{font-family:var(--font-serif);font-size:clamp(2.2rem,5vw,3.8rem);font-weight:500;letter-spacing:0.06em;margin-bottom:0.5rem;color:#fff}
+.cover-tagline{font-family:var(--font-serif);font-style:italic;font-size:clamp(1rem,2vw,1.25rem);color:rgba(255,255,255,0.7);margin-bottom:2.5rem}
+.cover-divider{width:80px;height:1px;background:var(--gold);margin:0 auto 2rem}
+.cover-menu-label{font-size:0.8rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.cover-subtitle{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.5)}
+.cover-scroll{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.4);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase}
+.cover-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);animation:scrollPulse 2s ease-in-out infinite}
+@keyframes scrollPulse{0%,100%{opacity:0.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+
+/* ═══════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════ */
+.section-header{text-align:center;margin-bottom:2.5rem;position:relative}
+.section-header--left{text-align:left}
+.section-number{font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem}
+.section-title{font-family:var(--font-serif);font-size:clamp(1.8rem,3.5vw,2.6rem);font-weight:500;color:var(--ink);margin-bottom:0.3rem}
+.section-subtitle{font-family:var(--font-serif);font-style:italic;font-size:1rem;color:var(--muted)}
+.section-header--dark .section-title{color:var(--cream)}
+.section-header--dark .section-subtitle{color:rgba(244,239,230,0.5)}
+.section-header--dark .section-number{color:rgba(244,239,230,0.35)}
+
+/* Gold ornamental divider */
+.gold-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1.5rem 0}
+.gold-divider::before,.gold-divider::after{content:'';height:1px;width:60px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.gold-divider svg{width:16px;height:16px;fill:var(--gold)}
+
+/* Terracotta divider */
+.terra-divider{display:flex;align-items:center;gap:1rem;margin:2rem 0}
+.terra-divider::before{content:'';height:1px;flex:1;background:var(--line)}
+.terra-divider::after{content:'';height:1px;flex:1;background:var(--line)}
+.terra-divider span{font-family:var(--font-serif);font-style:italic;font-size:0.85rem;color:var(--terracotta);white-space:nowrap}
+
+/* ═══════════════════════════════════════
+   HERO IMAGES (Section)
+   ═══════════════════════════════════════ */
+.section-hero{position:relative;width:100%;height:280px;border-radius:var(--radius);overflow:hidden;margin-bottom:2.5rem}
+.section-hero img{width:100%;height:100%;object-fit:cover;transition:transform 8s ease}
+.section-hero:hover img{transform:scale(1.05)}
+.section-hero-overlay{position:absolute;bottom:0;left:0;right:0;padding:2rem;background:linear-gradient(to top,rgba(23,21,19,0.7),transparent)}
+.section-hero-overlay h3{color:#fff;font-size:1.4rem}
+.section-hero-overlay p{color:rgba(255,255,255,0.6);font-size:0.85rem;margin-top:0.25rem}
+.section-hero--sm{height:200px}
+
+/* ═══════════════════════════════════════
+   MENU ITEMS
+   ═══════════════════════════════════════ */
+.items-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.15rem 2rem}
+.items-grid--3col{grid-template-columns:1fr 1fr 1fr;gap:0.1rem 1.5rem}
+.items-grid--1col{grid-template-columns:1fr}
+
+.mi{display:flex;align-items:baseline;padding:0.45rem 0;border-bottom:1px solid rgba(227,220,206,0.5);gap:0.4rem;transition:background 0.2s}
+.mi:hover{background:rgba(227,220,206,0.3);border-radius:6px;padding-left:6px;padding-right:6px}
+.mi-icon{flex-shrink:0;width:16px;height:16px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.mi-icon svg{width:14px;height:14px}
+.mi-name{flex:1;min-width:0;font-size:0.92rem;font-weight:400;color:var(--ink);line-height:1.35}
+.mi-dots{flex:1;min-width:20px;border-bottom:1px dotted var(--line);margin:0 6px;transform:translateY(-3px)}
+.mi-price{flex-shrink:0;font-family:var(--font-serif);font-size:0.95rem;font-weight:500;color:var(--ink);white-space:nowrap}
+.mi-note{display:block;font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:1px}
+
+/* Dark theme items */
+.menu-page--dark .mi,
+.menu-page--forest .mi{border-bottom-color:rgba(255,255,255,0.08)}
+.menu-page--dark .mi:hover,
+.menu-page--forest .mi:hover{background:rgba(255,255,255,0.05)}
+.menu-page--dark .mi-name,
+.menu-page--forest .mi-name{color:var(--cream)}
+.menu-page--dark .mi-price,
+.menu-page--forest .mi-price{color:var(--cream)}
+.menu-page--dark .mi-dots,
+.menu-page--forest .mi-dots{border-color:rgba(255,255,255,0.1)}
+.menu-page--dark .mi-note,
+.menu-page--forest .mi-note{color:rgba(244,239,230,0.4)}
+
+/* ═══════════════════════════════════════
+   BADGES
+   ═══════════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:0.6rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;border-radius:20px;vertical-align:middle;margin-left:4px;white-space:nowrap}
+.badge-chef{background:linear-gradient(135deg,var(--gold),var(--gold-dark));color:#fff}
+.badge-best{background:var(--terracotta);color:#fff}
+.badge-signature{background:var(--forest);color:#fff}
+.badge-spicy{background:transparent;color:#c0392b;border:1px solid #c0392b;font-size:0.65rem}
+.badge-popular{background:rgba(46,75,46,0.1);color:var(--forest);border:1px solid rgba(46,75,46,0.2)}
+.menu-page--dark .badge-popular{background:rgba(255,255,255,0.08);color:var(--gold-light);border-color:rgba(201,168,76,0.3)}
+.menu-page--forest .badge-popular{background:rgba(255,255,255,0.08);color:var(--gold-light);border-color:rgba(201,168,76,0.3)}
+
+/* ═══════════════════════════════════════
+   CATEGORY SUB-HEADERS
+   ═══════════════════════════════════════ */
+.cat-header{grid-column:1/-1;display:flex;align-items:center;gap:0.75rem;margin-top:1.5rem;margin-bottom:0.3rem;padding-bottom:0.5rem;border-bottom:2px solid var(--line)}
+.cat-header:first-child{margin-top:0}
+.cat-header h4{font-family:var(--font-serif);font-size:1.05rem;font-weight:500;color:var(--forest);white-space:nowrap}
+.cat-header span{flex:1;height:1px;background:var(--line)}
+.menu-page--dark .cat-header{border-bottom-color:rgba(255,255,255,0.1)}
+.menu-page--dark .cat-header h4{color:var(--gold)}
+.menu-page--dark .cat-header span{background:rgba(255,255,255,0.1)}
+.menu-page--forest .cat-header{border-bottom-color:rgba(255,255,255,0.1)}
+.menu-page--forest .cat-header h4{color:var(--gold)}
+.menu-page--forest .cat-header span{background:rgba(255,255,255,0.1)}
+
+/* ═══════════════════════════════════════
+   FEATURED CARDS
+   ═══════════════════════════════════════ */
+.featured-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:2rem 0}
+.featured-card{border-radius:var(--radius);overflow:hidden;background:var(--paper);box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid var(--line);transition:transform 0.4s ease,box-shadow 0.4s ease}
+.featured-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.1)}
+.featured-card-img{height:160px;overflow:hidden}
+.featured-card-img img{width:100%;height:100%;object-fit:cover;transition:transform 6s ease}
+.featured-card:hover .featured-card-img img{transform:scale(1.08)}
+.featured-card-body{padding:1.2rem}
+.featured-card-body h4{font-family:var(--font-serif);font-size:1.05rem;margin-bottom:0.3rem}
+.featured-card-body p{font-size:0.8rem;color:var(--muted);line-height:1.4}
+.featured-card-price{font-family:var(--font-serif);font-size:1.1rem;font-weight:500;color:var(--terracotta);margin-top:0.5rem}
+
+/* ═══════════════════════════════════════
+   KG TABLE
+   ═══════════════════════════════════════ */
+.kg-table{width:100%;border-collapse:collapse;font-size:0.9rem}
+.kg-table thead th{font-family:var(--font-serif);font-weight:500;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--forest);padding:0.8rem 1rem;border-bottom:2px solid var(--forest);text-align:left}
+.kg-table tbody td{padding:0.7rem 1rem;border-bottom:1px solid var(--line);vertical-align:middle}
+.kg-table tbody tr:hover{background:rgba(227,220,206,0.3)}
+.kg-table .price-col{text-align:right;font-family:var(--font-serif);font-weight:500;color:var(--terracotta)}
+
+/* ═══════════════════════════════════════
+   BACK COVER
+   ═══════════════════════════════════════ */
+.back-cover{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;color:#fff;overflow:hidden}
+.back-cover-bg{position:absolute;inset:0}
+.back-cover-bg img{width:100%;height:100%;object-fit:cover}
+.back-cover-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(31,51,32,0.92),rgba(23,21,19,0.95));z-index:1}
+.back-content{position:relative;z-index:2;text-align:center;padding:2rem;max-width:500px}
+.back-content h2{font-size:2.5rem;margin-bottom:0.5rem}
+.back-content .gold-divider{margin:1.5rem auto}
+.back-content p{font-size:0.95rem;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:1.5rem}
+.contact-list{list-style:none;display:flex;flex-direction:column;gap:0.8rem;margin:1.5rem 0}
+.contact-list li{display:flex;align-items:center;justify-content:center;gap:0.6rem;font-size:0.9rem;color:rgba(255,255,255,0.7)}
+.contact-list svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.8}
+.qr-placeholder{width:120px;height:120px;border:2px solid var(--gold);border-radius:var(--radius);margin:1.5rem auto;display:flex;align-items:center;justify-content:center;background:rgba(201,168,76,0.05)}
+.qr-placeholder svg{width:60px;height:60px;stroke:var(--gold);fill:none;stroke-width:1.2;opacity:0.5}
+.social-links{display:flex;justify-content:center;gap:1rem;margin-top:1.5rem}
+.social-links a{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;transition:all 0.3s}
+.social-links a:hover{border-color:var(--gold);background:rgba(201,168,76,0.1)}
+.social-links svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.8}
+
+/* ═══════════════════════════════════════
+   SIDE NAV DOTS
+   ═══════════════════════════════════════ */
+.side-nav{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.side-nav-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;cursor:pointer;transition:all 0.3s;padding:0}
+.side-nav-dot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.4)}
+.side-nav-dot:hover{border-color:var(--gold)}
+
+/* ═══════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  .cover-scroll-line{animation:none}
+  .section-hero img{transition:none}
+  .featured-card,.featured-card-img img{transition:none}
+}
+
+/* ═══════════════════════════════════════
+   DECORATIVE PATTERNS
+   ═══════════════════════════════════════ */
+.pattern-overlay{position:absolute;inset:0;pointer-events:none;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2323211c' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+
+/* ═══════════════════════════════════════
+   PRINT STYLES
+   ═══════════════════════════════════════ */
+@media print{
+  .side-nav{display:none!important}
+  .cover-scroll{display:none!important}
+  .mi:hover{background:none;padding-left:0;padding-right:0}
+  .featured-card:hover{transform:none;box-shadow:0 4px 20px rgba(0,0,0,0.06)}
+  .section-hero img{transform:none!important}
+  .menu-page{page-break-after:always;min-height:auto;padding:0}
+  body{background:#fff}
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media(max-width:768px){
+  .items-grid{grid-template-columns:1fr}
+  .items-grid--3col{grid-template-columns:1fr 1fr}
+  .featured-cards{grid-template-columns:1fr}
+  .section-hero{height:200px}
+  .page-inner{padding:2rem 1.25rem}
+  .side-nav{display:none}
+  .kg-table{font-size:0.8rem}
+  .kg-table thead th,.kg-table tbody td{padding:0.5rem 0.6rem}
+}
+@media(max-width:480px){
+  .items-grid--3col{grid-template-columns:1fr}
+  .section-hero{height:160px;border-radius:8px}
+  .cover-name{letter-spacing:0.02em}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDE NAVIGATION DOTS -->
+<nav class="side-nav" id="sideNav" aria-label="Section navigation">
+  <button class="side-nav-dot active" data-target="cover" aria-label="Cover"></button>
+  <button class="side-nav-dot" data-target="breakfast" aria-label="Breakfast"></button>
+  <button class="side-nav-dot" data-target="lunch-veg" aria-label="Lunch Veg"></button>
+  <button class="side-nav-dot" data-target="beverages" aria-label="Beverages"></button>
+  <button class="side-nav-dot" data-target="nonveg-biryani" aria-label="Non-Veg Biryani"></button>
+  <button class="side-nav-dot" data-target="mutton" aria-label="Mutton"></button>
+  <button class="side-nav-dot" data-target="chicken" aria-label="Chicken"></button>
+  <button class="side-nav-dot" data-target="seafood" aria-label="Seafood"></button>
+  <button class="side-nav-dot" data-target="special-parotta" aria-label="Special & Parotta"></button>
+  <button class="side-nav-dot" data-target="egg-dosai" aria-label="Egg & Dosai"></button>
+  <button class="side-nav-dot" data-target="kg" aria-label="Kilogram"></button>
+  <button class="side-nav-dot" data-target="back" aria-label="Back Cover"></button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     PAGE 1 — COVER
+     ═══════════════════════════════════════ -->
+<section class="menu-page cover" id="cover">
+  <div class="cover-bg">
+    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1600&q=80" alt="Elegant restaurant interior">
+  </div>
+  <div class="cover-overlay"></div>
+  <div class="cover-content">
+    <div class="cover-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    </div>
+    <div class="cover-menu-label reveal">The Menu</div>
+    <h1 class="cover-name reveal reveal-delay-1">Shraddha Gardan<br>And Resort</h1>
+    <div class="cover-divider reveal reveal-delay-2"></div>
+    <p class="cover-tagline reveal reveal-delay-2">Where Tradition Meets Elegance</p>
+    <p class="cover-subtitle reveal reveal-delay-3">Breakfast &amp; Dinner</p>
+  </div>
+  <div class="cover-scroll">
+    <span>Explore</span>
+    <div class="cover-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 2 — BREAKFAST & DOSAI
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--paper" id="breakfast">
+  <div class="pattern-overlay"></div>
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero reveal">
+      <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=1000&q=80" alt="South Indian breakfast spread with idli and chutney">
+      <div class="section-hero-overlay">
+        <h3>Breakfast</h3>
+        <p>A traditional South Indian morning</p>
+      </div>
+    </div>
+
+    <div class="section-header reveal">
+      <div class="section-number">Chapter One</div>
+      <h2 class="section-title">Breakfast</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="cat-header"><h4>Steamed &amp; Fried</h4><span></span></div>
+
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Idly <span class="text-muted text-xs">(2 pcs)</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Sambar Idly</span><span class="mi-dots"></span><span class="mi-price">₹80</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Vada</span><span class="mi-dots"></span><span class="mi-price">₹30</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Sambar Vada</span><span class="mi-dots"></span><span class="mi-price">₹48</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Curd Vada</span><span class="mi-dots"></span><span class="mi-price">₹48</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Kichadi</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Pongal <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Poori</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Choola Poori</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Idiyappam</span><span class="mi-dots"></span><span class="mi-price">₹80</span></div>
+    </div>
+
+    <!-- DOSAI VARIETIES -->
+    <div class="terra-divider reveal" style="margin-top:3rem"><span>Dosai Varieties</span></div>
+
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Plain Dosa</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Diet Dosa <span class="mi-note">(Ragi/Wheat)</span></span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Kal Dosa</span><span class="mi-dots"></span><span class="mi-price">₹112</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Podi Dosa</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Podi Dosa <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Dosa</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Masala Dosa <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Masala Dosa</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Onion Dosa</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Rava Dosa</span><span class="mi-dots"></span><span class="mi-price">₹112</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Cashew Net Rava Dosa <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Rava Dosa</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Onion Rava Dosa</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Mushroom Masala Dosa</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paneer Masala Dosa</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Gobi Masala Dosa</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paper Roast <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹182</span></div>
+    </div>
+
+    <div class="terra-divider reveal"><span>Uttappam Varieties</span></div>
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Onion Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Carrot Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Tomato Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Podi Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Ghee Podi Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">5 Taste Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">7 Taste Uttappam <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 3 — LUNCH VEGETARIAN
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--cream" id="lunch-veg">
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero reveal" style="height:220px">
+      <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=1000&q=80" alt="South Indian vegetarian meals">
+      <div class="section-hero-overlay">
+        <h3>Vegetarian Lunch</h3>
+        <p>Rice, starters, and Indo-Chinese delicacies</p>
+      </div>
+    </div>
+
+    <div class="section-header reveal">
+      <div class="section-number">Chapter Two</div>
+      <h2 class="section-title">Lunch Vegetarian</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="cat-header"><h4>Rice &amp; Meals</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Meals <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹220</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Curd Rice</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Lemon Rice</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Tomato Rice</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Veg Biryani</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+
+      <div class="cat-header"><h6>Starters — 65</h6><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Mushroom 65 <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paneer 65 <span class="badge badge-best">Best Seller</span> <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Gobi 65 <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+
+      <div class="cat-header"><h4>Chilli</h4><span></span></div>
+      <div class="mi" style="grid-column:1/-1"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Chilli <span class="text-muted text-xs">(Paneer / Mushroom / Gobi / Baby Corn)</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+
+      <div class="cat-header"><h4>Manchurian</h4><span></span></div>
+      <div class="mi" style="grid-column:1/-1"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Manchurian <span class="text-muted text-xs">(Gobi / Mushroom / Paneer / Baby Corn)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+
+      <div class="cat-header"><h4>Dragon</h4><span></span></div>
+      <div class="mi" style="grid-column:1/-1"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Dragon <span class="text-muted text-xs">(Gobi / Mushroom / Paneer / Baby Corn)</span> <span class="badge badge-spicy">🌶🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+
+      <div class="cat-header"><h4>Pepper</h4><span></span></div>
+      <div class="mi" style="grid-column:1/-1"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Pepper <span class="text-muted text-xs">(Gobi / Mushroom / Paneer / Baby Corn)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+    </div>
+
+    <!-- FRIED RICE -->
+    <div class="terra-divider reveal"><span>Fried Rice</span></div>
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Veg Fried Rice</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paneer Fried Rice</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Mushroom Fried Rice</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Corn Fried Rice</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Veg Fried Rice <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Paneer Fried Rice <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Mushroom Fried Rice <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Panner Fried Rice <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Corn Fried Rice <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+    </div>
+
+    <!-- NOODLES -->
+    <div class="terra-divider reveal"><span>Noodles</span></div>
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Veg Noodles</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paneer Noodles</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Mushroom Noodles</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Corn Noodles</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Veg Noodles <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Paneer Noodles <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Mushroom Noodles <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Panner Noodles <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Schezwan Corn Noodles <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+    </div>
+
+    <!-- PULAV & BREADS -->
+    <div class="terra-divider reveal"><span>Pulav &amp; Indian Breads</span></div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Veg Pulav</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Kashmiri Pulav <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹240</span></div>
+      <div class="cat-header"><h4>Indian Breads</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Tandoori Chapati <span class="text-muted text-xs">(2 pcs)</span></span><span class="mi-dots"></span><span class="mi-price">₹72</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Phulka <span class="text-muted text-xs">(2 pcs)</span></span><span class="mi-dots"></span><span class="mi-price">₹72</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paratha</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+    </div>
+
+    <!-- REPEATED STARTERS (as in original PDF) -->
+    <div class="terra-divider reveal"><span>Accompaniments</span></div>
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Paneer 65</span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Gobi 65</span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Chilli <span class="text-muted text-xs">(P/M/G/BC)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Manchurian <span class="text-muted text-xs">(Gobi)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Manchurian <span class="text-muted text-xs">(M/P/BC)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Dragon <span class="text-muted text-xs">(P/M/G/BC)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Pepper <span class="text-muted text-xs">(P/M/G/BC)</span></span><span class="mi-dots"></span><span class="mi-price">₹200</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 4 — BEVERAGES
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--paper" id="beverages">
+  <div class="pattern-overlay"></div>
+  <div class="page-inner">
+    <div class="section-hero section-hero--sm reveal">
+      <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1000&q=80" alt="South Indian filter coffee">
+      <div class="section-hero-overlay">
+        <h3>Beverages</h3>
+        <p>Hot &amp; Cold</p>
+      </div>
+    </div>
+    <div class="section-header reveal">
+      <div class="section-number">Refreshments</div>
+      <h2 class="section-title">Beverages</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+    </div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Water Bottle <span class="mi-note">₹50 / 1L</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Cool Drinks <span class="mi-note">₹50 / 500ml</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Tea</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Coffee <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Boost</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Horlicks</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+    </div>
+    <div style="text-align:center;padding:3rem 0 1rem" class="reveal">
+      <p class="serif-italic text-muted" style="font-size:1.1rem">"A cup of coffee is a moment of warmth,<br>a pause in the day's rush."</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 5 — NON-VEG MEALS & BIRYANI
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--dark" id="nonveg-biryani">
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero reveal" style="height:300px">
+      <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=1200&q=80" alt="Premium chicken dum biryani">
+      <div class="section-hero-overlay">
+        <h3>Non-Vegetarian</h3>
+        <p>Meals, Soups &amp; Biryani</p>
+      </div>
+    </div>
+
+    <div class="section-header section-header--dark reveal">
+      <div class="section-number">Chapter Three</div>
+      <h2 class="section-title">Non-Vegetarian</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+      <p class="section-subtitle">Lunch &amp; Dinner</p>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="cat-header"><h4>Meals &amp; Soups</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Meals <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹288</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Nattu Kozhi Soup <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Goat Leg Soup</span><span class="mi-dots"></span><span class="mi-price">₹192</span></div>
+
+      <div class="cat-header"><h4>Biryani Varieties</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Flying Biriyani</span><span class="mi-dots"></span><span class="mi-price">₹330</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Biryani</span><span class="mi-dots"></span><span class="mi-price">₹330</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Biryani <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Biryani <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+    </div>
+
+    <!-- FEATURED BIRYANI CARDS -->
+    <div class="featured-cards reveal">
+      <div class="featured-card">
+        <div class="featured-card-img"><img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80" alt="Chicken Biryani"></div>
+        <div class="featured-card-body">
+          <span class="badge badge-best" style="margin-bottom:6px">Best Seller</span>
+          <h4>Chicken Biryani</h4>
+          <p>Aromatic basmati rice layered with tender chicken, slow-cooked with signature spices</p>
+          <div class="featured-card-price">₹400</div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="featured-card-img"><img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" alt="Mutton Biryani"></div>
+        <div class="featured-card-body">
+          <span class="badge badge-signature" style="margin-bottom:6px">Signature</span>
+          <h4>Mutton Biryani</h4>
+          <p>Premium mutton dum biryani with saffron-infused rice and slow-cooked mutton pieces</p>
+          <div class="featured-card-price">₹500</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 6 — MUTTON VARIETIES
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--forest" id="mutton">
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero section-hero--sm reveal">
+      <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1000&q=80" alt="Mutton chukka">
+      <div class="section-hero-overlay">
+        <h3>Mutton</h3>
+        <p>From our kitchen to your table</p>
+      </div>
+    </div>
+    <div class="section-header section-header--dark reveal">
+      <div class="section-number">Chapter Four</div>
+      <h2 class="section-title">Mutton Varieties</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="cat-header"><h4>Gravy</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Chukka <span class="badge badge-chef">Chef's Pick</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Varuval Gravy <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Egg Curry</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Chest Curry Gravy</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Liver <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Suvarotti</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Brain Roast</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Head Curry Gravy</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Kudal Gravy</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+
+      <div class="cat-header"><h4>Roast</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Nalli Chops <span class="text-muted text-xs">(2 pcs)</span> <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Leg Paya</span><span class="mi-dots"></span><span class="mi-price">₹240</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Kola <span class="text-muted text-xs">(1 pc)</span></span><span class="mi-dots"></span><span class="mi-price">₹75</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Chukka Roast <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Chest Curry Roast</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Liver Roast <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 7 — CHICKEN VARIETIES
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--dark" id="chicken">
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero section-hero--sm reveal">
+      <img src="https://images.unsplash.com/photo-1610057099431-d73a1c9d2f2f?auto=format&fit=crop&w=1000&q=80" alt="Chicken 65">
+      <div class="section-hero-overlay">
+        <h3>Chicken</h3>
+        <p>Classic &amp; contemporary preparations</p>
+      </div>
+    </div>
+    <div class="section-header section-header--dark reveal">
+      <div class="section-number">Chapter Five</div>
+      <h2 class="section-title">Chicken Varieties</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Egg Curry</span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Nattu Kozhi Chops <span class="badge badge-chef">Chef's Pick</span> <span class="badge badge-spicy">🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Nattu Kozhi Roast <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chettinad Chicken Curry <span class="badge badge-signature">Signature</span> <span class="badge badge-spicy">🌶🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken 65 <span class="text-muted text-xs">(BL ¼)</span> <span class="badge badge-best">Best Seller</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken 65 <span class="text-muted text-xs">(BL ½)</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chilli Chicken <span class="text-muted text-xs">(BL ¼)</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Lollipop <span class="text-muted text-xs">(4 pcs)</span> <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 8 — SEA FOOD & POND FISH
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--cream" id="seafood">
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero reveal" style="height:300px">
+      <img src="https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&w=1200&q=80" alt="Fresh seafood platter">
+      <div class="section-hero-overlay">
+        <h3>Seafood</h3>
+        <p>Fresh catch from the coast</p>
+      </div>
+    </div>
+
+    <div class="section-header reveal">
+      <div class="section-number">Chapter Six</div>
+      <h2 class="section-title">Sea Food Varieties</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ney Fish Roast</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ney Fish <span class="text-muted text-xs">(BL)</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ney Fish Gravy</span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Vaval Fish Roast <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Vila / Paarai Roast</span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab Masala <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab <span class="text-muted text-xs">(BL)</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Gravy</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Pepper Gravy <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ney Fish Chilli <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">SPL Vaval Roast <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn 65 (or) Prawn Chilli <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+    </div>
+
+    <!-- POND FISH -->
+    <div class="terra-divider reveal"><span>Pond Fish Varieties</span></div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Viral Fish Gravy</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Viral Fish Roast</span><span class="mi-dots"></span><span class="mi-price">₹300</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ayirai Fish Gravy</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Keluthi Fish Gravy</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Fish Head</span><span class="mi-dots"></span><span class="mi-price">₹240</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 9 — SPECIAL & PAROTTA
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--paper" id="special-parotta">
+  <div class="pattern-overlay"></div>
+  <div class="page-inner page-inner--wide">
+    <div class="section-hero reveal" style="height:220px">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1000&q=80" alt="Special chef prepared dishes">
+      <div class="section-hero-overlay">
+        <h3>Special &amp; Parotta</h3>
+        <p>Chef's special preparations &amp; parotta combinations</p>
+      </div>
+    </div>
+
+    <div class="section-header reveal">
+      <div class="section-number">Chapter Seven</div>
+      <h2 class="section-title">Special Varieties</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Dove Chops <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Kadai Chops</span><span class="mi-dots"></span><span class="mi-price">₹280</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Kadai 65 <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹280</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Rabbit Chukka <span class="badge badge-signature">Signature</span> <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Turkey Chukka <span class="badge badge-spicy">🌶🌶</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+    </div>
+
+    <!-- PAROTTA -->
+    <div class="terra-divider reveal"><span>Parotta Varieties</span></div>
+    <div class="items-grid reveal">
+      <div class="cat-header"><h4>Plain &amp; Egg Parotta</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Parotta</span><span class="mi-dots"></span><span class="mi-price">₹75</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Veechu Parotta</span><span class="mi-dots"></span><span class="mi-price">₹225</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Parotta</span><span class="mi-dots"></span><span class="mi-price">₹225</span></div>
+
+      <div class="cat-header"><h4>Combination Parotta</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Egg Parotta</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Egg Parotta</span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Egg Parotta</span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab Egg Parotta <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+
+      <div class="cat-header"><h4>Labaa (Veechu)</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Labaa <span class="text-muted text-xs">(Veechu)</span></span><span class="mi-dots"></span><span class="mi-price">₹240</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Labaa <span class="text-muted text-xs">(Veechu)</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Labaa <span class="text-muted text-xs">(Veechu)</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab Labaa <span class="text-muted text-xs">(Veechu)</span> <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹600</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Labaa <span class="text-muted text-xs">(Veechu)</span></span><span class="mi-dots"></span><span class="mi-price">₹540</span></div>
+
+      <div class="cat-header"><h4>Gravy Parotta</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Parotta <span class="badge badge-best">Best Seller</span></span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Parotta <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Gravy Parotta</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     PAGE 10 — EGG, EASY TO EAT & SPECIAL DOSAI
+     ═══════════════════════════════════════ -->
+<section class="menu-page menu-page--cream" id="egg-dosai">
+  <div class="page-inner page-inner--wide">
+    <!-- EGG VARIETIES -->
+    <div class="section-header reveal">
+      <div class="section-number">Chapter Eight</div>
+      <h2 class="section-title">Egg Varieties</h2>
+      <div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+    </div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Omelette</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Half Boil</span><span class="mi-dots"></span><span class="mi-price">₹40</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Fry</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Boiled Egg</span><span class="mi-dots"></span><span class="mi-price">₹30</span></div>
+      <div class="cat-header"><h4>Special Omelettes</h4><span></span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Omelette <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Omelette</span><span class="mi-dots"></span><span class="mi-price">₹350</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab Omelette <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹550</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Omelette</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Fish Omelette</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ayirai Omelette</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+    </div>
+
+    <!-- EASY TO EAT -->
+    <div class="terra-divider reveal"><span>Easy To Eat</span></div>
+    <div class="items-grid reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Idli <span class="text-muted text-xs">(1 pc)</span></span><span class="mi-dots"></span><span class="mi-price">₹30</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Idiyappam <span class="text-muted text-xs">(1 pc)</span></span><span class="mi-dots"></span><span class="mi-price">₹30</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Idiyappam</span><span class="mi-dots"></span><span class="mi-price">₹190</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Mutton Idiyappam <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Chicken Idiyappam</span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Crab Idiyappam</span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Prawn Idiyappam</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+    </div>
+
+    <!-- SPECIAL DOSAI -->
+    <div class="terra-divider reveal"><span>Special Dosai Varieties</span></div>
+    <div class="items-grid items-grid--3col reveal">
+      <div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Home Dosai</span><span class="mi-dots"></span><span class="mi-price">₹96</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Dosai</span><span class="mi-dots"></span><span class="mi-price">₹112</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Kal Dosai</span><span class="mi-dots"></span><span class="mi-price">₹112</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">SPL Dosai</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Oil Dosai</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹112</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Onion Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹128</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Spl Onion Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹144</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Onion Egg Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Dosai</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Egg Uttappam</span><span class="mi-dots"></span><span class="mi-price">₹160</span></div>
+</div>
+
+<!-- KARI DOSAI (Non-Veg Dosai) -->
+<div class="terra-divider reveal"><span>Kari Dosai <span class="serif-italic text-muted" style="font-size:0.8rem">— with curry</span></span></div>
+<div class="items-grid reveal">
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Mutton Kari Dosai <span class="badge badge-chef">Chef's Pick</span></span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Chicken Kari Dosai <span class="badge badge-popular">Popular</span></span><span class="mi-dots"></span><span class="mi-price">₹400</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Crab Kari Dosai <span class="badge badge-signature">Signature</span></span><span class="mi-dots"></span><span class="mi-price">₹600</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Prawn Kari Dosai</span><span class="mi-dots"></span><span class="mi-price">₹500</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Fish Kari Dosai</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#a6763f" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#a6763f"/></svg></span><span class="mi-name">Ayirai Fish Dosai</span><span class="mi-dots"></span><span class="mi-price">₹450</span></div>
+</div> </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+PAGE 11 — KILOGRAM VARIETIES
+═══════════════════════════════════════ -->
+<section class="menu-page menu-page--dark" id="kg">
+<div class="page-inner page-inner--wide">
+<div class="section-hero section-hero--sm reveal">
+<img src="https://images.unsplash.com/photo-1633945274405-b6c8069047b0?auto=format&fit=crop&w=1000&q=80" alt="Bulk seafood preparation">
+<div class="section-hero-overlay">
+<h3>Bulk Orders</h3>
+<p>Per kilogram — perfect for gatherings</p>
+</div>
+</div>
+
+<div class="section-header section-header--dark reveal">
+<div class="section-number">Chapter Nine</div>
+<h2 class="section-title">Kilogram Varieties</h2>
+<div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+<p class="section-subtitle">Per Kilogram Pricing</p>
+</div>
+
+<!-- SEAFOOD KG -->
+<div class="cat-header" style="border-bottom-color:rgba(255,255,255,0.1)"><h4 style="color:var(--gold)">Sea Food — 1 Kg</h4><span style="background:rgba(255,255,255,0.1)"></span></div>
+<table class="kg-table reveal" style="margin-bottom:2.5rem">
+<thead>
+<tr><th style="color:var(--gold);border-color:var(--gold)">Item</th><th style="color:var(--gold);border-color:var(--gold);text-align:right">Price</th></tr>
+</thead>
+<tbody>
+<tr><td>Ayirai Mean Kolambu</td><td class="price-col">₹2,800</td></tr>
+<tr><td>Viral Mean Kolambu</td><td class="price-col">₹2,000</td></tr>
+<tr><td>Nei Mean Kolambu</td><td class="price-col">₹2,500</td></tr>
+<tr><td>Fish Fry Vanjaram</td><td class="price-col">₹2,000</td></tr>
+<tr><td>Fish Fry Viral</td><td class="price-col">₹2,000</td></tr>
+<tr><td>Fish Fry Nei Mean</td><td class="price-col">₹2,000</td></tr>
+<tr><td>Nandu Gravy</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Prawn Gravy</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Prawn 65</td><td class="price-col">₹2,300</td></tr>
+</tbody>
+</table>
+
+<!-- CHICKEN KG -->
+<div class="cat-header" style="border-bottom-color:rgba(255,255,255,0.1)"><h4 style="color:var(--gold)">Chicken — 1 Kg</h4><span style="background:rgba(255,255,255,0.1)"></span></div>
+<table class="kg-table reveal" style="margin-bottom:2.5rem">
+<thead>
+<tr><th style="color:var(--gold);border-color:var(--gold)">Item</th><th style="color:var(--gold);border-color:var(--gold);text-align:right">Price</th></tr>
+</thead>
+<tbody>
+<tr><td>Chicken Kolambu</td><td class="price-col">₹1,400</td></tr>
+<tr><td>Chicken Gravy</td><td class="price-col">₹1,400</td></tr>
+<tr><td>Chicken 65</td><td class="price-col">₹1,400</td></tr>
+<tr><td>Chicken Chukka</td><td class="price-col">₹1,400</td></tr>
+<tr><td>Nattu Kozhi Kolambu <span class="badge badge-chef" style="font-size:0.55rem">Chef's Pick</span></td><td class="price-col">₹2,400</td></tr>
+</tbody>
+</table>
+
+<!-- MUTTON KG -->
+<div class="cat-header" style="border-bottom-color:rgba(255,255,255,0.1)"><h4 style="color:var(--gold)">Mutton — 1 Kg</h4><span style="background:rgba(255,255,255,0.1)"></span></div>
+<table class="kg-table reveal">
+<thead>
+<tr><th style="color:var(--gold);border-color:var(--gold)">Item</th><th style="color:var(--gold);border-color:var(--gold);text-align:right">Price</th></tr>
+</thead>
+<tbody>
+<tr><td>Mutton Kolambu</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Gravy</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Chukka</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Head</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Kudal</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Eral</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Sevarotti <span class="badge badge-signature" style="font-size:0.55rem">Signature</span></td><td class="price-col">₹6,500</td></tr>
+<tr><td>Mutton Sillipi</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Paya</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Gadi Chops</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Mutton Nalli Gravy</td><td class="price-col">₹2,300</td></tr>
+<tr><td>Vengai Kari Gravy</td><td class="price-col">₹2,300</td></tr>
+</tbody>
+</table>
+
+<div style="text-align:center;padding:2.5rem 0 0.5rem" class="reveal">
+<p class="text-muted" style="font-size:0.8rem;letter-spacing:0.05em">For bulk orders and special events, please contact our kitchen in advance.</p>
+</div> </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+PAGE 12 — BEVERAGE HOT & COLD (NON-VEG SECTION)
+═══════════════════════════════════════ -->
+<section class="menu-page menu-page--forest" style="min-height:auto;padding:4rem 0">
+<div class="page-inner">
+<div class="section-header section-header--dark reveal">
+<div class="section-number">Refreshments</div>
+<h2 class="section-title" style="font-size:clamp(1.4rem,2.5vw,1.8rem)">Beverage — Hot &amp; Cold</h2>
+<div class="gold-divider"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg></div>
+</div>
+<div class="items-grid reveal" style="max-width:600px;margin:0 auto">
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Water Bottle <span class="mi-note">₹50 / 1L</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Soda <span class="mi-note">₹50 / 500ml</span></span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Coffee</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Tea</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Boost</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+<div class="mi"><span class="mi-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="9" fill="none" stroke="#2e4b2e" stroke-width="1.5"/><circle cx="10" cy="10" r="4" fill="#2e4b2e"/></svg></span><span class="mi-name">Horlicks</span><span class="mi-dots"></span><span class="mi-price">₹50</span></div>
+</div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════
+LAST PAGE — BACK COVER / THANK YOU
+═══════════════════════════════════════ -->
+<section class="back-cover" id="back">
+<div class="back-cover-bg">
+<img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1600&q=80" alt="Resort ambiance at golden hour">
+</div>
+<div class="back-cover-overlay"></div>
+<div class="back-content">
+<div class="reveal">
+<h2 style="font-family:var(--font-serif);font-weight:500">Thank You</h2>
+<div class="gold-divider" style="margin:1.2rem auto"></div>
+<p class="serif-italic" style="color:rgba(255,255,255,0.5);font-size:0.95rem;margin-bottom:0.5rem">for dining with us</p>
+<p style="font-size:0.85rem;line-height:1.8;color:rgba(255,255,255,0.55);margin-bottom:1rem">
+Every dish is crafted with love, tradition, and the finest ingredients.<br>
+We hope your meal was as memorable as your stay.
+</p>
+</div>
+
+<div class="reveal reveal-delay-1">
+<div class="qr-placeholder">
+<svg viewBox="0 0 60 60">
+<rect x="5" y="5" width="20" height="20" rx="2"/>
+<rect x="35" y="5" width="20" height="20" rx="2"/>
+<rect x="5" y="35" width="20" height="20" rx="2"/>
+<rect x="10" y="10" width="10" height="10" rx="1"/>
+<rect x="40" y="10" width="10" height="10" rx="1"/>
+<rect x="10" y="40" width="10" height="10" rx="1"/>
+<rect x="30" y="30" width="5" height="5"/>
+<rect x="40" y="35" width="5" height="10"/>
+<rect x="50" y="30" width="5" height="5"/>
+<rect x="35" y="50" width="10" height="5"/>
+<rect x="30" y="40" width="5" height="5"/>
+</svg>
+</div>
+<p style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:0.5rem">Scan to view online menu</p>
+</div>
+
+<ul class="contact-list reveal reveal-delay-2">
+<li>
+<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+<span>+91 XXXXX XXXXX</span>
+</li>
+<li>
+<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+<span>www.shraddharesort.com</span>
+</li>
+<li>
+<svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+<span>Shraddha Gardan and Resort, Tamil Nadu</span>
+</li>
+</ul>
+
+<div class="social-links reveal reveal-delay-3">
+<a href="#" aria-label="Instagram">
+<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="#fff" stroke="none"/></svg>
+</a>
+<a href="#" aria-label="Facebook">
+<svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+</a>
+<a href="#" aria-label="YouTube">
+<svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.43z"/><polygon points="9.75,15.02 15.5,11.75 9.75,8.48" fill="#fff" stroke="none"/></svg>
+</a>
+</div>
+
+<div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.08)" class="reveal reveal-delay-3">
+<p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2)">Shraddha Gardan and Resort &copy; 2025</p>
+<p style="font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.12);margin-top:0.3rem">All rights reserved</p>
+</div> </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+// ── Scroll Reveal (Intersection Observer) ──
+(function() {
+const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReduced) {
+document.querySelectorAll('.reveal').forEach(function(el) { el.classList.add('visible'); });
+return;
+}
+
+var observer = new IntersectionObserver(function(entries) {
+entries.forEach(function(entry) {
+if (entry.isIntersecting) {
+entry.target.classList.add('visible');
+observer.unobserve(entry.target);
+}
+});
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(function(el) {
+observer.observe(el);
+});
+})();
+
+// ── Side Navigation ──
+(function() {
+var dots = document.querySelectorAll('.side-nav-dot');
+var sections = [];
+dots.forEach(function(dot) {
+var target = dot.getAttribute('data-target');
+var section = document.getElementById(target);
+if (section) sections.push({ dot: dot, section: section });
+});
+
+// Click handler
+dots.forEach(function(dot) {
+dot.addEventListener('click', function() {
+var target = document.getElementById(this.getAttribute('data-target'));
+if (target) target.scrollIntoView({ behavior: 'smooth' });
+});
+});
+
+// Scroll handler — update active dot
+var updateActive = function() {
+var scrollY = window.scrollY + window.innerHeight / 3;
+var activeIdx = 0;
+sections.forEach(function(s, i) {
+if (s.section.offsetTop <= scrollY) activeIdx = i;
+});
+dots.forEach(function(d, i) {
+d.classList.toggle('active', i === activeIdx);
+});
+};
+
+var raf;
+window.addEventListener('scroll', function() {
+if (raf) cancelAnimationFrame(raf);
+raf = requestAnimationFrame(updateActive);
+}, { passive: true });
+
+updateActive();
+})();
+
+// ── Parallax on hero images ──
+(function() {
+var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReduced) return;
+
+var heroes = document.querySelectorAll('.section-hero');
+var raf;
+
+window.addEventListener('scroll', function() {
+if (raf) cancelAnimationFrame(raf);
+raf = requestAnimationFrame(function() {
+heroes.forEach(function(hero) {
+var rect = hero.getBoundingClientRect();
+var vh = window.innerHeight;
+if (rect.bottom > 0 && rect.top < vh) {
+var progress = (vh - rect.top) / (vh + rect.height);
+var translateY = (progress - 0.5) * 30;
+var img = hero.querySelector('img');
+if (img) img.style.transform = 'translateY(' + translateY + 'px) scale(1.05)';
+}
+});
+});
+}, { passive: true });
+})();
+
+// ── Smooth scrolling (Lenis-like) ──
+(function() {
+var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (prefersReduced) return;
+
+// Lightweight smooth scroll using CSS scroll-behavior (already set on html)
+// For browsers that don't support it, we add a polyfill-style approach
+if (!('scrollBehavior' in document.documentElement.style)) {
+document.querySelectorAll('a[href^="#"]').forEach(function(link) {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+var target = document.querySelector(this.getAttribute('href'));
+if (target) target.scrollIntoView({ behavior: 'smooth' });
+});
+});
+}
+})();
+</script>
+
+</body>
+</html>
+```

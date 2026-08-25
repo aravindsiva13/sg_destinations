@@ -1,0 +1,35 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create tarball
+        run: |
+          tar --exclude=node_modules --exclude=.git --exclude=dist \
+              --exclude=api/node_modules --exclude=api/dist --exclude=api/prisma/dev.db \
+              --exclude=.env --exclude=api/.env \
+              -czf resort.tgz .
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Upload and Deploy
+        run: |
+          # Upload the zip to the server
+          scp -i ~/.ssh/id_rsa resort.tgz ubuntu@${{ secrets.EC2_HOST }}:~/
+          
+          # SSH in, extract the files into the resort folder, and run the update script
+          ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} 'mkdir -p ~/resort && tar -xzf resort.tgz -C ~/resort && cd ~/resort/deploy && chmod +x update.sh && ./update.sh'

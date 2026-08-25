@@ -1,0 +1,39 @@
+Square circular emblem logo, perfectly symmetrical, on a flat warm ivory background (
+#F7F4EE), no border, no shadow.
+
+Frame: Two concentric thin circles occupying about 90% of the canvas. Outer ring is a 3px deep forest green (
+#2C3A22) hairline. Inner ring, offset slightly inward, is a 2px antique gold (
+#C08A2E) hairline; both rings are open at the bottom where the wordmark breaks through them.
+
+Inside the circle — a single continuous vintage copperplate engraving scene in fine sepia-brown (#8A6A48) line art with cross-hatched shading, no color fills, no gradients:
+
+Center, dominant: a tall ornate Dravidian Hindu temple gopuram tower, seven tapering tiers, each tier densely packed with rows of carved deity sculptures and pilasters, crowned with a row of small gold kalasha finials and two curved horn-like ridge ornaments. Base of the tower has a dark rectangular temple doorway. The tower occupies the vertical center and rises from the middle of the circle to just below the top ring. Rendered in the finest, densest linework in the composition.
+Sky behind it: soft outlined cumulus clouds in the faintest line weight, left and upper right. Two tiny V-shaped flying birds in the upper right.
+Left third: a small single-storey heritage cottage with a terracotta tiled sloping roof, a covered veranda with two slim pillars, warm-lit windows, and stone steps leading down to a garden path with scattered rocks and low shrubs. Above and behind it, a large broad-canopy leafy tree drawn in muted olive green (
+#4A5C33). A slender palm tree behind the cottage.
+Right third: an open-sided thatched-roof gazebo — conical layered thatch roof with a small finial, six wooden posts, wooden lounge chairs and a table underneath, sitting on a paved stone platform. Behind it, two palm trees and dense tropical foliage in the same muted olive green.
+The left and right vignettes fade softly into the ivory background at their outer edges; they do not touch the ring.
+
+Monogram, overlapping the lower half of the scene: an oversized elegant high-contrast serif capital "S" in deep forest green (
+#2C3A22) and capital "G" in antique gold (
+#C08A2E), set side by side and centered, the G slightly overlapping the S, both with fine hairline serifs and pronounced thick–thin stroke contrast (Didone / Playfair style). They span roughly 40% of the circle's width and sit on the horizontal centerline of the lower half.
+
+Flourish: a sweeping deep-green calligraphic swash passes beneath the monogram, curling under the S on the left and sweeping upward to the right where it terminates in a small olive branch of six pointed leaves in forest green.
+
+Below the circle, centered, stacked:
+
+The word "DESTINATIONS" in deep forest green (
+#2C3A22), classic serif capitals, very wide letter-spacing (approx. 0.3em), spanning the full width of the circle.
+A thin gold horizontal rule broken at the center by a small gold lotus/fleuron ornament.
+"RESORT • FARM HOUSE STAY • NATURE" in sepia-brown serif capitals, moderate tracking, bullet separators as small gold diamonds, about one-third the size of the wordmark.
+A second, shorter thin gold rule with a small gold fleuron at center.
+"RELAX • RECONNECT • REJUVENATE" in the smallest size, sepia-brown serif capitals, set on a gentle upward-curving arc, gold diamond separators.
+
+Palette, strictly limited to: ivory 
+#F7F4EE, forest green 
+#2C3A22, olive green 
+#4A5C33, antique gold 
+#C08A2E, sepia brown 
+#8A6A48.
+
+Style: heritage luxury hospitality branding, vintage etched engraving, hand-drawn line art, crisp vector edges, flat, symmetrical, highly detailed, print-ready. No photorealism, no 3D, no gradients, no drop shadows, no watermark.

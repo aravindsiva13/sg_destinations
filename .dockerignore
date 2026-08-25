@@ -1,0 +1,15 @@
+node_modules
+api/node_modules
+dist
+api/dist
+.git
+*.log
+.env
+.env.local
+.env.production
+api/.env
+api/prisma/dev.db
+api/prisma/*.db-journal
+ngrok.txt
+WEBSITE-LINK.txt
+*.tgz
