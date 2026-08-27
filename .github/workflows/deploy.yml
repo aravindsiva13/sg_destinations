@@ -16,7 +16,7 @@ jobs:
         run: |
           tar --exclude=node_modules --exclude=.git --exclude=dist \
               --exclude=api/node_modules --exclude=api/dist --exclude=api/prisma/dev.db \
-              --exclude=.env --exclude=api/.env \
+              --exclude=.env --exclude=api/.env --exclude=resort.tgz \
               -czf resort.tgz .
 
       - name: Setup SSH
