@@ -46,8 +46,8 @@ export default function AdminLogin() {
       {/* Brand panel */}
       <div className="relative hidden overflow-hidden bg-forest-deep lg:block">
         <img
-          src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80"
-          alt="Lush resort garden at dusk"
+          src="/images/selected-images/Events/7L3A1901.JPG"
+          alt="Shraddha Garden"
           className="absolute inset-0 h-full w-full object-cover opacity-40"
         />
         <div className="relative flex h-full flex-col justify-between p-12 text-cream">

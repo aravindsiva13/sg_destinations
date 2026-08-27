@@ -10,13 +10,13 @@ import DiningCard from '../components/DiningCard';
 import Icon from '../components/Icon';
 import { images } from '../data/images';
 import { amenities } from '../data/amenities';
-import { diningCards } from '../data/dining';
+import { useContentList } from '../hooks/usePublic';
 import Seo from '../components/Seo';
 
 const heroCards = [
-  { src: images.gardenPool, alt: 'Garden pool reflecting the evening sky' },
-  { src: images.waterfall, alt: 'A waterfall amid lush greenery' },
-  { src: images.portrait, alt: 'A guest enjoying the gardens' },
+  { src: images.gardenPool, alt: 'Shraddha Garden glowing entrance sign' },
+  { src: images.waterfall, alt: 'Girl in a pink dress on a garden swing' },
+  { src: images.portrait, alt: 'Italian family group portrait' },
 ];
 
 const traditionPoints = [
@@ -37,6 +37,8 @@ const stats = [
 const unwind = amenities.slice(0, 8);
 
 export default function Home() {
+  const { data: diningExperiences } = useContentList('dining');
+
   return (
     <>
       <Seo title="Shraddha Garden Resort — Celebrate amidst lush greenery" path="/" />
@@ -101,13 +103,24 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------------- Stats Band ---------------- */}
-      <section className="relative overflow-hidden bg-forest text-cream">
+      {/* ---------------- Stats Band & Branding Graphic ---------------- */}
+      <section className="relative overflow-hidden bg-forest text-cream pt-16 pb-12 md:pt-24 md:pb-16">
         <div 
-          className="absolute inset-0 opacity-60 mix-blend-overlay" 
+          className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none" 
           style={{ backgroundImage: 'url(/images/brand/brand-pattern.png)', backgroundSize: '240px' }}
         />
-        <div className="container-pad relative py-12 md:py-16">
+        <div className="container-pad relative z-10">
+          {/* Branding Graphic */}
+          <Reveal className="flex justify-center mb-16 md:mb-24">
+            <img 
+              src="/images/brand/i-love-shraddha-graphic.png" 
+              alt="I Love Shraddha Garden" 
+              loading="lazy"
+              className="w-full max-w-4xl object-contain drop-shadow-2xl transition-transform duration-700 hover:scale-105"
+            />
+          </Reveal>
+
+          {/* Stats */}
           <div className="grid grid-cols-2 gap-y-10 gap-x-4 md:grid-cols-4 md:gap-8">
             {stats.map((s, i) => (
               <Reveal key={s.label} delay={i * 0.1} className="flex flex-col items-center text-center">
@@ -152,20 +165,20 @@ export default function Home() {
           <Reveal className="grid grid-cols-2 gap-4">
             <img
               src={images.lushGarden}
-              alt="Lush garden lawns"
+              alt="Outdoor event decoration"
               loading="lazy"
               className="aspect-[3/4] w-full rounded-card object-cover"
             />
             <div className="mt-8 grid gap-4">
               <img
                 src={images.gardenPath}
-                alt="A shaded garden path"
+                alt="Family gathering with balloons"
                 loading="lazy"
                 className="aspect-square w-full rounded-card object-cover"
               />
               <img
                 src={images.swimmingPool}
-                alt="The garden swimming pool"
+                alt="Guests enjoying the swimming pool"
                 loading="lazy"
                 className="aspect-square w-full rounded-card object-cover"
               />
@@ -229,8 +242,8 @@ export default function Home() {
           subtext="Live kitchens, banana-leaf feasts and worldly spreads — dining is woven into every celebration."
         />
         <div className="mt-12 grid gap-6 md:grid-cols-3" data-reveal-stagger>
-          {diningCards.map((d, i) => (
-            <Reveal key={d.name} delay={i * 0.08}>
+          {diningExperiences?.map((d, i) => (
+            <Reveal key={d.slug} delay={i * 0.08}>
               <DiningCard item={d} />
             </Reveal>
           ))}

@@ -18,8 +18,8 @@ const DEFAULTS: Record<string, unknown> = {
   // surcharge). When false, it only discounts the base price, not the peak part.
   offerAppliesToPeak: true,
   contactEmail: 'hello@shraddhagarden.com',
-  contactPhone: '+91 98765 43210',
-  whatsapp: '+91 98765 43210',
+  contactPhone: '+91 98941 99762',
+  whatsapp: '+91 98941 99762',
   address: 'Shraddha Garden Resort, Tamil Nadu, India',
   checkInTime: '14:00',
   checkOutTime: '11:00',

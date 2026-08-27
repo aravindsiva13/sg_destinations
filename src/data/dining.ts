@@ -1,36 +1,6 @@
 import { images } from './images';
 
-export interface DiningItem {
-  name: string;
-  tag: string;
-  price: number;
-  description: string;
-  image: string;
-}
 
-export const diningCards: DiningItem[] = [
-  {
-    name: 'The Garden Grill',
-    tag: 'Signature',
-    price: 850,
-    description: 'Flame-grilled platters served beneath the open sky.',
-    image: images.diningBurger,
-  },
-  {
-    name: 'Saapadu Thali',
-    tag: 'Traditional',
-    price: 650,
-    description: 'A banana-leaf feast of authentic Tamil home cooking.',
-    image: images.diningPlate,
-  },
-  {
-    name: "Chef's Spread",
-    tag: 'Buffet',
-    price: 1200,
-    description: 'A lavish multi-cuisine buffet for celebrations of any size.',
-    image: images.diningSpread,
-  },
-];
 
 export interface Cuisine {
   name: string;

@@ -5,7 +5,7 @@ export const site = {
   footerTagline:
     'A sanctuary of celebration and stays, blending modern luxury with natural serenity.',
   email: 'hello@shraddhagarden.com',
-  phone: '+91 98765 43210',
+  phone: '+91 98941 99762',
   address: 'Coimbatore, Tamil Nadu, India',
 } as const;
 

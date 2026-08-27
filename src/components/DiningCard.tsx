@@ -1,14 +1,16 @@
-import type { DiningItem } from '../data/dining';
-import { inr } from '../data/site';
+import type { ApiContent } from '../lib/publicTypes';
 import Pill from './Pill';
 
-export default function DiningCard({ item }: { item: DiningItem }) {
+export default function DiningCard({ item }: { item: ApiContent }) {
+  // Use the first tag as the "tag" (e.g. Signature, Traditional), or fallback to category
+  const tag = item.tags.length > 0 ? item.tags[0] : item.category;
+
   return (
     <article className="group overflow-hidden rounded-card bg-paper shadow-sm ring-1 ring-line/70">
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={item.image}
-          alt={item.name}
+          src={item.heroImage}
+          alt={item.title}
           loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -20,17 +22,21 @@ export default function DiningCard({ item }: { item: DiningItem }) {
             className="w-16 h-16 opacity-0 translate-y-4 transition-all duration-500 delay-75 group-hover:opacity-90 group-hover:translate-y-0 drop-shadow-lg" 
           />
         </div>
-        <span className="absolute left-3 top-3">
-          <Pill tone="dark">{item.tag}</Pill>
-        </span>
-        <span className="absolute right-3 top-3">
-          <Pill tone="light">{inr(item.price)}</Pill>
-        </span>
+        {tag && (
+          <span className="absolute left-3 top-3">
+            <Pill tone="dark">{tag}</Pill>
+          </span>
+        )}
+        {item.priceLabel && (
+          <span className="absolute right-3 top-3">
+            <Pill tone="light">{item.priceLabel}</Pill>
+          </span>
+        )}
       </div>
       <div className="p-5">
-        <h3 className="font-serif text-lg text-ink">{item.name}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted">
-          {item.description}
+        <h3 className="font-serif text-lg text-ink">{item.title}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-muted line-clamp-2">
+          {item.excerpt}
         </p>
       </div>
     </article>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SectionEyebrow from '../components/SectionEyebrow';
 import SectionHeading from '../components/SectionHeading';
@@ -13,6 +14,7 @@ import { useContentList } from '../hooks/usePublic';
 import Seo from '../components/Seo';
 
 export default function Events() {
+  const [isLaughing, setIsLaughing] = useState(false);
   const { data, isLoading, error, refetch } = useContentList('event');
   const eventTypes = (data ?? []).map((e) => ({
     name: e.title,
@@ -143,6 +145,16 @@ export default function Events() {
           </div>
         </div>
       </section>
+
+      {/* ---------------- Decorative Cutout ---------------- */}
+      <div className="relative w-full h-0 z-10">
+        <img
+          src={isLaughing ? "/images/brand/girl-laughing.png" : "/images/brand/girl-sitting.png"}
+          alt="Happy guest"
+          onClick={() => setIsLaughing(!isLaughing)}
+          className="absolute bottom-0 left-8 w-32 cursor-pointer drop-shadow-xl transition-all duration-500 hover:scale-105 active:scale-95 md:left-16 md:w-48 lg:left-32 lg:w-56"
+        />
+      </div>
 
       {/* ---------------- Steps ---------------- */}
       <StepsBand />

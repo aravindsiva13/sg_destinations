@@ -116,7 +116,7 @@ export default function Footer() {
               <img 
                 src="/images/brand/logo-light.png" 
                 alt={site.fullName} 
-                className="h-16 w-auto object-contain md:h-20" 
+                className="h-32 w-auto object-contain md:h-40" 
               />
             </Link>
             <p className="mt-5 text-base leading-relaxed text-cream/60">
