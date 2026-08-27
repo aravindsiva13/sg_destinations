@@ -16,8 +16,8 @@ jobs:
         run: |
           tar --exclude=node_modules --exclude=.git --exclude=dist \
               --exclude=api/node_modules --exclude=api/dist --exclude=api/prisma/dev.db \
-              --exclude=.env --exclude=api/.env --exclude=resort.tgz \
-              -czf resort.tgz .
+              --exclude=.env --exclude=api/.env \
+              -czf /tmp/resort.tgz .
 
       - name: Setup SSH
         run: |
@@ -29,7 +29,7 @@ jobs:
       - name: Upload and Deploy
         run: |
           # Upload the zip to the server
-          scp -i ~/.ssh/id_rsa resort.tgz ubuntu@${{ secrets.EC2_HOST }}:~/
+          scp -i ~/.ssh/id_rsa /tmp/resort.tgz ubuntu@${{ secrets.EC2_HOST }}:~/
           
           # SSH in, extract the files into the resort folder, and run the update script
           ssh -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_HOST }} 'mkdir -p ~/resort && tar -xzf resort.tgz -C ~/resort && cd ~/resort/deploy && chmod +x update.sh && ./update.sh'
