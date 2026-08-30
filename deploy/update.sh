@@ -34,7 +34,7 @@ npm run build
 echo "==> Restarting API + applying Nginx config + reloading…"
 pm2 restart resort-api
 # Re-apply the nginx template (picks up security-header changes), then reload.
-sudo sed "s#__WEBROOT__#$ROOT/dist#g" "$SCRIPT_DIR/nginx.conf" | sudo tee /etc/nginx/sites-available/resort >/dev/null
+# sudo sed "s#__WEBROOT__#$ROOT/dist#g" "$SCRIPT_DIR/nginx.conf" | sudo tee /etc/nginx/sites-available/resort >/dev/null
 if sudo nginx -t; then sudo systemctl reload nginx; fi
 
 echo "==> Done."
