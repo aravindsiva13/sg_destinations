@@ -104,14 +104,14 @@ export default function Home() {
       </section>
 
       {/* ---------------- Stats Band & Branding Graphic ---------------- */}
-      <section className="relative overflow-hidden bg-forest text-cream pt-16 pb-12 md:pt-24 md:pb-16">
+      <section className="relative overflow-hidden bg-forest text-cream pt-8 pb-8 md:pt-12 md:pb-12">
         <div 
           className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none" 
           style={{ backgroundImage: 'url(/images/brand/brand-pattern.png)', backgroundSize: '240px' }}
         />
         <div className="container-pad relative z-10">
           {/* Branding Graphic */}
-          <Reveal className="flex justify-center mb-16 md:mb-24">
+          <Reveal className="flex justify-center mb-8 md:mb-12">
             <img 
               src="/images/brand/i-love-shraddha-graphic.png" 
               alt="I Love Shraddha Garden" 
