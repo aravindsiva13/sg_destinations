@@ -7,11 +7,11 @@ const u = (id: string, w = 1200) =>
 
 export const images = {
   // Hero / garden (Replaced with real images)
-  gardenPool: '/images/selected-images/new/i_love_shraddha.jpeg', // Shraddha Garden sign (Updated)
+  gardenPool: '/images/selected-images/new/elevated_stay.jpeg', // Elevated stay structure
   waterfall: '/images/selected-images/Resort/7L3A1963.JPG', // Girl on swing
-  portrait: '/images/selected-images/Hero/hero-italian-family.jpeg', // Italian family
+  portrait: '/images/selected-images/new/pool_angle.jpeg', // Pool angle
   lushGarden: '/images/selected-images/Events/7L3A1899.JPG', // Event decor
-  gardenPath: '/images/selected-images/Family/7L3A1948.JPG', // Family with balloon
+  gardenPath: '/images/selected-images/new/pool_wide_2.jpeg', // Pool wide 2
   verticalGarden: u('1490750967868-88aa4486c946'), // Keep mock
 
   // Cabins / stays
@@ -50,7 +50,7 @@ export const images = {
   corporate: '/images/selected-images/new/event_seating_night.jpeg', // Night event seating
   getTogether: '/images/selected-images/Family/7L3A2099.JPG', // Big family group
   eventTable: '/images/selected-images/Events/7L3A1933.JPG', // Ribbon cutting/stage
-  celebration: '/images/selected-images/Events/7L3A2041.JPG', // Lamp lighting
+  celebration: '/images/selected-images/new/event_seating_night.jpeg', // Night event seating
 } as const;
 
 export type ImageKey = keyof typeof images;
