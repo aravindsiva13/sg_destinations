@@ -67,13 +67,13 @@ export default function About() {
           {/* Overlapping framed photos */}
           <Reveal className="relative mx-auto h-[320px] w-full max-w-md md:h-[420px]">
             <img
-              src={images.gardenPath}
-              alt="A symmetrical garden path"
+              src="/images/selected-images/new/pool_wide.jpeg"
+              alt="Pool area at Shraddha Garden"
               className="absolute left-0 top-6 h-[78%] w-[70%] rounded-card border-8 border-paper object-cover shadow-xl"
             />
             <img
-              src={images.verticalGarden}
-              alt="A vertical garden wall"
+              src="/images/selected-images/new/shra_vanam.jpeg"
+              alt="Shra Vanam water feature"
               className="absolute bottom-0 right-0 h-[62%] w-[52%] rounded-card border-8 border-paper object-cover shadow-2xl"
             />
           </Reveal>
