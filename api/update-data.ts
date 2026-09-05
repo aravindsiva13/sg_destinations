@@ -42,8 +42,15 @@ async function main() {
         rating: 5.0,
         shortIntro: '4 person theater house',
         description: JSON.stringify(['A unique stay featuring a private theater setup for 4 persons.']),
-        heroImage: '/images/brand/logo-dark.png',
-        gallery: JSON.stringify([]),
+        heroImage: '/images/stays/theatre-house/7L3A9292.webp',
+        gallery: JSON.stringify([
+          '/images/stays/theatre-house/7L3A9294.webp',
+          '/images/stays/theatre-house/7L3A9296.webp',
+          '/images/stays/theatre-house/7L3A9299.webp',
+          '/images/stays/theatre-house/7L3A9301.webp',
+          '/images/stays/theatre-house/7L3A9302.webp',
+          '/images/stays/theatre-house/7L3A9314.webp'
+        ]),
         amenities: JSON.stringify([
           { label: 'Air Conditioning', icon: 'snow' },
           { label: 'Home Theater', icon: 'monitor' },
