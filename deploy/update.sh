@@ -29,6 +29,7 @@ cd "$API"
 npm ci
 npx prisma generate
 npx prisma db push          # applies any new schema changes (non-destructive)
+npx tsx update-theatre.ts   # Update theatre house images
 npm run build
 
 echo "==> Restarting API + applying Nginx config + reloading…"
