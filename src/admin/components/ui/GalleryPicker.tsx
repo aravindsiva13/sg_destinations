@@ -192,7 +192,7 @@ export default function GalleryPicker({
             {uploading ? (
               <div className="flex flex-col items-center gap-1.5">
                 <div className="w-5 h-5 border-2 border-forest border-t-transparent rounded-full animate-spin" />
-                <span className="text-[11px] font-medium text-forest">Uploading…</span>
+                <span className="text-[11px] font-medium text-forest">Compressing…</span>
               </div>
             ) : (
               <>
@@ -200,7 +200,7 @@ export default function GalleryPicker({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
                 <span className="text-xs font-medium text-ink">Add photos</span>
-                <span className="text-[10px] text-muted mt-0.5">Select multiple</span>
+                <span className="text-[10px] text-muted mt-0.5">Auto-compresses WebP</span>
               </>
             )}
           </button>

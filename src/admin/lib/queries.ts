@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { api } from './apiClient';
+import { compressImage } from './imageCompressor';
 import type {
   Addon,
   Campaign,
@@ -678,23 +679,22 @@ export function fileToBase64(file: File): Promise<string> {
 }
 
 export async function uploadFile(file: File, folder = 'uploads'): Promise<string> {
-  const data = await fileToBase64(file);
+  const compressed = await compressImage(file);
   const res = await api.post<MediaItem>('/api/media/upload', {
-    name: file.name,
-    data,
+    name: compressed.name,
+    data: compressed.dataUrl,
     folder,
   });
   return res.data.url;
 }
 
 export async function uploadFiles(files: File[], folder = 'uploads'): Promise<string[]> {
-  const payloads = await Promise.all(
-    files.map(async (file) => ({
-      name: file.name,
-      data: await fileToBase64(file),
-      folder,
-    }))
-  );
+  const compressedList = await Promise.all(files.map((file) => compressImage(file)));
+  const payloads = compressedList.map((c) => ({
+    name: c.name,
+    data: c.dataUrl,
+    folder,
+  }));
   const res = await api.post<{ items: MediaItem[] }>('/api/media/upload', {
     files: payloads,
     folder,

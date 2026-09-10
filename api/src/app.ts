@@ -82,8 +82,8 @@ export function createApp() {
   // The payment webhook needs the raw body for HMAC verification — capture it
   // before the JSON parser runs (body-parser skips paths already parsed).
   app.use('/api/payments/webhook', express.raw({ type: '*/*', limit: '1mb' }));
-  app.use('/api/media/upload', express.json({ limit: '30mb' }));
-  app.use(express.json({ limit: '10mb' }));
+  app.use('/api/media/upload', express.json({ limit: '100mb' }));
+  app.use(express.json({ limit: '50mb' }));
   app.use(cookieParser());
 
   const uploadsDir = getUploadsDir();

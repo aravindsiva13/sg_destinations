@@ -174,7 +174,7 @@ export default function ImagePicker({
           {uploading ? (
             <div className="flex flex-col items-center gap-2 py-2">
               <div className="w-6 h-6 border-2 border-forest border-t-transparent rounded-full animate-spin" />
-              <span className="text-xs font-medium text-forest">Uploading image…</span>
+              <span className="text-xs font-medium text-forest">Compressing &amp; uploading…</span>
             </div>
           ) : (
             <>
@@ -192,7 +192,7 @@ export default function ImagePicker({
                 Click to browse or drag &amp; drop your image
               </p>
               <p className="text-[11px] text-muted mt-0.5">
-                PNG, JPG, WebP up to 25MB
+                Auto-compressed to web format (preserves quality)
               </p>
 
               <div className="mt-3 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>

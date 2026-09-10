@@ -117,10 +117,10 @@ export default function Gallery() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-6 py-2 rounded-full border transition-all duration-300 ${
+                className={`px-6 py-2 rounded-full border text-sm font-medium transition-all duration-300 ${
                   activeCategory === cat.id 
-                    ? 'bg-primary text-white border-primary shadow-md' 
-                    : 'bg-transparent text-ink border-ink/20 hover:border-primary hover:text-primary'
+                    ? 'bg-forest text-cream border-forest shadow-md' 
+                    : 'bg-paper text-ink border-line hover:border-forest hover:text-forest'
                 }`}
               >
                 {cat.name}
