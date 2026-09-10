@@ -3,6 +3,7 @@ import PageHeader from '../components/PageHeader';
 import Badge from '../components/ui/Badge';
 import AdminButton from '../components/ui/AdminButton';
 import { Field, inputCls } from '../components/ui/Field';
+import ImagePicker from '../components/ui/ImagePicker';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/DataState';
 import {
   useBanners,
@@ -93,9 +94,12 @@ export default function Banners() {
           <Field label="Subtitle">
             <input value={f.subtitle ?? ''} onChange={(e) => set('subtitle', e.target.value)} className={inputCls} />
           </Field>
-          <Field label="Image URL">
-            <input value={f.imageUrl ?? ''} onChange={(e) => set('imageUrl', e.target.value)} className={inputCls} placeholder="https://…" />
-          </Field>
+          <ImagePicker
+            label="Banner image"
+            value={f.imageUrl ?? ''}
+            onChange={(url) => set('imageUrl', url)}
+            folder="banners"
+          />
           <Field label="CTA label">
             <input value={f.ctaLabel ?? ''} onChange={(e) => set('ctaLabel', e.target.value)} className={inputCls} placeholder="Check availability" />
           </Field>

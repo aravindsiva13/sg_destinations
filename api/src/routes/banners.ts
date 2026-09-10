@@ -49,7 +49,7 @@ const bannerInput = z.object({
   type: z.enum(BANNER_TYPES),
   title: z.string().min(1),
   subtitle: z.string().optional().nullable(),
-  imageUrl: z.string().url().optional().nullable(),
+  imageUrl: z.string().min(1).optional().nullable(),
   ctaLabel: z.string().optional().nullable(),
   ctaHref: z.string().optional().nullable(),
   active: z.boolean().default(true),

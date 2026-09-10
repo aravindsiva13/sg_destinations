@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Drawer from '../components/ui/Drawer';
 import AdminButton from '../components/ui/AdminButton';
 import { Field, inputCls } from '../components/ui/Field';
+import ImagePicker from '../components/ui/ImagePicker';
+import GalleryPicker from '../components/ui/GalleryPicker';
 import { useCreateContent, useUpdateContent, type ContentInput } from '../lib/queries';
 import { apiErrorMessage } from '../lib/apiClient';
 import type { ContentItem, ContentType } from '../types';
@@ -157,9 +159,12 @@ export default function ContentForm({
             <input value={f.excerpt} onChange={(e) => set('excerpt', e.target.value)} className={inputCls} />
           </Field>
 
-          <Field label="Hero image URL">
-            <input value={f.heroImage} onChange={(e) => set('heroImage', e.target.value)} className={inputCls} placeholder="https://…" />
-          </Field>
+          <ImagePicker
+            label="Hero image"
+            value={f.heroImage}
+            onChange={(url) => set('heroImage', url)}
+            folder="content"
+          />
 
           <Field label="Tags (comma separated)">
             <input value={f.tags} onChange={(e) => set('tags', e.target.value)} className={inputCls} placeholder="Veg, Signature" />
@@ -169,9 +174,13 @@ export default function ContentForm({
             <textarea value={f.body} onChange={(e) => set('body', e.target.value)} rows={4} className={inputCls} />
           </Field>
 
-          <Field label="Gallery image URLs (one per line)">
-            <textarea value={f.gallery} onChange={(e) => set('gallery', e.target.value)} rows={3} className={inputCls} />
-          </Field>
+          <GalleryPicker
+            label="Gallery images"
+            value={f.gallery}
+            onChange={(val) => set('gallery', val as string)}
+            folder="content"
+            isStringFormat={true}
+          />
 
           <Field label="What to expect (one per line — shown on detail pages)">
             <textarea value={f.whatToExpect} onChange={(e) => set('whatToExpect', e.target.value)} rows={3} className={inputCls} />

@@ -668,6 +668,51 @@ export function useDeleteMedia() {
   });
 }
 
+export function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (err) => reject(err);
+    reader.readAsDataURL(file);
+  });
+}
+
+export async function uploadFile(file: File, folder = 'uploads'): Promise<string> {
+  const data = await fileToBase64(file);
+  const res = await api.post<MediaItem>('/api/media/upload', {
+    name: file.name,
+    data,
+    folder,
+  });
+  return res.data.url;
+}
+
+export async function uploadFiles(files: File[], folder = 'uploads'): Promise<string[]> {
+  const payloads = await Promise.all(
+    files.map(async (file) => ({
+      name: file.name,
+      data: await fileToBase64(file),
+      folder,
+    }))
+  );
+  const res = await api.post<{ items: MediaItem[] }>('/api/media/upload', {
+    files: payloads,
+    folder,
+  });
+  return res.data.items.map((item) => item.url);
+}
+
+export function useUploadMedia() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: { name: string; data: string; alt?: string; folder?: string } | { files: Array<{ name: string; data: string; alt?: string; folder?: string }>; folder?: string }) => {
+      const res = await api.post<MediaItem | { items: MediaItem[] }>('/api/media/upload', payload);
+      return res.data;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['media'] }),
+  });
+}
+
 /* ---------------- Reports ---------------- */
 export function useReport(from?: string, to?: string) {
   return useQuery({

@@ -5,6 +5,8 @@ import { z } from 'zod';
 import Drawer from '../components/ui/Drawer';
 import AdminButton from '../components/ui/AdminButton';
 import { Field, inputCls } from '../components/ui/Field';
+import ImagePicker from '../components/ui/ImagePicker';
+import GalleryPicker from '../components/ui/GalleryPicker';
 import { useCreateStay, useUpdateStay, type StayInput } from '../lib/queries';
 import { apiErrorMessage } from '../lib/apiClient';
 import type { Stay } from '../types';
@@ -22,7 +24,7 @@ const schema = z.object({
   inventory: z.coerce.number().int().min(0),
   beds: z.string().min(1),
   shortIntro: z.string().min(1, 'A short intro is required'),
-  heroImage: z.string().url('Must be a valid URL'),
+  heroImage: z.string().min(1, 'Hero image is required'),
   description: z.string().optional(),
   gallery: z.string().optional(),
   amenities: z.string().optional(),
@@ -183,17 +185,25 @@ export default function StayForm({
           <input {...register('shortIntro')} className={inputCls} />
         </Field>
 
-        <Field label="Hero image URL" error={errors.heroImage?.message}>
-          <input {...register('heroImage')} className={inputCls} placeholder="https://…" />
-        </Field>
+        <ImagePicker
+          label="Hero image"
+          value={watch('heroImage')}
+          onChange={(url) => setValue('heroImage', url, { shouldValidate: true })}
+          error={errors.heroImage?.message}
+          folder="stays"
+        />
 
         <Field label="Description (separate paragraphs with a blank line)">
           <textarea {...register('description')} rows={4} className={inputCls} />
         </Field>
 
-        <Field label="Gallery image URLs (one per line)">
-          <textarea {...register('gallery')} rows={3} className={inputCls} />
-        </Field>
+        <GalleryPicker
+          label="Gallery images"
+          value={watch('gallery')}
+          onChange={(val) => setValue('gallery', val as string, { shouldValidate: true })}
+          folder="stays"
+          isStringFormat={true}
+        />
 
         <Field label="Amenities (one per line, format: Label|icon)">
           <textarea {...register('amenities')} rows={3} className={`${inputCls} font-mono text-xs`} />
