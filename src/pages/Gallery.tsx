@@ -69,7 +69,8 @@ export default function Gallery() {
   const { data: dbCategories } = useGallery();
 
   const categories = useMemo(() => {
-    if (dbCategories && dbCategories.length > 0) {
+    // If database returned an array (even if empty after deletions), respect database!
+    if (Array.isArray(dbCategories)) {
       return dbCategories.map((c) => ({
         id: c.slug,
         name: c.name,
@@ -77,6 +78,7 @@ export default function Gallery() {
         images: c.images.map((img) => img.url),
       }));
     }
+    // Only fall back if API is still loading or unreachable
     return fallbackCategories;
   }, [dbCategories]);
 
