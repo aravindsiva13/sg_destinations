@@ -35,8 +35,8 @@ export default defineConfig({
     // In dev, forward API calls to the backend so the app can use same-origin
     // relative URLs (matches how it's served in production behind the edge).
     proxy: {
-      '/api': 'http://127.0.0.1:4000',
-      '/health': 'http://127.0.0.1:4000',
+      '/api': 'http://127.0.0.1:1313',
+      '/health': 'http://127.0.0.1:1313',
     },
   },
   preview: {

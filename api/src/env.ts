@@ -36,7 +36,7 @@ function secret(name: string, devFallback: string): string {
 }
 
 export const env = {
-  port: Number(process.env.PORT ?? 4000),
+  port: Number(process.env.PORT ?? 1313),
   corsOrigins: (process.env.CORS_ORIGINS ?? 'http://localhost:5173')
     .split(',')
     .map((s) => s.trim()),
@@ -50,7 +50,7 @@ export const env = {
   seedDemoAccounts: (process.env.SEED_DEMO_ACCOUNTS ?? 'true').toLowerCase() !== 'false' && !IS_PROD,
   // Absolute base used to build links in emails (e.g. unsubscribe). Point this
   // at the public origin (tunnel/domain) in production; /api is proxied to here.
-  publicUrl: (process.env.PUBLIC_URL ?? 'http://localhost:4000').replace(/\/$/, ''),
+  publicUrl: (process.env.PUBLIC_URL ?? 'http://localhost:1313').replace(/\/$/, ''),
   isProduction: IS_PROD,
 };
 

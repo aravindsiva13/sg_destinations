@@ -70,7 +70,7 @@ if [ ! -f "$API/.env" ]; then
   ADMIN_PASSWORD=$(openssl rand -base64 12 | tr -d '/+=' | head -c 16)
   cat > "$API/.env" <<EOF
 DATABASE_URL="file:./dev.db"
-PORT=4000
+PORT=1313
 CORS_ORIGINS="http://localhost:5173"
 JWT_ACCESS_SECRET="$ACCESS"
 JWT_REFRESH_SECRET="$REFRESH"

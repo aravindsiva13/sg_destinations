@@ -1,5 +1,5 @@
 // Temporary single-origin host: serves the built `dist/` (SPA) and reverse-proxies
-// /api and /health to the local API on port 4000. One origin => no CORS, and the
+// /api and /health to the local API on port 1313. One origin => no CORS, and the
 // frontend can use relative API URLs so a changing tunnel URL needs no rebuild.
 import http from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('./dist', import.meta.url));
 const EDGE_PORT = Number(process.env.EDGE_PORT ?? 8080);
-const API_TARGET = { host: '127.0.0.1', port: Number(process.env.API_PORT ?? 4000) };
+const API_TARGET = { host: '127.0.0.1', port: Number(process.env.API_PORT ?? 1313) };
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',

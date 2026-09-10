@@ -5,7 +5,7 @@ import axios, {
 } from 'axios';
 import { tokenStore } from './tokenStore';
 
-const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
+const baseURL = import.meta.env.VITE_API_URL ?? 'http://localhost:1313';
 
 // Skip ngrok's free-tier browser-warning interstitial for API requests.
 const skipNgrokWarning = { 'ngrok-skip-browser-warning': 'true' };

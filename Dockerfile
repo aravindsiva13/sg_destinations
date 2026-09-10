@@ -44,10 +44,11 @@ COPY --from=build /app/api/prisma ./api/prisma
 WORKDIR /app/api
 # SQLite lives on a mounted volume so data survives redeploys.
 ENV DATABASE_URL=file:/data/prod.db
-EXPOSE 4000
+EXPOSE 1313
+ENV PORT=1313
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:4000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "fetch('http://127.0.0.1:1313/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 # Apply schema, seed once (only when the DB file doesn't exist yet — requires
 # SEED_ADMIN_PASSWORD >= 12 chars on first boot), then serve.

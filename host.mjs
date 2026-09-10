@@ -45,17 +45,17 @@ const ngrok = readNgrokConfig();
 
 console.log('Starting your website… please wait ~15 seconds.\n');
 
-// 1) API (compiled backend on port 4000)
+// 1) API (compiled backend on port 1313)
 const api = spawn(process.execPath, [join(API_DIR, 'dist', 'src', 'server.js')], {
   cwd: API_DIR,
-  env: { ...process.env, PORT: '4000' },
+  env: { ...process.env, PORT: '1313' },
   stdio: ['ignore', 'pipe', 'pipe'],
 });
 children.push(api);
 api.stdout.on('data', (d) => process.stdout.write('[server] ' + d));
 api.stderr.on('data', (d) => process.stdout.write('[server] ' + d));
 
-// 2) Web server (serves the site + forwards /api → 4000) on port 4173
+// 2) Web server (serves the site + forwards /api → 1313) on port 4173
 const edge = spawn(process.execPath, [join(ROOT, 'serve-edge.mjs')], {
   cwd: ROOT,
   env: { ...process.env, EDGE_PORT: '4173' },
