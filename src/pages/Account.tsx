@@ -6,8 +6,6 @@ import Button from '../components/Button';
 import { PublicLoading } from '../components/PublicState';
 import { useCustomerAuth } from '../hooks/useCustomerAuth';
 import { publicApi, apiErrorMessage } from '../lib/publicApi';
-import { createPaymentOrder, verifyPayment, usePaymentConfig } from '../hooks/usePublic';
-import { loadRazorpay, openRazorpayCheckout } from '../lib/razorpay';
 import { inr } from '../data/site';
 import Seo from '../components/Seo';
 
@@ -40,7 +38,6 @@ function statusTone(status: string, payment: string) {
 export default function Account() {
   const { user, signOut } = useCustomerAuth();
   const queryClient = useQueryClient();
-  const { data: payConfig } = usePaymentConfig();
   const [actionError, setActionError] = useState<string | null>(null);
 
   const { data, isLoading, isError, refetch } = useQuery({
@@ -58,40 +55,6 @@ export default function Account() {
       void queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
     },
     onError: (e) => setActionError(apiErrorMessage(e, 'Could not cancel the booking')),
-  });
-
-  const payBalance = useMutation({
-    mutationFn: async (booking: MyBooking) => {
-      const order = await createPaymentOrder(booking.id, true);
-      if (order.provider === 'razorpay') {
-        const ok = await loadRazorpay();
-        if (!ok) throw new Error('Could not load the payment gateway');
-        openRazorpayCheckout({
-          key: order.keyId,
-          amount: order.amount * 100,
-          currency: order.currency,
-          name: 'Shraddha Garden Resort',
-          description: booking.code,
-          order_id: order.orderId,
-          prefill: { name: user?.name ?? '', email: user?.email ?? '' },
-          theme: { color: '#2E4B2E' },
-          handler: async (r) => {
-            await verifyPayment({
-              paymentRecordId: order.paymentRecordId,
-              razorpayPaymentId: r.razorpay_payment_id,
-              razorpaySignature: r.razorpay_signature,
-            });
-            void queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
-          },
-          modal: { ondismiss: () => setActionError('Payment was cancelled.') },
-        });
-      } else {
-        // Mock provider: settle immediately.
-        await verifyPayment({ paymentRecordId: order.paymentRecordId, mockSuccess: true });
-        void queryClient.invalidateQueries({ queryKey: ['my-bookings'] });
-      }
-    },
-    onError: (e) => setActionError(apiErrorMessage(e, 'Could not start the payment')),
   });
 
   if (!user) return <Navigate to="/signin" replace />;
@@ -156,7 +119,6 @@ export default function Account() {
         <div className="mt-6 space-y-4">
           {data.map((b) => {
             const balance = b.balanceDue ?? Math.max(0, b.amount - (b.amountPaid ?? 0));
-            const canPayBalance = balance > 0 && b.paymentStatus !== 'PAID' && b.paymentStatus !== 'REFUNDED' && b.status !== 'CANCELLED';
             const canCancel = CANCELLABLE.has(b.status) && (b.paymentStatus === 'UNPAID' || b.paymentStatus === 'PARTIAL');
             return (
               <div key={b.id} className="flex flex-wrap items-center gap-4 rounded-card border border-line bg-paper p-4">
@@ -167,8 +129,8 @@ export default function Account() {
                     {fmt(b.checkIn)} → {fmt(b.checkOut)} · {b.nights} night{b.nights === 1 ? '' : 's'} · {b.guests} guests
                   </p>
                   <p className="mt-0.5 font-mono text-xs text-muted">{b.code}</p>
-                  {balance > 0 && b.paymentStatus !== 'REFUNDED' && (
-                    <p className="mt-1 text-xs text-amber-700">Balance due: {inr(balance)}</p>
+                  {balance > 0 && b.paymentStatus !== 'REFUNDED' && b.status !== 'CANCELLED' && (
+                    <p className="mt-1 text-xs text-amber-800">Pay at check-in: {inr(balance)}</p>
                   )}
                 </div>
                 <div className="text-right">
@@ -176,37 +138,21 @@ export default function Account() {
                   <span className={`text-xs ${statusTone(b.status, b.paymentStatus)}`}>
                     {b.status} · {b.paymentStatus}
                   </span>
-                  {(canPayBalance || canCancel) && (
+                  {canCancel && (
                     <div className="mt-2 flex flex-col gap-2">
-                      {canPayBalance && (
-                        <Button
-                          size="sm"
-                          variant="forest"
-                          disabled={payBalance.isPending}
-                          onClick={() => {
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={cancel.isPending}
+                        onClick={() => {
+                          if (window.confirm(`Cancel booking ${b.code}?`)) {
                             setActionError(null);
-                            payBalance.mutate(b);
-                          }}
-                        >
-                          Pay {inr(balance)}
-                          {payConfig?.provider === 'razorpay' ? '' : ' (mock)'}
-                        </Button>
-                      )}
-                      {canCancel && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          disabled={cancel.isPending}
-                          onClick={() => {
-                            if (window.confirm(`Cancel booking ${b.code}?`)) {
-                              setActionError(null);
-                              cancel.mutate(b.id);
-                            }
-                          }}
-                        >
-                          Cancel booking
-                        </Button>
-                      )}
+                            cancel.mutate(b.id);
+                          }
+                        }}
+                      >
+                        Cancel booking
+                      </Button>
                     </div>
                   )}
                 </div>

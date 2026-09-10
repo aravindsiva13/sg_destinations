@@ -5,8 +5,6 @@ import SectionEyebrow from '../components/SectionEyebrow';
 import Button from '../components/Button';
 import { PublicLoading } from '../components/PublicState';
 import { publicApi, apiErrorMessage } from '../lib/publicApi';
-import { createPaymentOrder, verifyPayment, usePaymentConfig } from '../hooks/usePublic';
-import { loadRazorpay, openRazorpayCheckout } from '../lib/razorpay';
 import { inr } from '../data/site';
 import Seo from '../components/Seo';
 
@@ -31,11 +29,9 @@ const field =
 const fmt = (iso: string) => new Date(iso).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
 export default function FindBooking() {
-  const { data: payConfig } = usePaymentConfig();
   const [params] = useSearchParams();
   const [code, setCode] = useState(params.get('code') ?? '');
   const [email, setEmail] = useState(params.get('email') ?? '');
-  const [paying, setPaying] = useState(false);
 
   const lookup = useMutation({
     mutationFn: async () =>
@@ -44,46 +40,6 @@ export default function FindBooking() {
 
   const booking = lookup.data;
   const balance = booking ? (booking.balanceDue ?? Math.max(0, booking.amount - (booking.amountPaid ?? 0))) : 0;
-  const canPay = booking && balance > 0 && booking.paymentStatus !== 'PAID' && booking.paymentStatus !== 'REFUNDED' && booking.status !== 'CANCELLED';
-
-  async function startPayment() {
-    if (!booking) return;
-    setPaying(true);
-    try {
-      const order = await createPaymentOrder(booking.id, true);
-      if (order.provider === 'razorpay') {
-        const ok = await loadRazorpay();
-        if (!ok) throw new Error('Could not load the payment gateway');
-        openRazorpayCheckout({
-          key: order.keyId,
-          amount: order.amount * 100,
-          currency: order.currency,
-          name: 'Shraddha Garden Resort',
-          description: booking.code,
-          order_id: order.orderId,
-          prefill: { name: '', email, contact: '' },
-          theme: { color: '#2E4B2E' },
-          handler: async (r) => {
-            await verifyPayment({
-              paymentRecordId: order.paymentRecordId,
-              razorpayPaymentId: r.razorpay_payment_id,
-              razorpaySignature: r.razorpay_signature,
-            });
-            await lookup.mutateAsync();
-          },
-          modal: { ondismiss: () => undefined },
-        });
-      } else {
-        await verifyPayment({ paymentRecordId: order.paymentRecordId, mockSuccess: true });
-        await lookup.mutateAsync();
-      }
-    } catch (e) {
-      lookup.error; // surface via mutation state
-      alert(apiErrorMessage(e, 'Could not start the payment'));
-    } finally {
-      setPaying(false);
-    }
-  }
 
   return (
     <section className="container-pad grid min-h-[70vh] place-items-center pt-28 pb-20">
@@ -167,10 +123,13 @@ export default function FindBooking() {
                 </div>
               )}
             </div>
-            {canPay && (
-              <Button variant="forest" className="mt-4 w-full" disabled={paying} onClick={startPayment}>
-                {paying ? 'Processing…' : `Pay balance ${inr(balance)}${payConfig?.provider === 'razorpay' ? '' : ' (mock)'}`}
-              </Button>
+            {balance > 0 && booking.status !== 'CANCELLED' && (
+              <div className="mt-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 p-3 text-center text-xs text-emerald-900">
+                <p className="font-semibold">Pay at Check-in</p>
+                <p className="mt-0.5 text-muted">
+                  No online payment needed. Settle balance of {inr(balance)} upon arrival at the resort.
+                </p>
+              </div>
             )}
             {booking.status === 'CANCELLED' && (
               <p className="mt-3 text-sm text-terracotta">This booking has been cancelled.</p>
