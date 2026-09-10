@@ -8,6 +8,16 @@ interface DrawerProps {
   width?: string;
 }
 
+const WIDTH_CLASSES: Record<string, string> = {
+  'max-w-md': 'max-w-md',
+  'max-w-lg': 'max-w-lg',
+  'max-w-xl': 'max-w-xl',
+  'max-w-2xl': 'max-w-2xl',
+  'max-w-3xl': 'max-w-3xl',
+  'max-w-4xl': 'max-w-4xl',
+  'max-w-5xl': 'max-w-5xl',
+};
+
 /** Right-side slide-over panel used for detail/edit views. */
 export default function Drawer({ open, onClose, title, children, width = 'max-w-xl' }: DrawerProps) {
   useEffect(() => {
@@ -23,6 +33,8 @@ export default function Drawer({ open, onClose, title, children, width = 'max-w-
 
   if (!open) return null;
 
+  const widthCls = WIDTH_CLASSES[width] || width;
+
   return (
     <div className="fixed inset-0 z-50">
       <div
@@ -34,7 +46,7 @@ export default function Drawer({ open, onClose, title, children, width = 'max-w-
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className={`absolute right-0 top-0 flex h-full w-full ${width} animate-[slidein_.25s_ease] flex-col bg-cream shadow-2xl`}
+        className={`absolute right-0 top-0 flex h-full w-full ${widthCls} animate-[slidein_.25s_ease] flex-col bg-cream shadow-2xl`}
         style={{ animationName: 'slidein' }}
       >
         <header className="flex items-center justify-between border-b border-line px-6 py-4">

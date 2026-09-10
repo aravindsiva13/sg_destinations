@@ -116,12 +116,12 @@ export default function ContentForm({
       open
       onClose={onClose}
       title={isEdit ? `Edit ${config.singular}` : `New ${config.singular}`}
-      width="max-w-4xl" // Increased width to fit preview side-by-side
+      width={config.type === 'DINING' ? 'max-w-5xl' : 'max-w-2xl'}
     >
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col xl:flex-row gap-8">
         
         {/* Form Column */}
-        <div className="flex-1 space-y-5">
+        <div className="flex-1 min-w-0 space-y-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Title">
               <input
@@ -211,7 +211,7 @@ export default function ContentForm({
 
         {/* Live Preview Column (Only for DINING) */}
         {config.type === 'DINING' && (
-          <div className="hidden lg:block w-[340px] shrink-0">
+          <div className="hidden xl:block w-[340px] shrink-0">
             <div className="sticky top-6">
               <p className="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Live Preview</p>
               <DiningCard item={previewItem} />
