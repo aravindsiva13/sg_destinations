@@ -3,7 +3,7 @@ import { Link, Navigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import SectionEyebrow from '../components/SectionEyebrow';
 import Button from '../components/Button';
-import { PublicError, PublicLoading } from '../components/PublicState';
+import { PublicLoading } from '../components/PublicState';
 import { useCustomerAuth } from '../hooks/useCustomerAuth';
 import { publicApi, apiErrorMessage } from '../lib/publicApi';
 import { createPaymentOrder, verifyPayment, usePaymentConfig } from '../hooks/usePublic';
@@ -119,7 +119,26 @@ export default function Account() {
       {isLoading ? (
         <PublicLoading label="Loading your bookings…" />
       ) : isError ? (
-        <PublicError onRetry={() => refetch()} />
+        <div className="mt-6 rounded-card border border-dashed border-line bg-paper p-8 text-center max-w-md mx-auto">
+          <p className="font-serif text-xl text-ink">Session Expired or Unable to Load</p>
+          <p className="mt-2 text-sm text-muted">
+            We couldn't load your bookings. Your login session may have expired.
+          </p>
+          <div className="mt-5 flex justify-center gap-3">
+            <Button variant="outline" onClick={() => refetch()}>
+              Try again
+            </Button>
+            <Button
+              variant="forest"
+              onClick={() => {
+                signOut();
+                window.location.href = '/signin';
+              }}
+            >
+              Sign in again
+            </Button>
+          </div>
+        </div>
       ) : !data || data.length === 0 ? (
         <div className="relative mt-6 overflow-hidden rounded-card border border-dashed border-line bg-paper p-12 text-center flex flex-col items-center justify-center min-h-[300px]">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03]">

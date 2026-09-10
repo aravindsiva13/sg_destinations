@@ -1,5 +1,5 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { publicApi, CUSTOMER_KEYS } from '../lib/publicApi';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { publicApi, CUSTOMER_KEYS, setOnCustomerAuthExpired } from '../lib/publicApi';
 
 export interface CustomerUser {
   id: string;
@@ -28,8 +28,17 @@ function readUser(): CustomerUser | null {
 export function CustomerAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<CustomerUser | null>(readUser);
 
-  const persist = useCallback((accessToken: string, u: CustomerUser) => {
+  useEffect(() => {
+    setOnCustomerAuthExpired(() => {
+      setUser(null);
+    });
+  }, []);
+
+  const persist = useCallback((accessToken: string, refreshToken: string | undefined, u: CustomerUser) => {
     localStorage.setItem(CUSTOMER_KEYS.access, accessToken);
+    if (refreshToken) {
+      localStorage.setItem(CUSTOMER_KEYS.refresh, refreshToken);
+    }
     localStorage.setItem(CUSTOMER_KEYS.user, JSON.stringify(u));
     setUser(u);
   }, []);
@@ -37,7 +46,7 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
   const signIn = useCallback(
     async (email: string, password: string) => {
       const { data } = await publicApi.post('/api/auth/login', { email, password });
-      persist(data.accessToken, data.user);
+      persist(data.accessToken, data.refreshToken, data.user);
     },
     [persist],
   );
@@ -45,13 +54,18 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(
     async (input: { name: string; email: string; password: string; phone?: string }) => {
       const { data } = await publicApi.post('/api/auth/register', input);
-      persist(data.accessToken, data.user);
+      persist(data.accessToken, data.refreshToken, data.user);
     },
     [persist],
   );
 
   const signOut = useCallback(() => {
+    const refreshToken = localStorage.getItem(CUSTOMER_KEYS.refresh);
+    if (refreshToken) {
+      publicApi.post('/api/auth/logout', { refreshToken }).catch(() => undefined);
+    }
     localStorage.removeItem(CUSTOMER_KEYS.access);
+    localStorage.removeItem(CUSTOMER_KEYS.refresh);
     localStorage.removeItem(CUSTOMER_KEYS.user);
     setUser(null);
   }, []);

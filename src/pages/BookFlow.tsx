@@ -19,6 +19,7 @@ import { apiErrorMessage } from '../lib/publicApi';
 import type { AvailabilityResult, CouponResult } from '../lib/publicTypes';
 import { inr } from '../data/site';
 import Seo from '../components/Seo';
+import { useCustomerAuth } from '../hooks/useCustomerAuth';
 
 const STEPS = ['Dates', 'Food', 'Add-ons', 'Your details', 'Review', 'Confirmed'];
 const field =
@@ -27,6 +28,7 @@ const today = new Date().toISOString().split('T')[0];
 
 export default function BookFlow() {
   const [params] = useSearchParams();
+  const { user } = useCustomerAuth();
   const { data: settings } = useSettings();
   const { data: stays } = useStays();
   const { data: menu } = useMenu();
@@ -46,7 +48,12 @@ export default function BookFlow() {
   // Food: map of menu itemId → quantity. Add-ons: selected ids.
   const [foodQty, setFoodQty] = useState<Record<string, number>>({});
   const [addonIds, setAddonIds] = useState<string[]>([]);
-  const [guest, setGuest] = useState({ name: '', email: '', phone: '', notes: '' });
+  const [guest, setGuest] = useState({
+    name: user?.name ?? '',
+    email: user?.email ?? '',
+    phone: user?.phone ?? '',
+    notes: '',
+  });
   const [coupon, setCoupon] = useState('');
   const [couponResult, setCouponResult] = useState<CouponResult | null>(null);
   const [couponError, setCouponError] = useState<string | null>(null);
@@ -55,6 +62,18 @@ export default function BookFlow() {
   const [submitting, setSubmitting] = useState(false);
   const [foodTab, setFoodTab] = useState<string | null>(null);
   const [foodSearch, setFoodSearch] = useState('');
+
+  // Sync user details if user signs in or auth loads
+  useEffect(() => {
+    if (user) {
+      setGuest((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [user]);
 
   // Auto-run availability if we arrived with full params.
   useEffect(() => {

@@ -231,15 +231,49 @@ authRouter.post(
   }),
 );
 
-// The signed-in customer's own bookings (matched by id or email).
+// The signed-in customer's own bookings (matched by id or email, case-insensitively).
 authRouter.get(
   '/me/bookings',
   requireAuth,
   asyncHandler(async (req, res) => {
     const user = await prisma.user.findUnique({ where: { id: req.user!.sub } });
     if (!user) throw new HttpError(404, 'User not found');
+
+    const cleanEmail = user.email.trim().toLowerCase();
+
+    // Query booking IDs where userId matches OR customerEmail matches case-insensitively
+    let matchedIds: string[] = [];
+    try {
+      const rawMatches = await prisma.$queryRaw<{ id: string }[]>`
+        SELECT id FROM Booking 
+        WHERE userId = ${user.id} 
+           OR LOWER(customerEmail) = LOWER(${cleanEmail})
+      `;
+      matchedIds = rawMatches.map((m) => m.id);
+    } catch {
+      // Fallback if raw query fails
+      matchedIds = [];
+    }
+
+    // Auto-link any matching bookings to this user
+    if (matchedIds.length > 0) {
+      await prisma.booking
+        .updateMany({
+          where: { id: { in: matchedIds }, userId: null },
+          data: { userId: user.id },
+        })
+        .catch(() => undefined);
+    }
+
     const bookings = await prisma.booking.findMany({
-      where: { OR: [{ userId: user.id }, { customerEmail: user.email }] },
+      where: {
+        OR: [
+          ...(matchedIds.length > 0 ? [{ id: { in: matchedIds } }] : []),
+          { userId: user.id },
+          { customerEmail: cleanEmail },
+          { customerEmail: user.email },
+        ],
+      },
       orderBy: { createdAt: 'desc' },
       include: { stay: { select: { name: true, slug: true, heroImage: true } } },
     });

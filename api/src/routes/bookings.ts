@@ -18,6 +18,7 @@ import { quoteStay } from '../pricing.js';
 import { evaluateCoupon } from './coupons.js';
 import { onBookingReceived, onBookingConfirmed, onBookingCancelled } from '../email/notify.js';
 import { subscribeGuest } from '../email/marketing.js';
+import { verifyAccessToken } from '../auth/tokens.js';
 
 export const bookingsRouter = Router();
 
@@ -140,13 +141,34 @@ bookingsRouter.post(
 
     const roomAmount = quote.subtotal - discount;
     const amount = roomAmount + foodAmount + addonsAmount;
+
+    // Associate user if signed in or if an account exists for this email
+    let userId: string | null = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith('Bearer ')) {
+      try {
+        const decoded = verifyAccessToken(authHeader.slice(7));
+        userId = decoded.sub;
+      } catch {
+        // continue
+      }
+    }
+    const cleanEmail = b.customerEmail.trim().toLowerCase();
+    if (!userId) {
+      const matchedUser = await prisma.user.findFirst({
+        where: { email: cleanEmail },
+      });
+      if (matchedUser) userId = matchedUser.id;
+    }
+
     const booking = await prisma.booking.create({
       data: {
         code: generateBookingCode(),
         stayId: stay.id,
-        customerName: b.customerName,
-        customerEmail: b.customerEmail,
-        customerPhone: b.customerPhone,
+        userId,
+        customerName: b.customerName.trim(),
+        customerEmail: cleanEmail,
+        customerPhone: b.customerPhone?.trim() || null,
         checkIn,
         checkOut,
         nights: quote.nights,
