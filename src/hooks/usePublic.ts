@@ -216,3 +216,13 @@ export function useGallery() {
   });
 }
 
+/* -------------------------- Featured Reviews --------------------------- */
+export function useFeaturedReviews() {
+  return useQuery({
+    queryKey: ['public', 'featured-reviews'],
+    queryFn: async () => (await publicApi.get<ApiReview[]>('/api/reviews/featured')).data,
+    staleTime: 60_000,
+  });
+}
+
+

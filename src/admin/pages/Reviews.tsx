@@ -68,6 +68,7 @@ export default function Reviews() {
                     <span className="font-medium text-ink">{r.author}</span>
                     <Stars n={r.rating} />
                     <Badge tone={TONE[r.status]}>{r.status}</Badge>
+                    {r.featured && <Badge tone="amber">Featured on Home ★</Badge>}
                   </div>
                   {r.title && <p className="font-serif text-ink">{r.title}</p>}
                   <p className="mt-1 max-w-2xl text-sm text-ink/80">{r.body}</p>
@@ -81,6 +82,20 @@ export default function Reviews() {
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
+                  {r.status === 'APPROVED' && (
+                    <AdminButton
+                      size="sm"
+                      variant={r.featured ? 'primary' : 'secondary'}
+                      onClick={() =>
+                        moderate.mutate(
+                          { id: r.id, featured: !r.featured },
+                          { onError: (err) => notifyError(apiErrorMessage(err, 'Could not update featured status')) },
+                        )
+                      }
+                    >
+                      {r.featured ? 'Featured on Home ★' : 'Feature on Home'}
+                    </AdminButton>
+                  )}
                   {r.status !== 'APPROVED' && (
                     <AdminButton
                       size="sm"

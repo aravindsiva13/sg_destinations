@@ -9,35 +9,63 @@ import StayScrollPanel from '../components/StayScrollPanel';
 import DiningCard from '../components/DiningCard';
 import Icon from '../components/Icon';
 import { images } from '../data/images';
-import { amenities } from '../data/amenities';
-import { useContentList } from '../hooks/usePublic';
+import { amenities as defaultAmenities } from '../data/amenities';
+import { useContentList, useSettings, useFeaturedReviews } from '../hooks/usePublic';
 import Seo from '../components/Seo';
 
-const heroCards = [
+const defaultHeroCards = [
   { src: images.gardenPool, alt: 'Shraddha Garden glowing entrance sign' },
   { src: images.waterfall, alt: 'Girl in a pink dress on a garden swing' },
   { src: images.portrait, alt: 'Italian family group portrait' },
 ];
 
-const traditionPoints = [
+const defaultTraditionPoints = [
   'Acres of manicured, lush green gardens',
   'Rooted in authentic Tamil hospitality',
   'Stays, dining and celebration — all on-site',
   'A dedicated host for every occasion',
 ];
 
-const stats = [
+const defaultStats = [
   { value: '40+', label: 'Acres of greenery' },
   { value: '16', label: 'Unique amenities' },
   { value: '3', label: 'Signature kitchens' },
   { value: '1k+', label: 'Events celebrated' },
 ];
 
-// First eight amenities form the "Sixteen ways to unwind" preview grid.
-const unwind = amenities.slice(0, 8);
-
 export default function Home() {
   const { data: diningExperiences } = useContentList('dining');
+  const { data: dbAmenities } = useContentList('amenity');
+  const { data: settings } = useSettings();
+  const { data: featuredReviews } = useFeaturedReviews();
+
+  // Dynamic values with complete fallbacks
+  const headline = (settings?.homeHeadline as string) || 'Celebrate amidst lush\ngreen gardens';
+  const subtext = (settings?.homeSubtext as string) ||
+    'A sanctuary of celebration and stays, where every milestone unfolds amidst forty acres of botanical beauty and timeless Tamil warmth.';
+
+  const heroCards = ((settings?.homeHeroCards as typeof defaultHeroCards) && (settings?.homeHeroCards as typeof defaultHeroCards).length === 3)
+    ? (settings?.homeHeroCards as typeof defaultHeroCards)
+    : defaultHeroCards;
+
+  const stats = ((settings?.homeStats as typeof defaultStats) && (settings?.homeStats as typeof defaultStats).length === 4)
+    ? (settings?.homeStats as typeof defaultStats)
+    : defaultStats;
+
+  const traditionTitle = (settings?.homeTraditionTitle as string) || 'Your ultimate getaway, rooted in Tamil tradition';
+  const traditionSubtext = (settings?.homeTraditionSubtext as string) ||
+    'From thatched kudil cottages to a glassy garden pool, every corner of Shraddha Garden is designed to feel both luxurious and deeply rooted in the land it grows from.';
+
+  const traditionPoints = ((settings?.homeTraditionPoints as string[]) && (settings?.homeTraditionPoints as string[]).length === 4)
+    ? (settings?.homeTraditionPoints as string[])
+    : defaultTraditionPoints;
+
+  const traditionImages = ((settings?.homeTraditionImages as string[]) && (settings?.homeTraditionImages as string[]).length === 3)
+    ? (settings?.homeTraditionImages as string[])
+    : [images.lushGarden, images.gardenPath, images.swimmingPool];
+
+  // First eight amenities form the "Sixteen ways to unwind" preview grid (live from DB with fallback)
+  const unwind = (dbAmenities && dbAmenities.length > 0 ? dbAmenities.slice(0, 8) : defaultAmenities.slice(0, 8));
 
   return (
     <>
@@ -51,16 +79,14 @@ export default function Home() {
           <Reveal delay={0.05}>
             <h1
               data-word-reveal
-              className="mt-3 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl md:text-6xl"
+              className="mt-3 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl md:text-6xl whitespace-pre-line"
             >
-              Celebrate amidst lush
-              <br className="hidden sm:block" /> green gardens
+              {headline}
             </h1>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted md:text-base">
-              A sanctuary of celebration and stays, where every milestone unfolds
-              amidst forty acres of botanical beauty and timeless Tamil warmth.
+              {subtext}
             </p>
           </Reveal>
           <Reveal delay={0.15}>
@@ -84,7 +110,7 @@ export default function Home() {
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-16">
           {heroCards.map((c, i) => (
             <motion.div
-              key={c.alt}
+              key={c.alt + i}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
@@ -123,7 +149,7 @@ export default function Home() {
           {/* Stats */}
           <div className="grid grid-cols-2 gap-y-10 gap-x-4 md:grid-cols-4 md:gap-8">
             {stats.map((s, i) => (
-              <Reveal key={s.label} delay={i * 0.1} className="flex flex-col items-center text-center">
+              <Reveal key={s.label + i} delay={i * 0.1} className="flex flex-col items-center text-center">
                 <span className="font-serif text-4xl md:text-5xl lg:text-[4rem]">{s.value}</span>
                 <span className="mt-3 text-xs text-cream/80 uppercase tracking-widest md:text-sm">{s.label}</span>
               </Reveal>
@@ -138,12 +164,10 @@ export default function Home() {
           <Reveal>
             <SectionEyebrow align="left">Discover</SectionEyebrow>
             <h2 className="mt-2 font-serif text-3xl leading-tight text-ink md:text-[2.6rem]">
-              Your ultimate getaway, rooted in Tamil tradition
+              {traditionTitle}
             </h2>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-              From thatched kudil cottages to a glassy garden pool, every corner
-              of Shraddha Garden is designed to feel both luxurious and deeply
-              rooted in the land it grows from.
+              {traditionSubtext}
             </p>
             <ul className="mt-6 space-y-3">
               {traditionPoints.map((p) => (
@@ -164,20 +188,20 @@ export default function Home() {
           {/* Image collage */}
           <Reveal className="grid grid-cols-2 gap-4">
             <img
-              src={images.lushGarden}
+              src={traditionImages[0]}
               alt="Outdoor event decoration"
               loading="lazy"
               className="aspect-[3/4] w-full rounded-card object-cover"
             />
             <div className="mt-8 grid gap-4">
               <img
-                src={images.gardenPath}
+                src={traditionImages[1]}
                 alt="Family gathering with balloons"
                 loading="lazy"
                 className="aspect-square w-full rounded-card object-cover"
               />
               <img
-                src={images.swimmingPool}
+                src={traditionImages[2]}
                 alt="Guests enjoying the swimming pool"
                 loading="lazy"
                 className="aspect-square w-full rounded-card object-cover"
@@ -213,7 +237,7 @@ export default function Home() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/10 to-transparent" />
                   <span className="absolute inset-x-0 bottom-0 flex items-center gap-2 p-3.5">
-                    <Icon name={a.icon} className="h-4 w-4 text-cream/90" />
+                    <Icon name={a.icon || 'star'} className="h-4 w-4 text-cream/90" />
                     <span className="font-serif text-sm text-cream md:text-base">
                       {a.title}
                     </span>
@@ -224,7 +248,7 @@ export default function Home() {
           </div>
           <div className="mt-10 text-center">
             <Button to="/amenities" variant="outline" className="text-ink">
-              View all sixteen
+              View all amenities
               <Icon name="arrow" className="h-4 w-4" />
             </Button>
           </div>
@@ -255,6 +279,46 @@ export default function Home() {
           </Button>
         </div>
       </section>
+
+      {/* ---------------- Guest Impressions & Testimonials Showcase ---------------- */}
+      {featuredReviews && featuredReviews.length > 0 && (
+        <section className="border-t border-line/60 bg-paper py-16 md:py-24">
+          <div className="container-pad">
+            <SectionHeading
+              eyebrow="Guest Impressions"
+              title="What our honored guests say"
+              subtext="Authentic words from families, couples, and teams who made Shraddha Garden their sanctuary of celebration."
+            />
+
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredReviews.map((r, i) => (
+                <Reveal key={r.id} delay={i * 0.08}>
+                  <div className="flex h-full flex-col justify-between rounded-card border border-line bg-cream/40 p-6 shadow-2xs transition-transform hover:-translate-y-1">
+                    <div>
+                      <div className="flex items-center gap-1 text-terracotta mb-3 text-sm">
+                        {'★'.repeat(r.rating)}
+                        <span className="text-line">{'★'.repeat(5 - r.rating)}</span>
+                      </div>
+                      {r.title && <h3 className="font-serif text-lg font-medium text-ink mb-2">{r.title}</h3>}
+                      <p className="text-sm leading-relaxed text-ink/80 italic">"{r.body}"</p>
+                    </div>
+
+                    <div className="mt-6 border-t border-line/60 pt-4">
+                      <p className="font-serif text-sm font-medium text-ink">{r.author}</p>
+                      <p className="text-2xs text-muted">Verified Guest</p>
+                      {r.reply && (
+                        <div className="mt-3 rounded-lg bg-forest/5 p-2.5 text-xs text-ink/85">
+                          <span className="font-semibold text-forest">Resort reply:</span> {r.reply}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

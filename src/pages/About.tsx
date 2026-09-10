@@ -7,10 +7,11 @@ import MarqueeBanner from '../components/MarqueeBanner';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import { images } from '../data/images';
-import { handledOnSite } from '../data/team';
+import { handledOnSite as defaultHandledOnSite } from '../data/team';
 import Seo from '../components/Seo';
+import { useSettings } from '../hooks/usePublic';
 
-const introBlocks = [
+const defaultIntroBlocks = [
   {
     eyebrow: 'Built upon luxury',
     body: 'Shraddha Garden was conceived as a place where understated luxury meets the living landscape — a retreat that feels generous, grounded and unmistakably ours.',
@@ -25,28 +26,50 @@ const introBlocks = [
   },
 ];
 
-const hosts = [
+const defaultHosts = [
   {
-    icon: 'star' as const,
+    icon: 'star',
     title: 'Your celebration host',
     text: 'One dedicated host owns your day from the first call to the final farewell — availability, planning and on-site coordination.',
   },
   {
-    icon: 'dining' as const,
+    icon: 'dining',
     title: 'Chef & live kitchens',
     text: 'Meals are cooked fresh on site. Menus are shaped together around your guests, your occasion and the season.',
   },
   {
-    icon: 'check' as const,
+    icon: 'check',
     title: 'Grounds & concierge',
     text: 'Housekeeping, valet, security and a garden crew that keeps every corner welcoming, around the clock.',
   },
 ];
 
 export default function About() {
+  const { data: settings } = useSettings();
+
+  const heroTitle = (settings?.aboutHeroTitle as string) || 'A garden built for togetherness';
+  const heroSubtext = (settings?.aboutHeroSubtext as string) ||
+    'What began as a stretch of coconut grove is today a sanctuary of celebration and stays — a place designed, quite simply, for people to come together.';
+  
+  const heroImages = ((settings?.aboutHeroImages as string[]) && (settings?.aboutHeroImages as string[]).length === 2)
+    ? (settings?.aboutHeroImages as string[])
+    : ['/images/selected-images/new/pool_wide.jpeg', '/images/selected-images/new/shra_vanam.jpeg'];
+
+  const introBlocks = ((settings?.aboutIntroBlocks as typeof defaultIntroBlocks) && (settings?.aboutIntroBlocks as typeof defaultIntroBlocks).length > 0)
+    ? (settings?.aboutIntroBlocks as typeof defaultIntroBlocks)
+    : defaultIntroBlocks;
+
+  const hosts = ((settings?.aboutHosts as typeof defaultHosts) && (settings?.aboutHosts as typeof defaultHosts).length > 0)
+    ? (settings?.aboutHosts as typeof defaultHosts)
+    : defaultHosts;
+
+  const handledOnSite = ((settings?.aboutHandledOnSite as string[]) && (settings?.aboutHandledOnSite as string[]).length > 0)
+    ? (settings?.aboutHandledOnSite as string[])
+    : defaultHandledOnSite;
+
   return (
     <>
-  <Seo title="About Shraddha Garden" path="/about" />
+      <Seo title="About Shraddha Garden" path="/about" />
       {/* ---------------- Hero ---------------- */}
       <section className="container-pad pt-28 pb-12 md:pt-36 md:pb-20">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
@@ -55,25 +78,23 @@ export default function About() {
             <WordReveal
               as="h1"
               className="mt-3 font-serif text-4xl leading-[1.05] text-ink sm:text-5xl md:text-[3.5rem]"
-              text="A garden built for togetherness"
+              text={heroTitle}
             />
             <p className="mt-5 max-w-md text-sm leading-relaxed text-muted md:text-base">
-              What began as a stretch of coconut grove is today a sanctuary of
-              celebration and stays — a place designed, quite simply, for people
-              to come together.
+              {heroSubtext}
             </p>
           </div>
 
           {/* Overlapping framed photos */}
           <Reveal className="relative mx-auto h-[320px] w-full max-w-md md:h-[420px]">
             <img
-              src="/images/selected-images/new/pool_wide.jpeg"
-              alt="Pool area at Shraddha Garden"
+              src={heroImages[0]}
+              alt="Sanctuary grounds"
               className="absolute left-0 top-6 h-[78%] w-[70%] rounded-card border-8 border-paper object-cover shadow-xl"
             />
             <img
-              src="/images/selected-images/new/shra_vanam.jpeg"
-              alt="Shra Vanam water feature"
+              src={heroImages[1]}
+              alt="Water feature"
               className="absolute bottom-0 right-0 h-[62%] w-[52%] rounded-card border-8 border-paper object-cover shadow-2xl"
             />
           </Reveal>

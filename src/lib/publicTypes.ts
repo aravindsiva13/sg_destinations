@@ -82,6 +82,7 @@ export interface ApiReview {
   title?: string | null;
   body: string;
   reply?: string | null;
+  featured?: boolean;
   createdAt: string;
 }
 

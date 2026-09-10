@@ -14,8 +14,6 @@ const DEFAULTS: Record<string, unknown> = {
   resortName: 'Shraddha Garden Resort',
   gstPercent: 12,
   currency: 'INR',
-  // When true, a coupon discounts the full room price (including any peak-day
-  // surcharge). When false, it only discounts the base price, not the peak part.
   offerAppliesToPeak: true,
   contactEmail: 'hello@shraddhagarden.com',
   contactPhone: '+91 98941 99762',
@@ -23,6 +21,92 @@ const DEFAULTS: Record<string, unknown> = {
   address: 'Shraddha Garden Resort, Tamil Nadu, India',
   checkInTime: '14:00',
   checkOutTime: '11:00',
+
+  // Social & Maps
+  instagramUrl: 'https://instagram.com/shraddhagarden',
+  facebookUrl: 'https://facebook.com/shraddhagarden',
+  youtubeUrl: 'https://youtube.com/@shraddhagarden',
+  tripadvisorUrl: '',
+  googleMapsUrl: 'https://maps.google.com/?q=Shraddha+Garden+Resort',
+  googleMapsEmbed: '',
+  footerTagline: 'A sanctuary of celebration and stays, where memories unfold amidst forty acres of lush greenery.',
+
+  // Home Page Highlights
+  homeHeadline: 'Celebrate amidst lush\ngreen gardens',
+  homeSubtext: 'A sanctuary of celebration and stays, where every milestone unfolds amidst forty acres of botanical beauty and timeless Tamil warmth.',
+  homeHeroCards: [
+    { src: '/images/selected-images/new/entrance.jpeg', alt: 'Shraddha Garden glowing entrance sign' },
+    { src: '/images/selected-images/new/waterfall.jpeg', alt: 'Girl in a pink dress on a garden swing' },
+    { src: '/images/selected-images/Family/italian-family-1.jpeg', alt: 'Italian family group portrait' },
+  ],
+  homeStats: [
+    { value: '40+', label: 'Acres of greenery' },
+    { value: '16', label: 'Unique amenities' },
+    { value: '3', label: 'Signature kitchens' },
+    { value: '1k+', label: 'Events celebrated' },
+  ],
+  homeTraditionTitle: 'Your ultimate getaway, rooted in Tamil tradition',
+  homeTraditionSubtext: 'From thatched kudil cottages to a glassy garden pool, every corner of Shraddha Garden is designed to feel both luxurious and deeply rooted in the land it grows from.',
+  homeTraditionPoints: [
+    'Acres of manicured, lush green gardens',
+    'Rooted in authentic Tamil hospitality',
+    'Stays, dining and celebration — all on-site',
+    'A dedicated host for every occasion',
+  ],
+  homeTraditionImages: [
+    '/images/selected-images/new/lush_garden.jpeg',
+    '/images/selected-images/new/garden_path.jpeg',
+    '/images/selected-images/new/pool_wide.jpeg',
+  ],
+
+  // About Page Story
+  aboutHeroTitle: 'A garden built for togetherness',
+  aboutHeroSubtext: 'What began as a stretch of coconut grove is today a sanctuary of celebration and stays — a place designed, quite simply, for people to come together.',
+  aboutHeroImages: [
+    '/images/selected-images/new/pool_wide.jpeg',
+    '/images/selected-images/new/shra_vanam.jpeg',
+  ],
+  aboutIntroBlocks: [
+    {
+      eyebrow: 'Built upon luxury',
+      body: 'Shraddha Garden was conceived as a place where understated luxury meets the living landscape — a retreat that feels generous, grounded and unmistakably ours.',
+    },
+    {
+      eyebrow: 'Peace, greenery, beauty',
+      body: 'Forty acres of manicured gardens, flowering borders and quiet water features create a sanctuary that calms the moment you arrive.',
+    },
+    {
+      eyebrow: 'A canvas for legacies',
+      body: 'From weddings to milestone birthdays, the garden becomes the backdrop for the memories your family will return to for years.',
+    },
+  ],
+  aboutHosts: [
+    {
+      icon: 'star',
+      title: 'Your celebration host',
+      text: 'One dedicated host owns your day from the first call to the final farewell — availability, planning and on-site coordination.',
+    },
+    {
+      icon: 'dining',
+      title: 'Chef & live kitchens',
+      text: 'Meals are cooked fresh on site. Menus are shaped together around your guests, your occasion and the season.',
+    },
+    {
+      icon: 'check',
+      title: 'Grounds & concierge',
+      text: 'Housekeeping, valet, security and a garden crew that keeps every corner welcoming, around the clock.',
+    },
+  ],
+  aboutHandledOnSite: [
+    'Dedicated celebration host',
+    'Housekeeping & valet',
+    'Live kitchen & fresh catering setup',
+    'Decor & lighting coordination',
+    'Sound, audiovisual & power backup',
+    'Round-the-clock property security',
+    'Garden lawn preparation & seating',
+    'Guest check-in & accommodation concierge',
+  ],
 };
 
 /**
@@ -71,6 +155,33 @@ const settingsSchema = z
     address: z.string().min(1).optional(),
     checkInTime: z.string().regex(/^\d{2}:\d{2}$/).optional(),
     checkOutTime: z.string().regex(/^\d{2}:\d{2}$/).optional(),
+
+    // Social & Maps
+    instagramUrl: z.string().optional().nullable(),
+    facebookUrl: z.string().optional().nullable(),
+    youtubeUrl: z.string().optional().nullable(),
+    tripadvisorUrl: z.string().optional().nullable(),
+    googleMapsUrl: z.string().optional().nullable(),
+    googleMapsEmbed: z.string().optional().nullable(),
+    footerTagline: z.string().optional().nullable(),
+
+    // Home Page Highlights
+    homeHeadline: z.string().optional().nullable(),
+    homeSubtext: z.string().optional().nullable(),
+    homeHeroCards: z.array(z.object({ src: z.string(), alt: z.string() })).optional(),
+    homeStats: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
+    homeTraditionTitle: z.string().optional().nullable(),
+    homeTraditionSubtext: z.string().optional().nullable(),
+    homeTraditionPoints: z.array(z.string()).optional(),
+    homeTraditionImages: z.array(z.string()).optional(),
+
+    // About Page Story
+    aboutHeroTitle: z.string().optional().nullable(),
+    aboutHeroSubtext: z.string().optional().nullable(),
+    aboutHeroImages: z.array(z.string()).optional(),
+    aboutIntroBlocks: z.array(z.object({ eyebrow: z.string(), body: z.string() })).optional(),
+    aboutHosts: z.array(z.object({ icon: z.string(), title: z.string(), text: z.string() })).optional(),
+    aboutHandledOnSite: z.array(z.string()).optional(),
   })
   .strict();
 

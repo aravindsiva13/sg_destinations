@@ -304,11 +304,13 @@ model Review {
   body      String
   status    String   @default("PENDING") // PENDING | APPROVED | REJECTED
   reply     String?
+  featured  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Public feed (APPROVED, newest first) and moderation filter by status.
   @@index([status, createdAt])
+  @@index([featured, status])
 }
 model Media {
   id        String   @id @default(cuid())

@@ -26,6 +26,19 @@ reviewsRouter.get(
   }),
 );
 
+// Public: featured reviews for Home page testimonial showcase
+reviewsRouter.get(
+  '/featured',
+  asyncHandler(async (_req, res) => {
+    const reviews = await prisma.review.findMany({
+      where: { status: 'APPROVED', featured: true },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+    });
+    res.json(reviews.map(({ email: _email, ...rest }) => rest));
+  }),
+);
+
 // Public: submit a review (enters moderation queue).
 const submitSchema = z.object({
   author: z.string().min(1),
@@ -63,6 +76,7 @@ reviewsRouter.get(
 const moderateSchema = z.object({
   status: z.enum(REVIEW_STATUS).optional(),
   reply: z.string().optional().nullable(),
+  featured: z.boolean().optional(),
 });
 
 reviewsRouter.patch(

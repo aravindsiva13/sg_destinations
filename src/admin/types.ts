@@ -292,6 +292,7 @@ export interface Review {
   body: string;
   status: ReviewStatus;
   reply?: string | null;
+  featured?: boolean;
   createdAt: string;
 }
 

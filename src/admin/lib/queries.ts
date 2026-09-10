@@ -576,9 +576,20 @@ export function useReviews(status?: ReviewStatus | '') {
 export function useModerateReview() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...patch }: { id: string; status?: ReviewStatus; reply?: string | null }) =>
-      (await api.patch<Review>(`/api/reviews/${id}`, patch)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['reviews'] }),
+    mutationFn: async ({
+      id,
+      ...patch
+    }: {
+      id: string;
+      status?: ReviewStatus;
+      reply?: string | null;
+      featured?: boolean;
+    }) => (await api.patch<Review>(`/api/reviews/${id}`, patch)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['reviews'] });
+      qc.invalidateQueries({ queryKey: ['public', 'reviews'] });
+      qc.invalidateQueries({ queryKey: ['public', 'featured-reviews'] });
+    },
   });
 }
 export function useDeleteReview() {

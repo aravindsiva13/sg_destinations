@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { stays } from '../data/stays';
+import { stays as fallbackStays } from '../data/stays';
 import Icon from './Icon';
 import SectionHeading from './SectionHeading';
+import { useStays } from '../hooks/usePublic';
 
 /**
  * Layer 2 — the signature sticky scroll panel.
@@ -11,10 +12,11 @@ import SectionHeading from './SectionHeading';
  * frame per stay. As each frame crosses the viewport centre, the left
  * panel cross-fades to that stay's details and a vertical progress bar
  * tracks position. Collapses to a stacked layout on mobile (CSS).
- *
- * Driven entirely by the real `stays` data — no placeholder content.
  */
 export default function StayScrollPanel() {
+  const { data: dbStays } = useStays();
+  const stays = useMemo(() => (dbStays && dbStays.length > 0 ? dbStays : fallbackStays), [dbStays]);
+
   const [active, setActive] = useState(0);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -35,9 +37,9 @@ export default function StayScrollPanel() {
     );
     items.forEach((it) => obs.observe(it));
     return () => obs.disconnect();
-  }, []);
+  }, [stays]);
 
-  const current = stays[active];
+  const current = stays[active] || stays[0];
   const index = String(active + 1).padStart(2, '0');
   const chips = current.amenities.slice(0, 4).map((a) => a.label);
 
