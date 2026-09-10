@@ -1,8 +1,8 @@
 import rateLimit, { type Options } from 'express-rate-limit';
 import type { RequestHandler } from 'express';
 
-// Rate limiting is disabled in tests so the test suite stays deterministic.
-const SKIP_RATE_LIMIT = process.env.NODE_ENV === 'test';
+// Rate limiting is disabled in development & tests so developers don't get locked out locally.
+const SKIP_RATE_LIMIT = process.env.NODE_ENV === 'test' || process.env.NODE_ENV !== 'production';
 
 function makeLimiter(opts: { windowMs: number; limit: number }): RequestHandler {
   const limiter = rateLimit({
