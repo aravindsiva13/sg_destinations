@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import SectionEyebrow from '../components/SectionEyebrow';
 import SectionHeading from '../components/SectionHeading';
@@ -8,14 +8,27 @@ import WordReveal from '../components/WordReveal';
 import Button from '../components/Button';
 import MarqueeBanner from '../components/MarqueeBanner';
 import Icon from '../components/Icon';
-import { images } from '../data/images';
-import { eventGallery } from '../data/events';
-import { useContentList } from '../hooks/usePublic';
+import { eventGallery as fallbackEventGallery } from '../data/events';
+import { useContentList, useSettings, useGallery } from '../hooks/usePublic';
 import Seo from '../components/Seo';
 
 export default function Events() {
   const [isLaughing, setIsLaughing] = useState(false);
   const { data, isLoading, error, refetch } = useContentList('event');
+  const { data: settings } = useSettings();
+  const { data: dbGallery } = useGallery();
+
+  const heroImage = (settings?.eventsHeroImage as string) || '/images/selected-images/Events/7L3A1899.JPG';
+
+  // Extract photos dynamically from the database "events" gallery category if present
+  const dynamicEventImages = useMemo(() => {
+    const eventsCat = dbGallery?.find((c) => c.slug === 'events');
+    if (eventsCat && eventsCat.images.length > 0) {
+      return eventsCat.images.map((img) => img.url);
+    }
+    return fallbackEventGallery;
+  }, [dbGallery]);
+
   const eventTypes = (data ?? []).map((e) => ({
     name: e.title,
     image: e.heroImage,
@@ -28,7 +41,7 @@ export default function Events() {
       {/* ---------------- Hero ---------------- */}
       <section className="relative isolate overflow-hidden pt-28 pb-16 md:pt-40 md:pb-24">
         <img
-          src={images.wedding}
+          src={heroImage}
           alt="A garden wedding celebration"
           className="absolute inset-0 -z-10 h-full w-full object-cover"
         />
@@ -126,7 +139,7 @@ export default function Events() {
             title="A garden full of memories"
           />
           <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-3">
-            {eventGallery.map((src, i) => (
+            {dynamicEventImages.map((src, i) => (
               <Reveal
                 key={src}
                 delay={(i % 3) * 0.06}

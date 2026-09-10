@@ -46,9 +46,15 @@ interface PageContentForm {
   aboutIntroBlocks?: IntroBlock[];
   aboutHosts?: HostItem[];
   aboutHandledOnSite?: string[];
+
+  // Page Hero Banners
+  eventsHeroImage?: string;
+  diningHeroImage1?: string;
+  diningHeroImage2?: string;
+  amenitiesHeroBanner?: string;
 }
 
-type TabKey = 'home' | 'about';
+type TabKey = 'home' | 'about' | 'banners';
 
 export default function PageContentManager() {
   const { data, isLoading, isError, refetch } = useSettings();
@@ -173,6 +179,17 @@ export default function PageContentManager() {
           }`}
         >
           About Us Page Content
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab('banners')}
+          className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+            activeTab === 'banners'
+              ? 'bg-forest text-cream shadow-xs'
+              : 'bg-paper text-ink hover:bg-cream-2'
+          }`}
+        >
+          Page Hero Banners
         </button>
       </div>
 
@@ -519,6 +536,64 @@ export default function PageContentManager() {
                     />
                   </div>
                 ))}
+              </div>
+            </section>
+          </div>
+        )}
+
+        {/* ======================= TAB 3: PAGE HERO BANNERS ======================= */}
+        {activeTab === 'banners' && (
+          <div className="space-y-8">
+            <section className="rounded-2xl border border-line bg-paper p-6 shadow-2xs space-y-6">
+              <div>
+                <h2 className="font-serif text-xl font-normal text-ink">Page Hero & Banner Images</h2>
+                <p className="text-xs text-muted">Customize the main hero background photos for public website pages.</p>
+              </div>
+
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="rounded-xl border border-line bg-cream/30 p-4 space-y-3">
+                  <h3 className="font-serif text-base font-medium text-ink">Events Page Hero Banner</h3>
+                  <p className="text-xs text-muted">Displayed at the top of the /events page behind "Celebrations that linger".</p>
+                  <ImagePicker
+                    label="Events Hero Background"
+                    folder="events/hero"
+                    value={form.eventsHeroImage || '/images/selected-images/Events/7L3A1899.JPG'}
+                    onChange={(url) => set('eventsHeroImage', url)}
+                  />
+                </div>
+
+                <div className="rounded-xl border border-line bg-cream/30 p-4 space-y-3">
+                  <h3 className="font-serif text-base font-medium text-ink">Amenities Page Header Image</h3>
+                  <p className="text-xs text-muted">Featured visual for the sixteen attractions showcase.</p>
+                  <ImagePicker
+                    label="Amenities Hero Image"
+                    folder="amenities/hero"
+                    value={form.amenitiesHeroBanner || '/images/selected-images/new/pool_wide.jpeg'}
+                    onChange={(url) => set('amenitiesHeroBanner', url)}
+                  />
+                </div>
+
+                <div className="rounded-xl border border-line bg-cream/30 p-4 space-y-3">
+                  <h3 className="font-serif text-base font-medium text-ink">Dining Page Hero Photo 1</h3>
+                  <p className="text-xs text-muted">First vertical card on the /dining page header.</p>
+                  <ImagePicker
+                    label="Dining Photo 1"
+                    folder="dining/hero"
+                    value={form.diningHeroImage1 || '/images/selected-images/new/water_shower.jpeg'}
+                    onChange={(url) => set('diningHeroImage1', url)}
+                  />
+                </div>
+
+                <div className="rounded-xl border border-line bg-cream/30 p-4 space-y-3">
+                  <h3 className="font-serif text-base font-medium text-ink">Dining Page Hero Photo 2</h3>
+                  <p className="text-xs text-muted">Second vertical card on the /dining page header.</p>
+                  <ImagePicker
+                    label="Dining Photo 2"
+                    folder="dining/hero"
+                    value={form.diningHeroImage2 || '/images/selected-images/new/shra_vanam.jpeg'}
+                    onChange={(url) => set('diningHeroImage2', url)}
+                  />
+                </div>
               </div>
             </section>
           </div>

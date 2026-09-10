@@ -4,10 +4,9 @@ import Reveal from '../components/Reveal';
 import WordReveal from '../components/WordReveal';
 import MarqueeBanner from '../components/MarqueeBanner';
 import Icon from '../components/Icon';
-import { images } from '../data/images';
 import { useState } from 'react';
 import { diningTimings } from '../data/dining';
-import { useMenu } from '../hooks/usePublic';
+import { useMenu, useSettings } from '../hooks/usePublic';
 import Tabs from '../components/Tabs';
 import Seo from '../components/Seo';
 
@@ -24,8 +23,12 @@ function VegMark({ veg }: { veg?: boolean | null }) {
 
 export default function Dining() {
   const { data: menu, isLoading, error, refetch } = useMenu();
+  const { data: settings } = useSettings();
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const photo1 = (settings?.diningHeroImage1 as string) || '/images/selected-images/new/water_shower.jpeg';
+  const photo2 = (settings?.diningHeroImage2 as string) || '/images/selected-images/new/shra_vanam.jpeg';
 
   return (
     <>
@@ -48,12 +51,12 @@ export default function Dining() {
           </div>
           <Reveal className="grid grid-cols-2 gap-4">
             <img
-              src={images.southIndian}
+              src={photo1}
               alt="A traditional South Indian spread"
               className="aspect-[3/4] w-full rounded-card object-cover"
             />
             <img
-              src={images.diningTable}
+              src={photo2}
               alt="A laid dining table in the garden"
               loading="lazy"
               className="mt-8 aspect-[3/4] w-full rounded-card object-cover"
