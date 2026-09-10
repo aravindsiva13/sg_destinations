@@ -1,4 +1,5 @@
 import { useRef, useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Seo from '../components/Seo';
@@ -90,6 +91,17 @@ export default function Gallery() {
       setActiveCategory(categories[0].id);
     }
   }, [categories, activeCategory]);
+
+  // Lock body scroll while lightbox is open
+  useEffect(() => {
+    if (lightboxImg) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [lightboxImg]);
 
   // We only show images for the active category for better performance and UX
   const currentCategory = useMemo(
@@ -200,29 +212,32 @@ export default function Gallery() {
         </div>
       </div>
 
-      {/* Lightbox */}
-      {lightboxImg && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-6 backdrop-blur-md transition-opacity"
-          onClick={() => setLightboxImg(null)}
-        >
-          <img
-            src={lightboxImg}
-            alt="Expanded view"
-            className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl animate-in zoom-in-95 duration-300"
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
+      {/* Lightbox in Portal */}
+      {lightboxImg &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div 
+            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-ink/95 p-6 backdrop-blur-md transition-opacity"
             onClick={() => setLightboxImg(null)}
-            className="absolute top-6 right-6 text-cream opacity-70 hover:opacity-100 transition-opacity p-2 bg-ink/50 rounded-full"
-            aria-label="Close lightbox"
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      )}
+            <img
+              src={lightboxImg}
+              alt="Expanded view"
+              className="max-h-[90vh] max-w-[90vw] object-contain rounded-xl shadow-2xl animate-in zoom-in-95 duration-300"
+              onClick={(e) => e.stopPropagation()}
+            />
+            <button
+              onClick={() => setLightboxImg(null)}
+              className="absolute top-6 right-6 text-cream opacity-70 hover:opacity-100 transition-opacity p-2 bg-ink/50 rounded-full"
+              aria-label="Close lightbox"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }

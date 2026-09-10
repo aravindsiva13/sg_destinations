@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import WordReveal from '../components/WordReveal';
@@ -41,6 +42,17 @@ export default function AmenityDetail() {
   const [secondary, tertiary] = item.gallery;
 
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+
+  // Lock body scroll while lightbox is open
+  useEffect(() => {
+    if (selectedPhoto) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [selectedPhoto]);
 
   return (
     <section className="container-pad pt-24 pb-20 md:pt-32 md:pb-28">
@@ -107,26 +119,31 @@ export default function AmenityDetail() {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {selectedPhoto && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md"
-          onClick={() => setSelectedPhoto(null)}
-        >
-          <button
-            type="button"
+      {/* Lightbox Modal in Portal */}
+      {selectedPhoto &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md"
             onClick={() => setSelectedPhoto(null)}
-            className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
           >
-            ✕
-          </button>
-          <img
-            src={selectedPhoto}
-            alt={item.title}
-            className="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl"
-          />
-        </div>
-      )}
+            <button
+              type="button"
+              onClick={() => setSelectedPhoto(null)}
+              className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+              aria-label="Close preview"
+            >
+              ✕
+            </button>
+            <img
+              src={selectedPhoto}
+              alt={item.title}
+              className="max-h-[85vh] max-w-[90vw] rounded-lg object-contain shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>,
+          document.body
+        )}
 
       {/* Body + sidebar */}
       <div className="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr]">

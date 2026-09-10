@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Pill from './Pill';
 
 interface GalleryProps {
@@ -8,14 +9,29 @@ interface GalleryProps {
   extraPhotos?: number;
 }
 
+const FALLBACK_IMAGE = '/images/brand/logo-dark.png';
+
 /**
  * Detail-page gallery: one large hero image beside a 2×2 thumbnail grid,
- * with an interactive lightbox modal preview when clicking any photo or "+N photos".
+ * with an interactive lightbox modal preview mounted in a portal to prevent CSS stacking bugs.
  */
 export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryProps) {
-  // Combine hero and all thumbs into a unified list of photos
-  const allImages = [hero, ...thumbs.filter((t) => t !== hero)];
+  // Combine hero and all thumbs into a unified list of photos, deduplicated and filtered
+  const rawList = [hero, ...thumbs];
+  const allImages = Array.from(new Set(rawList.filter((src): src is string => Boolean(src && src.trim()))));
+  if (allImages.length === 0) allImages.push(FALLBACK_IMAGE);
+
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  // Lock body scroll while lightbox is open
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [lightboxIndex]);
 
   // Keyboard navigation (Esc to close, Left/Right arrow to browse)
   useEffect(() => {
@@ -38,8 +54,12 @@ export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryP
           className="group relative cursor-pointer overflow-hidden rounded-card transition-all duration-300 hover:opacity-95"
         >
           <img
-            src={hero}
+            src={hero || FALLBACK_IMAGE}
             alt={alt}
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+            }}
             className="h-full max-h-[420px] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:max-h-none"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/20 group-hover:opacity-100">
@@ -60,9 +80,13 @@ export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryP
                 className="group relative cursor-pointer overflow-hidden rounded-card transition-all duration-300 hover:opacity-95"
               >
                 <img
-                  src={src}
+                  src={src || FALLBACK_IMAGE}
                   alt={`${alt} — view ${i + 2}`}
                   loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                  }}
                   className="aspect-[4/3] h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
@@ -82,87 +106,102 @@ export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryP
         </div>
       </div>
 
-      {/* Full-Screen Lightbox Modal */}
-      {lightboxIndex !== null && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-black/95 p-4 md:p-8 backdrop-blur-md animate-fadeIn"
-          onClick={() => setLightboxIndex(null)}
-        >
-          {/* Top Bar */}
+      {/* Full-Screen Lightbox Modal in React Portal */}
+      {lightboxIndex !== null &&
+        typeof document !== 'undefined' &&
+        createPortal(
           <div
-            className="flex w-full max-w-6xl items-center justify-between text-white/90"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-[99999] flex h-screen w-screen flex-col items-center justify-between bg-black/95 p-4 md:p-8 backdrop-blur-md animate-fadeIn"
+            onClick={() => setLightboxIndex(null)}
           >
-            <div className="font-serif text-lg tracking-wide">
-              {alt} <span className="text-xs font-sans text-white/60">({lightboxIndex + 1} of {allImages.length})</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setLightboxIndex(null)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-              aria-label="Close preview"
+            {/* Top Bar */}
+            <div
+              className="flex w-full max-w-6xl items-center justify-between text-white/90"
+              onClick={(e) => e.stopPropagation()}
             >
-              ✕
-            </button>
-          </div>
-
-          {/* Main Photo with Left / Right Navigation */}
-          <div
-            className="relative flex flex-1 w-full max-w-6xl items-center justify-center py-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Left Button */}
-            {allImages.length > 1 && (
+              <div className="font-serif text-lg tracking-wide">
+                {alt} <span className="text-xs font-sans text-white/60">({lightboxIndex + 1} of {allImages.length})</span>
+              </div>
               <button
                 type="button"
-                onClick={() => setLightboxIndex((prev) => (prev !== null ? (prev - 1 + allImages.length) % allImages.length : 0))}
-                className="absolute left-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white backdrop-blur-sm transition-all hover:bg-black/90 hover:scale-110 md:left-4"
-                aria-label="Previous image"
+                onClick={() => setLightboxIndex(null)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+                aria-label="Close preview"
               >
-                ‹
+                ✕
               </button>
-            )}
+            </div>
 
-            {/* Displayed Image */}
-            <img
-              src={allImages[lightboxIndex]}
-              alt={`${alt} preview ${lightboxIndex + 1}`}
-              className="max-h-[72vh] max-w-full rounded-lg object-contain shadow-2xl transition-all duration-300"
-            />
+            {/* Main Photo with Left / Right Navigation */}
+            <div
+              className="relative flex flex-1 w-full max-w-6xl items-center justify-center py-4 min-h-0"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Left Button */}
+              {allImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex((prev) => (prev !== null ? (prev - 1 + allImages.length) % allImages.length : 0))}
+                  className="absolute left-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white backdrop-blur-sm transition-all hover:bg-black/90 hover:scale-110 md:left-4"
+                  aria-label="Previous image"
+                >
+                  ‹
+                </button>
+              )}
 
-            {/* Right Button */}
-            {allImages.length > 1 && (
-              <button
-                type="button"
-                onClick={() => setLightboxIndex((prev) => (prev !== null ? (prev + 1) % allImages.length : 0))}
-                className="absolute right-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white backdrop-blur-sm transition-all hover:bg-black/90 hover:scale-110 md:right-4"
-                aria-label="Next image"
-              >
-                ›
-              </button>
-            )}
-          </div>
+              {/* Displayed Image */}
+              <img
+                src={allImages[lightboxIndex]}
+                alt={`${alt} preview ${lightboxIndex + 1}`}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                }}
+                className="max-h-[72vh] max-w-full rounded-lg object-contain shadow-2xl transition-all duration-300"
+              />
 
-          {/* Bottom Thumbnails Strip */}
-          <div
-            className="flex max-w-4xl gap-2 overflow-x-auto pb-2 scrollbar-none"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {allImages.map((src, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setLightboxIndex(idx)}
-                className={`h-16 w-20 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
-                  lightboxIndex === idx ? 'border-amber-400 scale-105' : 'border-transparent opacity-50 hover:opacity-100'
-                }`}
-              >
-                <img src={src} alt="" className="h-full w-full object-cover" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+              {/* Right Button */}
+              {allImages.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex((prev) => (prev !== null ? (prev + 1) % allImages.length : 0))}
+                  className="absolute right-2 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white backdrop-blur-sm transition-all hover:bg-black/90 hover:scale-110 md:right-4"
+                  aria-label="Next image"
+                >
+                  ›
+                </button>
+              )}
+            </div>
+
+            {/* Bottom Thumbnails Strip */}
+            <div
+              className="flex max-w-4xl gap-2 overflow-x-auto pb-2 scrollbar-none"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {allImages.map((src, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setLightboxIndex(idx)}
+                  className={`h-16 w-20 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
+                    lightboxIndex === idx ? 'border-amber-400 scale-105 opacity-100' : 'border-transparent opacity-50 hover:opacity-100'
+                  }`}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (target.src !== FALLBACK_IMAGE) target.src = FALLBACK_IMAGE;
+                    }}
+                    className="h-full w-full object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>,
+          document.body
+        )}
     </>
   );
 }

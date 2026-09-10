@@ -3,13 +3,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Updating stays images...");
+  console.log("Checking stays images...");
   
-  await prisma.stay.update({
-    where: { slug: 'madhan-residency-villa' },
-    data: {
+  const staysToSeed = [
+    {
+      slug: 'madhan-residency-villa',
       heroImage: '/images/stays/madhan-residency-villa/7L3A9204.webp',
-      gallery: JSON.stringify([
+      gallery: [
         "/images/stays/madhan-residency-villa/7L3A9204.webp",
         "/images/stays/madhan-residency-villa/7L3A9205.webp",
         "/images/stays/madhan-residency-villa/7L3A9206.webp",
@@ -39,15 +39,12 @@ async function main() {
         "/images/stays/madhan-residency-villa/7L3A9240.webp",
         "/images/stays/madhan-residency-villa/7L3A9248.webp",
         "/images/stays/madhan-residency-villa/7L3A9384.webp"
-      ])
-    }
-  });
-
-  await prisma.stay.update({
-    where: { slug: 'tower-house' },
-    data: {
+      ]
+    },
+    {
+      slug: 'tower-house',
       heroImage: '/images/stays/tower-house/7L3A9399.webp',
-      gallery: JSON.stringify([
+      gallery: [
         "/images/stays/tower-house/7L3A9399.webp",
         "/images/stays/tower-house/7L3A9400.webp",
         "/images/stays/tower-house/7L3A9403.webp",
@@ -57,25 +54,41 @@ async function main() {
         "/images/stays/tower-house/7L3A9409.webp",
         "/images/stays/tower-house/7L3A9410.webp",
         "/images/stays/tower-house/7L3A9453.webp"
-      ])
-    }
-  });
-
-  await prisma.stay.update({
-    where: { slug: 'wood-house-1' },
-    data: {
+      ]
+    },
+    {
+      slug: 'wood-house-1',
       heroImage: '/images/stays/wood-house-1/7L3A9320.webp',
-      gallery: JSON.stringify([
+      gallery: [
         "/images/stays/wood-house-1/7L3A9320.webp",
         "/images/stays/wood-house-1/7L3A9324.webp",
         "/images/stays/wood-house-1/7L3A9341.webp",
         "/images/stays/wood-house-1/7L3A9342.webp",
         "/images/stays/wood-house-1/7L3A9343.webp"
-      ])
+      ]
     }
-  });
+  ];
 
-  console.log("Stays updated successfully!");
+  for (const s of staysToSeed) {
+    const existing = await prisma.stay.findUnique({ where: { slug: s.slug } });
+    if (!existing) continue;
+    // Only update if heroImage is empty or default logo placeholder
+    const isPlaceholder = !existing.heroImage || existing.heroImage.includes('logo-dark');
+    if (isPlaceholder) {
+      await prisma.stay.update({
+        where: { slug: s.slug },
+        data: {
+          heroImage: s.heroImage,
+          gallery: JSON.stringify(s.gallery)
+        }
+      });
+      console.log(`Updated images for ${s.slug}`);
+    } else {
+      console.log(`Preserved custom images for ${s.slug}: ${existing.heroImage}`);
+    }
+  }
+
+  console.log("Stays check completed!");
 }
 
 main()

@@ -219,49 +219,55 @@ const realAmenities = [
 ];
 
 async function main() {
-  console.log('Upserting all amenities with real local images into database...');
+  console.log('Checking amenities images in database...');
 
   for (const item of realAmenities) {
-    await prisma.contentItem.upsert({
+    const existing = await prisma.contentItem.findUnique({
       where: {
         type_slug: {
           type: 'AMENITY',
           slug: item.slug,
         },
       },
-      update: {
-        title: item.title,
-        category: item.category,
-        icon: item.icon,
-        excerpt: item.excerpt,
-        body: JSON.stringify(item.body),
-        heroImage: item.heroImage,
-        gallery: JSON.stringify(item.gallery),
-        tags: JSON.stringify(item.tags),
-        meta: JSON.stringify(item.meta),
-        sortOrder: item.sortOrder,
-        published: true,
-      },
-      create: {
-        type: 'AMENITY',
-        slug: item.slug,
-        title: item.title,
-        category: item.category,
-        icon: item.icon,
-        excerpt: item.excerpt,
-        body: JSON.stringify(item.body),
-        heroImage: item.heroImage,
-        gallery: JSON.stringify(item.gallery),
-        tags: JSON.stringify(item.tags),
-        meta: JSON.stringify(item.meta),
-        sortOrder: item.sortOrder,
-        published: true,
-      },
     });
-    console.log(`✓ Upserted amenity: ${item.slug}`);
+
+    if (!existing) {
+      await prisma.contentItem.create({
+        data: {
+          type: 'AMENITY',
+          slug: item.slug,
+          title: item.title,
+          category: item.category,
+          icon: item.icon,
+          excerpt: item.excerpt,
+          body: JSON.stringify(item.body),
+          heroImage: item.heroImage,
+          gallery: JSON.stringify(item.gallery),
+          tags: JSON.stringify(item.tags),
+          meta: JSON.stringify(item.meta),
+          sortOrder: item.sortOrder,
+          published: true,
+        },
+      });
+      console.log(`✓ Created amenity: ${item.slug}`);
+    } else {
+      const isPlaceholder = !existing.heroImage || existing.heroImage.includes('logo-dark');
+      if (isPlaceholder) {
+        await prisma.contentItem.update({
+          where: { id: existing.id },
+          data: {
+            heroImage: item.heroImage,
+            gallery: JSON.stringify(item.gallery),
+          },
+        });
+        console.log(`✓ Updated images for amenity: ${item.slug}`);
+      } else {
+        console.log(`Preserved existing amenity: ${item.slug}`);
+      }
+    }
   }
 
-  console.log('Done updating amenity images!');
+  console.log('Done checking amenity images!');
 }
 
 main()
