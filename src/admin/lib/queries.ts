@@ -23,6 +23,7 @@ import type {
   DateBlock,
   EmailConfig,
   Enquiry,
+  GalleryCategory,
   MediaItem,
   MenuCategory,
   MenuItem,
@@ -779,3 +780,89 @@ export function useAudit(page: number, entity?: string) {
     placeholderData: keepPreviousData,
   });
 }
+
+/* ---------------- Gallery ---------------- */
+export function useAdminGallery() {
+  return useQuery({
+    queryKey: ['admin-gallery'],
+    queryFn: async () => (await api.get<GalleryCategory[]>('/api/gallery/admin/all')).data,
+  });
+}
+
+export function useCreateGalleryCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: {
+      name: string;
+      slug?: string;
+      description?: string | null;
+      sortOrder?: number;
+      published?: boolean;
+    }) => (await api.post<GalleryCategory>('/api/gallery/categories', data)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-gallery'] });
+      qc.invalidateQueries({ queryKey: ['public', 'gallery'] });
+    },
+  });
+}
+
+export function useUpdateGalleryCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      ...data
+    }: {
+      id: string;
+      name?: string;
+      slug?: string;
+      description?: string | null;
+      sortOrder?: number;
+      published?: boolean;
+    }) => (await api.put<GalleryCategory>(`/api/gallery/categories/${id}`, data)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-gallery'] });
+      qc.invalidateQueries({ queryKey: ['public', 'gallery'] });
+    },
+  });
+}
+
+export function useDeleteGalleryCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => (await api.delete<{ ok: boolean; id: string }>(`/api/gallery/categories/${id}`)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-gallery'] });
+      qc.invalidateQueries({ queryKey: ['public', 'gallery'] });
+    },
+  });
+}
+
+export function useSyncGalleryImages() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      categoryId,
+      images,
+    }: {
+      categoryId: string;
+      images: Array<string | { url: string; alt?: string | null; sortOrder?: number }>;
+    }) => (await api.put<GalleryCategory>(`/api/gallery/categories/${categoryId}/images`, { images })).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-gallery'] });
+      qc.invalidateQueries({ queryKey: ['public', 'gallery'] });
+    },
+  });
+}
+
+export function useDeleteGalleryImage() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => (await api.delete<{ ok: boolean; id: string }>(`/api/gallery/images/${id}`)).data,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-gallery'] });
+      qc.invalidateQueries({ queryKey: ['public', 'gallery'] });
+    },
+  });
+}
+

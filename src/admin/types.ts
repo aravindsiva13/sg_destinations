@@ -384,3 +384,26 @@ export interface Enquiry {
   source: string;
   createdAt: string;
 }
+
+export interface GalleryImage {
+  id: string;
+  categoryId: string;
+  url: string;
+  alt?: string | null;
+  sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GalleryCategory {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  sortOrder: number;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+  images: GalleryImage[];
+}
+

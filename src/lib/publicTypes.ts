@@ -108,3 +108,23 @@ export interface CouponResult {
   discount: number;
   total: number;
 }
+
+export interface ApiGalleryImage {
+  id: string;
+  categoryId: string;
+  url: string;
+  alt?: string | null;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface ApiGalleryCategory {
+  id: string;
+  slug: string;
+  name: string;
+  description?: string | null;
+  sortOrder: number;
+  published: boolean;
+  images: ApiGalleryImage[];
+}
+

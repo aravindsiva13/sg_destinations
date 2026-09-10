@@ -25,6 +25,7 @@ import { menuRouter } from './routes/menu.js';
 import { addonsRouter } from './routes/addons.js';
 import { emailRouter } from './routes/email.js';
 import { marketingRouter } from './routes/marketing.js';
+import { galleryRouter } from './routes/gallery.js';
 import { errorHandler, notFound } from './middleware/error.js';
 import {
   authLimiter,
@@ -123,6 +124,7 @@ export function createApp() {
   app.use('/api/addons', addonsRouter);
   app.use('/api/email', emailRouter);
   app.use('/api/marketing', marketingRouter);
+  app.use('/api/gallery', galleryRouter);
 
   // In production the API also serves the built frontend, so the whole app is
   // ONE deployable service (set SERVE_WEB=true). Unknown non-/api paths fall

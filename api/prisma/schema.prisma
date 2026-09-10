@@ -387,3 +387,34 @@ model Coupon {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+/// Gallery categories shown on the public Gallery page and managed in the admin portal.
+model GalleryCategory {
+  id          String         @id @default(cuid())
+  slug        String         @unique
+  name        String
+  description String?
+  sortOrder   Int            @default(0)
+  published   Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  images GalleryImage[]
+
+  @@index([published, sortOrder])
+}
+
+/// Individual photos inside a gallery category with drag-and-drop sort ordering.
+model GalleryImage {
+  id         String          @id @default(cuid())
+  categoryId String
+  category   GalleryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  url        String
+  alt        String?
+  sortOrder  Int             @default(0)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([categoryId, sortOrder])
+}
+

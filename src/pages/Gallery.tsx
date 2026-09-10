@@ -1,10 +1,11 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Seo from '../components/Seo';
 import Reveal from '../components/Reveal';
+import { useGallery } from '../hooks/usePublic';
 
-const categories = [
+const fallbackCategories = [
   {
     id: 'italian-family',
     name: 'A Taste of Italy',
@@ -64,10 +65,35 @@ const categories = [
 export default function Gallery() {
   const container = useRef<HTMLDivElement>(null);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
-  const [activeCategory, setActiveCategory] = useState(categories[0].id);
+
+  const { data: dbCategories } = useGallery();
+
+  const categories = useMemo(() => {
+    if (dbCategories && dbCategories.length > 0) {
+      return dbCategories.map((c) => ({
+        id: c.slug,
+        name: c.name,
+        description: c.description || '',
+        images: c.images.map((img) => img.url),
+      }));
+    }
+    return fallbackCategories;
+  }, [dbCategories]);
+
+  const [activeCategory, setActiveCategory] = useState<string>(categories[0]?.id || 'italian-family');
+
+  // Keep active category valid if loaded categories change
+  useEffect(() => {
+    if (categories.length > 0 && !categories.some((c) => c.id === activeCategory)) {
+      setActiveCategory(categories[0].id);
+    }
+  }, [categories, activeCategory]);
 
   // We only show images for the active category for better performance and UX
-  const currentCategory = useMemo(() => categories.find(c => c.id === activeCategory) || categories[0], [activeCategory]);
+  const currentCategory = useMemo(
+    () => categories.find((c) => c.id === activeCategory) || categories[0] || { id: '', name: '', description: '', images: [] },
+    [categories, activeCategory],
+  );
   
   // Split images into 3 columns for Masonry
   const cols = useMemo(() => {

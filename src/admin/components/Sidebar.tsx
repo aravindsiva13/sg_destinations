@@ -51,6 +51,7 @@ const CATEGORIES: NavCategory[] = [
     label: 'Marketing & Media',
     items: [
       { to: '/admin/media', label: 'Media Library', icon: 'media', roles: ['SUPER_ADMIN', 'MANAGER'] },
+      { to: '/admin/gallery', label: 'Gallery', icon: 'media', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/banners', label: 'Home & Banners', icon: 'banners', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/offers', label: 'Offers', icon: 'offers', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/coupons', label: 'Coupons', icon: 'offers', roles: ['SUPER_ADMIN', 'MANAGER'] },

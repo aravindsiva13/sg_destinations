@@ -31,6 +31,7 @@ const Reports = lazy(() => import('./admin/pages/Reports'));
 const Settings = lazy(() => import('./admin/pages/Settings'));
 const PaymentSettings = lazy(() => import('./admin/pages/PaymentSettings'));
 const Media = lazy(() => import('./admin/pages/Media'));
+const GalleryManager = lazy(() => import('./admin/pages/GalleryManager'));
 const Enquiries = lazy(() => import('./admin/pages/Enquiries'));
 const AuditLog = lazy(() => import('./admin/pages/AuditLog'));
 
@@ -70,6 +71,7 @@ export default function App() {
                       <Route path="coupons" element={<Coupons />} />
                       <Route path="banners" element={<Banners />} />
                       <Route path="media" element={<Media />} />
+                      <Route path="gallery" element={<GalleryManager />} />
                       <Route path="reports" element={<Reports />} />
                       <Route path="users" element={<Users />} />
                       <Route path="settings" element={<Settings />} />

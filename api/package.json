@@ -13,6 +13,7 @@
     "seed:content": "tsx prisma/seed-content.ts",
     "seed:menu": "tsx prisma/seed-menu.ts",
     "seed:addons": "tsx prisma/seed-addons.ts",
+    "seed:gallery": "tsx prisma/seed-gallery.ts",
     "test": "vitest run",
     "db:reset": "prisma db push --force-reset && tsx prisma/seed.ts",
     "setup": "prisma generate && prisma db push && tsx prisma/seed.ts"

@@ -7,6 +7,7 @@ import type {
   ApiMenuCategory,
   ApiReview,
   ApiStay,
+  ApiGalleryCategory,
   AvailabilityResult,
   CouponResult,
 } from '../lib/publicTypes';
@@ -205,3 +206,13 @@ export async function createEnquiry(input: {
   const { data } = await publicApi.post('/api/enquiries', input);
   return data;
 }
+
+/* ------------------------------- Gallery ------------------------------- */
+export function useGallery() {
+  return useQuery({
+    queryKey: ['public', 'gallery'],
+    queryFn: async () => (await publicApi.get<ApiGalleryCategory[]>('/api/gallery')).data,
+    staleTime: 60_000,
+  });
+}
+
