@@ -56,6 +56,9 @@ export function createApp() {
   const app = express();
   app.disable('x-powered-by');
 
+  // Behind Nginx reverse proxy, trust the first proxy hop for X-Forwarded-* headers (required for rate limiting)
+  app.set('trust proxy', 1);
+
   // Request log: method, path, status, duration — one line per request.
   app.use((req, res, next) => {
     const start = process.hrtime.bigint();
