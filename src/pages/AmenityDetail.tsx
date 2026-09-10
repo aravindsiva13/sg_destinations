@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Breadcrumb from '../components/Breadcrumb';
 import WordReveal from '../components/WordReveal';
@@ -6,15 +7,40 @@ import Icon from '../components/Icon';
 import Pill from '../components/Pill';
 import NotFound from './NotFound';
 import { getAmenity } from '../data/amenities';
+import { useContentItem } from '../hooks/usePublic';
 import Seo from '../components/Seo';
 
 export default function AmenityDetail() {
   const { slug } = useParams();
-  const item = slug ? getAmenity(slug) : undefined;
+  const fallback = slug ? getAmenity(slug) : undefined;
+  const { data: dbItem } = useContentItem('amenity', slug);
+
+  // Combine database content with static defaults so any admin change takes effect immediately
+  const item = useMemo(() => {
+    if (dbItem) {
+      const meta = (dbItem.meta || {}) as Record<string, unknown>;
+      const whatToExpect = (meta.whatToExpect as string[]) || fallback?.expect || [];
+      const quickFacts = (meta.quickFacts as Record<string, unknown>) || {};
+      return {
+        title: dbItem.title,
+        tag: dbItem.category || fallback?.tag || 'Amenity',
+        heroImage: dbItem.heroImage || fallback?.heroImage || '',
+        gallery: (dbItem.gallery && dbItem.gallery.length > 0) ? dbItem.gallery : (fallback?.gallery || []),
+        description: dbItem.excerpt || fallback?.description || '',
+        expect: whatToExpect,
+        bestFor: (quickFacts.bestFor as string[]) || fallback?.bestFor || [],
+        timings: (quickFacts.timings as string) || fallback?.timings || 'All Day',
+        safetyNote: (quickFacts.safetyNote as string) || fallback?.safetyNote || 'Please follow resort safety guidelines.',
+      };
+    }
+    return fallback;
+  }, [dbItem, fallback]);
 
   if (!item) return <NotFound />;
 
   const [secondary, tertiary] = item.gallery;
+
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   return (
     <section className="container-pad pt-24 pb-20 md:pt-32 md:pb-28">
@@ -43,34 +69,64 @@ export default function AmenityDetail() {
         </Button>
       </div>
 
-      {/* Gallery: large + 2 stacked */}
+      {/* Gallery: large + 2 stacked with click to enlarge */}
       <div className="mt-6 grid gap-3 md:grid-cols-[1.7fr_1fr]">
-        <div className="overflow-hidden rounded-card">
+        <div
+          onClick={() => setSelectedPhoto(item.heroImage)}
+          className="group cursor-pointer overflow-hidden rounded-card transition-opacity hover:opacity-95"
+        >
           <img
             src={item.heroImage}
             alt={item.title}
-            className="h-full max-h-[460px] w-full object-cover"
+            className="h-full max-h-[460px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         </div>
         <div className="grid gap-3">
-          <div className="overflow-hidden rounded-card">
+          <div
+            onClick={() => setSelectedPhoto(secondary ?? item.heroImage)}
+            className="group cursor-pointer overflow-hidden rounded-card transition-opacity hover:opacity-95"
+          >
             <img
               src={secondary ?? item.heroImage}
               alt={`${item.title} detail`}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover md:h-full"
+              className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-full"
             />
           </div>
-          <div className="overflow-hidden rounded-card">
+          <div
+            onClick={() => setSelectedPhoto(tertiary ?? item.heroImage)}
+            className="group cursor-pointer overflow-hidden rounded-card transition-opacity hover:opacity-95"
+          >
             <img
               src={tertiary ?? item.heroImage}
               alt={`${item.title} ambience`}
               loading="lazy"
-              className="aspect-[4/3] w-full object-cover md:h-full"
+              className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105 md:h-full"
             />
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setSelectedPhoto(null)}
+            className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+          >
+            ✕
+          </button>
+          <img
+            src={selectedPhoto}
+            alt={item.title}
+            className="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl"
+          />
+        </div>
+      )}
 
       {/* Body + sidebar */}
       <div className="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr]">

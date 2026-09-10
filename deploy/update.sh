@@ -30,6 +30,7 @@ npm ci
 npx prisma generate
 npx prisma db push          # applies any new schema changes (non-destructive)
 npx tsx update-stays.ts     # Update all stays images
+npx tsx update-amenities.ts # Update all amenities images
 npm run build
 
 echo "==> Restarting API + applying Nginx config + reloading…"
