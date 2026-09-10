@@ -50,17 +50,19 @@ const DEFAULT_EVENTS: EmailEvents = {
 };
 
 const DEFAULT_CONFIG: EmailConfig = {
-  enabled: false,
-  provider: 'brevo',
-  apiKey: '',
-  fromName: 'Shraddha Garden Resort',
-  fromEmail: '',
-  replyTo: '',
-  staffRecipients: [],
-  smtpHost: 'smtp-relay.brevo.com',
-  smtpPort: 587,
-  smtpUser: '',
-  smtpSecure: false,
+  enabled: process.env.EMAIL_ENABLED === 'true',
+  provider: (process.env.EMAIL_PROVIDER as EmailProvider) || 'smtp',
+  apiKey: process.env.EMAIL_API_KEY || process.env.BREVO_API_KEY || process.env.SMTP_PASS || '',
+  fromName: process.env.EMAIL_FROM_NAME || 'Shraddha Garden Resort',
+  fromEmail: process.env.EMAIL_FROM || process.env.SMTP_USER || '',
+  replyTo: process.env.EMAIL_REPLY_TO || '',
+  staffRecipients: process.env.STAFF_EMAILS
+    ? process.env.STAFF_EMAILS.split(',').map((s) => s.trim()).filter(Boolean)
+    : [],
+  smtpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+  smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587,
+  smtpUser: process.env.SMTP_USER || '',
+  smtpSecure: process.env.SMTP_SECURE === 'true',
   events: DEFAULT_EVENTS,
 };
 

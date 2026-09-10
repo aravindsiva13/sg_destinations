@@ -31,17 +31,29 @@ export async function getBrand(): Promise<Brand> {
 /** Resolve config once and guard on enabled + the specific toggle. */
 async function ready(event: keyof EmailEvents): Promise<{ cfg: EmailConfig; brand: Brand } | null> {
   const cfg = await getEmailConfig();
-  if (!cfg.enabled || !cfg.events[event]) return null;
+  if (!cfg.enabled) {
+    console.log(`[email] Notification suppressed: Email system is toggled OFF (event="${event}"). Enable it in /admin/email.`);
+    return null;
+  }
+  if (!cfg.events[event]) {
+    console.log(`[email] Notification suppressed: Event "${event}" is toggled OFF in Email Settings.`);
+    return null;
+  }
   return { cfg, brand: await getBrand() };
 }
 
 function log(label: string, r: { ok: boolean; error?: string }) {
-  if (!r.ok) console.warn(`[email] ${label} not sent: ${r.error}`);
+  if (!r.ok) {
+    console.warn(`[email] ${label} failed: ${r.error}`);
+  } else {
+    console.log(`[email] ${label} sent successfully.`);
+  }
 }
 
 /* --------------------------- public trigger helpers --------------------------- */
 export async function onEnquiryCreated(enquiry: Enquiry): Promise<void> {
   try {
+    console.log(`[email] onEnquiryCreated triggered for enquiry from ${enquiry.email}`);
     const guest = await ready('enquiryAck');
     if (guest && enquiry.email) {
       const t = T.enquiryAck(guest.brand, enquiry);
@@ -50,49 +62,54 @@ export async function onEnquiryCreated(enquiry: Enquiry): Promise<void> {
     const staff = await ready('staffNewEnquiry');
     if (staff && staff.cfg.staffRecipients.length) {
       const t = T.staffNewEnquiry(staff.brand, enquiry);
-      log('staff enquiry', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html, replyTo: enquiry.email }, staff.cfg));
+      log('staff enquiry alert', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html, replyTo: enquiry.email }, staff.cfg));
     }
   } catch (e) {
-    console.warn('[email] onEnquiryCreated failed', e);
+    console.error('[email] onEnquiryCreated failed', e);
   }
 }
 
 export async function onBookingReceived(booking: Booking, stay: Stay): Promise<void> {
   try {
+    console.log(`[email] onBookingReceived triggered for booking #${booking.code} (${booking.customerEmail})`);
     const guest = await ready('bookingReceived');
     if (guest) {
       const t = T.bookingReceived(guest.brand, booking, stay);
-      log('booking received', await sendMail({ to: booking.customerEmail, subject: t.subject, html: t.html }, guest.cfg));
+      log('booking received (guest)', await sendMail({ to: booking.customerEmail, subject: t.subject, html: t.html }, guest.cfg));
     }
     const staff = await ready('staffNewBooking');
     if (staff && staff.cfg.staffRecipients.length) {
       const t = T.staffNewBooking(staff.brand, booking, stay);
-      log('staff booking', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html }, staff.cfg));
+      log('staff booking alert', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html }, staff.cfg));
+    } else if (staff && !staff.cfg.staffRecipients.length) {
+      console.warn('[email] Staff booking alert enabled, but no staffRecipients configured in /admin/email.');
     }
   } catch (e) {
-    console.warn('[email] onBookingReceived failed', e);
+    console.error('[email] onBookingReceived failed', e);
   }
 }
 
 export async function onBookingConfirmed(booking: Booking, stay: Stay): Promise<void> {
   try {
+    console.log(`[email] onBookingConfirmed triggered for booking #${booking.code} (${booking.customerEmail})`);
     const guest = await ready('bookingConfirmed');
     if (!guest) return;
     const t = T.bookingConfirmed(guest.brand, booking, stay);
     log('booking confirmed', await sendMail({ to: booking.customerEmail, subject: t.subject, html: t.html }, guest.cfg));
   } catch (e) {
-    console.warn('[email] onBookingConfirmed failed', e);
+    console.error('[email] onBookingConfirmed failed', e);
   }
 }
 
 export async function onBookingCancelled(booking: Booking, stay: Stay): Promise<void> {
   try {
+    console.log(`[email] onBookingCancelled triggered for booking #${booking.code} (${booking.customerEmail})`);
     const guest = await ready('bookingCancelled');
     if (!guest) return;
     const t = T.bookingCancelled(guest.brand, booking, stay);
     log('booking cancelled', await sendMail({ to: booking.customerEmail, subject: t.subject, html: t.html }, guest.cfg));
   } catch (e) {
-    console.warn('[email] onBookingCancelled failed', e);
+    console.error('[email] onBookingCancelled failed', e);
   }
 }
 
@@ -101,8 +118,8 @@ export async function onReviewCreated(review: Review): Promise<void> {
     const staff = await ready('staffNewReview');
     if (!staff || !staff.cfg.staffRecipients.length) return;
     const t = T.staffNewReview(staff.brand, review);
-    log('staff review', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html }, staff.cfg));
+    log('staff review alert', await sendMail({ to: staff.cfg.staffRecipients, subject: t.subject, html: t.html }, staff.cfg));
   } catch (e) {
-    console.warn('[email] onReviewCreated failed', e);
+    console.error('[email] onReviewCreated failed', e);
   }
 }

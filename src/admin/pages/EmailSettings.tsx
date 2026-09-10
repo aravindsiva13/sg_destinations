@@ -104,7 +104,48 @@ function EmailForm({ config }: { config: EmailConfig }) {
 
       {/* Provider + credentials */}
       <section className="space-y-4 rounded-xl border border-line bg-paper p-5">
-        <h3 className="font-serif text-lg text-ink">Provider</h3>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="font-serif text-lg text-ink">Provider & Setup</h3>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted">Quick setup:</span>
+            <button
+              type="button"
+              onClick={() => {
+                setF((p) => ({
+                  ...p,
+                  provider: 'smtp',
+                  smtpHost: 'smtp.gmail.com',
+                  smtpPort: 587,
+                  smtpSecure: false,
+                }));
+                setMsg({
+                  tone: 'ok',
+                  text: 'Gmail SMTP preset applied. Set SMTP User to your Gmail address and SMTP Password to your 16-character Google App Password.',
+                });
+              }}
+              className="rounded-md border border-line bg-cream/70 px-2.5 py-1 text-xs font-medium text-ink hover:border-forest hover:bg-forest/10"
+            >
+              Gmail SMTP
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setF((p) => ({
+                  ...p,
+                  provider: 'brevo',
+                }));
+                setMsg({
+                  tone: 'ok',
+                  text: 'Brevo API preset applied. Paste your Brevo API Key (xkeysib-...) and use a verified sender email.',
+                });
+              }}
+              className="rounded-md border border-line bg-cream/70 px-2.5 py-1 text-xs font-medium text-ink hover:border-forest hover:bg-forest/10"
+            >
+              Brevo API
+            </button>
+          </div>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Sending method">
             <select value={f.provider} onChange={(e) => set('provider', e.target.value as 'brevo' | 'smtp')} className={inputCls}>
@@ -112,16 +153,28 @@ function EmailForm({ config }: { config: EmailConfig }) {
               <option value="smtp">SMTP (Gmail, Brevo SMTP, other)</option>
             </select>
           </Field>
-          <Field label={f.provider === 'brevo' ? 'Brevo API key' : 'SMTP password'} hint="Stored securely — never shown again.">
+          <Field label={f.provider === 'brevo' ? 'Brevo API key' : 'SMTP password / App Password'} hint="Stored securely — never shown again.">
             <input type="password" value={f.apiKey} onChange={(e) => set('apiKey', e.target.value)} className={inputCls} placeholder={secretPlaceholder} />
           </Field>
         </div>
+
         {f.provider === 'smtp' && (
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Field label="SMTP host"><input value={f.smtpHost} onChange={(e) => set('smtpHost', e.target.value)} className={inputCls} /></Field>
-            <Field label="Port"><input type="number" value={f.smtpPort} onChange={(e) => set('smtpPort', Number(e.target.value))} className={inputCls} /></Field>
-            <Field label="SMTP user"><input value={f.smtpUser} onChange={(e) => set('smtpUser', e.target.value)} className={inputCls} /></Field>
-          </div>
+          <>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label="SMTP host"><input value={f.smtpHost} onChange={(e) => set('smtpHost', e.target.value)} className={inputCls} placeholder="smtp.gmail.com" /></Field>
+              <Field label="Port"><input type="number" value={f.smtpPort} onChange={(e) => set('smtpPort', Number(e.target.value))} className={inputCls} placeholder="587" /></Field>
+              <Field label="SMTP user"><input value={f.smtpUser} onChange={(e) => set('smtpUser', e.target.value)} className={inputCls} placeholder="yourname@gmail.com" /></Field>
+            </div>
+            <div className="rounded-lg bg-amber-500/10 border border-amber-500/20 p-3 text-xs text-amber-900">
+              <p className="font-semibold mb-1">Using Gmail SMTP?</p>
+              <p>
+                1. Enable 2-Step Verification in your Google Account.<br />
+                2. Search "App passwords" in Google Account settings and create one for "Resort Website".<br />
+                3. Paste the generated 16-character password into the <strong>SMTP password</strong> field above (do not use your regular Gmail password).<br />
+                4. Set <strong>SMTP Host</strong>: <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">smtp.gmail.com</code>, <strong>Port</strong>: <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">587</code>, and <strong>SMTP User</strong>: your full Gmail address.
+              </p>
+            </div>
+          </>
         )}
       </section>
 

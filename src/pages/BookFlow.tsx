@@ -9,18 +9,13 @@ import SelectDropdown from '../components/SelectDropdown';
 import {
   checkAvailability,
   createBooking,
-  createPaymentOrder,
   useAddons,
   useMenu,
-  usePaymentConfig,
   useSettings,
   useStays,
   validateCoupon,
-  verifyPayment,
-  type PaymentOrder,
 } from '../hooks/usePublic';
 import { apiErrorMessage } from '../lib/publicApi';
-import { loadRazorpay, openRazorpayCheckout } from '../lib/razorpay';
 import type { AvailabilityResult, CouponResult } from '../lib/publicTypes';
 import { inr } from '../data/site';
 import Seo from '../components/Seo';
@@ -36,9 +31,7 @@ export default function BookFlow() {
   const { data: stays } = useStays();
   const { data: menu } = useMenu();
   const { data: addons } = useAddons();
-  const { data: payConfig } = usePaymentConfig();
   const gstPercent = Number(settings?.gstPercent ?? 12);
-  const depositPercent = payConfig?.depositPercent ?? 0;
 
   const [step, setStep] = useState(0);
   const [stayId, setStayId] = useState(params.get('stay') ?? '');
@@ -60,10 +53,6 @@ export default function BookFlow() {
 
   const [confirmation, setConfirmation] = useState<{ code: string } | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [payOrder, setPayOrder] = useState<PaymentOrder | null>(null);
-  // 'full' pays everything now; 'advance' pays the configured deposit % and
-  // reserves the booking with the balance collected later.
-  const [payChoice, setPayChoice] = useState<'full' | 'advance'>('full');
   const [foodTab, setFoodTab] = useState<string | null>(null);
   const [foodSearch, setFoodSearch] = useState('');
 
@@ -102,12 +91,6 @@ export default function BookFlow() {
   const preTax = Math.max(0, roomSubtotal - discount) + foodTotal + addonsTotal;
   const gst = Math.round((preTax * gstPercent) / 100);
   const grandTotal = preTax + gst;
-
-  // Advance / deposit support.
-  const advanceEnabled = depositPercent > 0;
-  const payNow =
-    advanceEnabled && payChoice === 'advance' ? Math.round((grandTotal * depositPercent) / 100) : grandTotal;
-  const balanceLater = grandTotal - payNow;
 
   const summaryContent = quote ? (
     <div className="space-y-2 text-sm">
@@ -163,7 +146,7 @@ export default function BookFlow() {
     }
   }
 
-  async function startPayment() {
+  async function submitReservation() {
     setSubmitting(true);
     setError(null);
     try {
@@ -174,6 +157,7 @@ export default function BookFlow() {
       ]
         .filter(Boolean)
         .join(' · ');
+
       const booking = await createBooking({
         stayId,
         customerName: guest.name,
@@ -187,57 +171,11 @@ export default function BookFlow() {
         addonIds,
         notes: notes || undefined,
       });
-      const order = await createPaymentOrder(booking.id, !(advanceEnabled && payChoice === 'advance'));
 
-      if (order.provider === 'razorpay') {
-        const ok = await loadRazorpay();
-        if (!ok) throw new Error('Could not load the payment gateway');
-        openRazorpayCheckout({
-          key: order.keyId,
-          amount: order.amount * 100,
-          currency: order.currency,
-          name: 'Shraddha Garden Resort',
-          description: booking.code,
-          order_id: order.orderId,
-          prefill: { name: guest.name, email: guest.email, contact: guest.phone },
-          theme: { color: '#2E4B2E' },
-          handler: async (r) => {
-            try {
-              const v = await verifyPayment({
-                paymentRecordId: order.paymentRecordId,
-                razorpayPaymentId: r.razorpay_payment_id,
-                razorpaySignature: r.razorpay_signature,
-              });
-              setConfirmation({ code: v.bookingCode });
-              setStep(5);
-            } catch (e) {
-              setError(apiErrorMessage(e, 'Payment verification failed'));
-            }
-          },
-          modal: { ondismiss: () => setError('Payment was cancelled.') },
-        });
-      } else {
-        // Mock provider — show the in-flow test payment panel.
-        setPayOrder(order);
-      }
-    } catch (err) {
-      setError(apiErrorMessage(err, 'Could not start payment'));
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  async function completeMock(success: boolean) {
-    if (!payOrder) return;
-    setSubmitting(true);
-    setError(null);
-    try {
-      const v = await verifyPayment({ paymentRecordId: payOrder.paymentRecordId, mockSuccess: success });
-      setConfirmation({ code: v.bookingCode });
-      setPayOrder(null);
+      setConfirmation({ code: booking.code });
       setStep(5);
     } catch (err) {
-      setError(apiErrorMessage(err, 'Payment failed — please try again.'));
+      setError(apiErrorMessage(err, 'Could not submit reservation'));
     } finally {
       setSubmitting(false);
     }
@@ -566,78 +504,44 @@ export default function BookFlow() {
           {step === 4 && quote && (
             <div>
               <h2 className="font-serif text-xl text-ink">Review & confirm</h2>
+              <p className="mt-1 text-sm text-muted">
+                Please review your stay details and booking summary before submitting.
+              </p>
               <div className="mt-5 lg:hidden">
                 {summaryContent}
               </div>
-              {advanceEnabled && (
-                <div className="mt-4">
-                  <p className="tag-label">Payment option</p>
-                  <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                    <button
-                      type="button"
-                      onClick={() => setPayChoice('full')}
-                      className={`rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-                        payChoice === 'full' ? 'border-forest bg-forest/5' : 'border-line hover:border-forest/50'
-                      }`}
-                    >
-                      <span className="block font-medium text-ink">Pay full amount</span>
-                      <span className="block text-xs text-muted">{inr(grandTotal)} now</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPayChoice('advance')}
-                      className={`rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
-                        payChoice === 'advance' ? 'border-forest bg-forest/5' : 'border-line hover:border-forest/50'
-                      }`}
-                    >
-                      <span className="block font-medium text-ink">Reserve with {depositPercent}% advance</span>
-                      <span className="block text-xs text-muted">
-                        {inr(Math.round((grandTotal * depositPercent) / 100))} now · balance{' '}
-                        {inr(grandTotal - Math.round((grandTotal * depositPercent) / 100))} later
-                      </span>
-                    </button>
-                  </div>
+
+              {/* Guest Details Recap */}
+              <div className="mt-6 rounded-xl border border-line bg-cream/30 p-4 text-sm space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-muted">Primary Guest</span>
+                  <span className="font-medium text-ink">{guest.name}</span>
                 </div>
-              )}
+                <div className="flex justify-between">
+                  <span className="text-muted">Email</span>
+                  <span className="text-ink">{guest.email}</span>
+                </div>
+                {guest.phone && (
+                  <div className="flex justify-between">
+                    <span className="text-muted">Phone</span>
+                    <span className="text-ink">{guest.phone}</span>
+                  </div>
+                )}
+                {guest.notes && (
+                  <div className="border-t border-line/60 pt-2 text-xs text-muted">
+                    <span className="font-medium text-ink">Special requests:</span> {guest.notes}
+                  </div>
+                )}
+              </div>
+
               {error && <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
 
-              {!payOrder ? (
-                <>
-                  <Button type="button" variant="forest" className="mt-6 w-full" onClick={startPayment} disabled={submitting}>
-                    {submitting
-                      ? 'Starting payment…'
-                      : payChoice === 'advance' && advanceEnabled
-                        ? `Pay ${inr(payNow)} advance · reserve`
-                        : `Pay ${inr(grandTotal)}`}
-                  </Button>
-                  {payChoice === 'advance' && advanceEnabled && (
-                    <p className="mt-1.5 text-center text-xs text-muted">
-                      Balance of {inr(balanceLater)} collected later. Your booking is held as <span className="text-ink">Reserved</span>.
-                    </p>
-                  )}
-                  <p className="mt-2 text-center text-xs text-muted">
-                    {payConfig?.provider === 'razorpay'
-                      ? `Secured by Razorpay${payConfig?.testMode ? ' (test mode)' : ''} · UPI, cards & netbanking`
-                      : 'Test checkout — no real charge is made.'}
-                  </p>
-                </>
-              ) : (
-                <div className="mt-6 rounded-xl border border-forest/30 bg-forest/5 p-4">
-                  <p className="text-sm font-medium text-ink">Test payment</p>
-                  <p className="mt-1 text-xs text-muted">
-                    Order <span className="font-mono">{payOrder.orderId.slice(0, 18)}…</span> · Pay now {inr(payOrder.amount)}
-                    {payOrder.amount < grandTotal && ` (balance ${inr(grandTotal - payOrder.amount)} at check-in)`}
-                  </p>
-                  <div className="mt-3 flex gap-2">
-                    <Button type="button" variant="forest" onClick={() => completeMock(true)} disabled={submitting}>
-                      {submitting ? 'Processing…' : 'Pay now'}
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => completeMock(false)} disabled={submitting}>
-                      Simulate failure
-                    </Button>
-                  </div>
-                </div>
-              )}
+              <Button type="button" variant="forest" className="mt-6 w-full" onClick={submitReservation} disabled={submitting}>
+                {submitting ? 'Submitting your reservation…' : `Confirm Reservation · ${inr(grandTotal)}`}
+              </Button>
+              <p className="mt-2 text-center text-xs text-muted">
+                No online payment required. Pay upon arrival at the resort.
+              </p>
             </div>
           )}
 
@@ -647,31 +551,32 @@ export default function BookFlow() {
               <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-forest text-cream">
                 <Icon name="check" className="h-6 w-6" />
               </span>
-              <h2 className="mt-4 font-serif text-2xl text-ink">Booking confirmed</h2>
+              <h2 className="mt-4 font-serif text-2xl text-ink">Reservation Received!</h2>
               <p className="mt-2 text-sm text-muted">
-                Thank you, {guest.name}! Your reference is{' '}
+                Thank you, {guest.name}! Your booking reference is{' '}
                 <span className="font-mono font-medium text-ink">{confirmation.code}</span>. A confirmation has been sent to {guest.email}.
               </p>
-              <div className="mx-auto mt-5 max-w-sm rounded-lg border border-line bg-cream/50 p-4 text-left text-sm">
+              <div className="mx-auto mt-5 max-w-sm rounded-lg border border-line bg-cream/50 p-4 text-left text-sm space-y-2">
                 <Line label="Stay" value={quote?.stay.name ?? ''} />
                 <Line label="Dates" value={`${checkIn} → ${checkOut}`} />
+                <Line label="Guests" value={`${guests} guest${guests === 1 ? '' : 's'}`} />
                 {foodTotal > 0 && <Line label="Food" value={inr(foodTotal)} />}
                 {addonsTotal > 0 && <Line label="Add-ons" value={inr(addonsTotal)} />}
-                {payChoice === 'advance' && advanceEnabled ? (
-                  <>
-                    <Line label="Paid now (advance)" value={inr(payNow)} accent />
-                    <Line label="Balance due later" value={inr(balanceLater)} />
-                  </>
-                ) : (
-                  <Line label="Total paid" value={inr(grandTotal)} />
-                )}
+                {discount > 0 && <Line label="Coupon discount" value={`− ${inr(discount)}`} accent />}
+                <div className="flex justify-between border-t border-line pt-2 font-serif text-base text-ink">
+                  <span>Total Amount</span>
+                  <span>{inr(grandTotal)}</span>
+                </div>
+                <p className="text-[11px] text-muted text-center pt-1">
+                  Payment to be settled at check-in (Cash / UPI / Card).
+                </p>
               </div>
               <div className="mt-6 flex justify-center gap-3">
                 <Link to="/stays">
                   <Button variant="outline">Browse more stays</Button>
                 </Link>
                 <Link to={`/find-booking?code=${confirmation.code}&email=${encodeURIComponent(guest.email)}`}>
-                  <Button variant="forest">Manage this booking</Button>
+                  <Button variant="forest">View Booking Details</Button>
                 </Link>
               </div>
             </div>
