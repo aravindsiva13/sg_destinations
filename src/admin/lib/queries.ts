@@ -171,7 +171,11 @@ export function useUpdateStay() {
   return useMutation({
     mutationFn: async ({ id, input }: { id: string; input: Partial<StayInput> }) =>
       (await api.patch<Stay>(`/api/stays/${id}`, input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['stays'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['stays'] });
+      qc.invalidateQueries({ queryKey: ['public', 'stays'] });
+      qc.invalidateQueries({ queryKey: ['public', 'stay'] });
+    },
   });
 }
 
@@ -324,7 +328,10 @@ export function useUpdateContent() {
   return useMutation({
     mutationFn: async ({ id, input }: { id: string; input: Partial<ContentInput> }) =>
       (await api.patch<ContentItem>(`/api/content/${id}`, input)).data,
-    onSuccess: (item) => qc.invalidateQueries({ queryKey: ['content', item.type] }),
+    onSuccess: (item) => {
+      qc.invalidateQueries({ queryKey: ['content', item.type] });
+      qc.invalidateQueries({ queryKey: ['public', 'content'] });
+    },
   });
 }
 
@@ -654,7 +661,10 @@ export function useSaveSettings() {
   return useMutation({
     mutationFn: async (patch: Record<string, unknown>) =>
       (await api.put<Record<string, unknown>>('/api/settings', patch)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['settings'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['settings'] });
+      qc.invalidateQueries({ queryKey: ['public', 'settings'] });
+    },
   });
 }
 

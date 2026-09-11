@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import Icon from '../components/Icon';
 import Pill from '../components/Pill';
 import NotFound from './NotFound';
+import { PublicError, PublicLoading } from '../components/PublicState';
 import { getAmenity } from '../data/amenities';
 import { useContentItem } from '../hooks/usePublic';
 import Seo from '../components/Seo';
@@ -14,7 +15,7 @@ import Seo from '../components/Seo';
 export default function AmenityDetail() {
   const { slug } = useParams();
   const fallback = slug ? getAmenity(slug) : undefined;
-  const { data: dbItem } = useContentItem('amenity', slug);
+  const { data: dbItem, isLoading, isError, refetch } = useContentItem('amenity', slug);
 
   // Combine database content with static defaults so any admin change takes effect immediately
   const item = useMemo(() => {
@@ -37,22 +38,42 @@ export default function AmenityDetail() {
     return fallback;
   }, [dbItem, fallback]);
 
-  if (!item) return <NotFound />;
-
-  const [secondary, tertiary] = item.gallery;
-
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
-  // Lock body scroll while lightbox is open
+  // Lock body scroll and restore native cursor while lightbox is open
   useEffect(() => {
     if (selectedPhoto) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('in-lightbox');
+      document.body.classList.remove('has-custom-cursor');
       return () => {
         document.body.style.overflow = originalOverflow;
+        document.body.classList.remove('in-lightbox');
+        document.body.classList.add('has-custom-cursor');
       };
     }
   }, [selectedPhoto]);
+
+  if (isLoading && !fallback) {
+    return (
+      <section className="container-pad pt-32 pb-20">
+        <PublicLoading label="Loading amenity…" />
+      </section>
+    );
+  }
+
+  if (isError && !fallback) {
+    return (
+      <section className="container-pad pt-32 pb-20">
+        <PublicError onRetry={() => refetch()} />
+      </section>
+    );
+  }
+
+  if (!item) return <NotFound />;
+
+  const [secondary, tertiary] = item.gallery;
 
   return (
     <section className="container-pad pt-24 pb-20 md:pt-32 md:pb-28">
@@ -124,7 +145,8 @@ export default function AmenityDetail() {
         typeof document !== 'undefined' &&
         createPortal(
           <div
-            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md"
+            data-lightbox="true"
+            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-black/95 p-4 md:p-8 backdrop-blur-md cursor-default"
             onClick={() => setSelectedPhoto(null)}
           >
             <button

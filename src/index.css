@@ -239,10 +239,37 @@ html.lenis body {
    Native pointer is hidden only while the custom cursor is
    active (class toggled by JS on the public site, never admin). */
 body.has-custom-cursor,
-body.has-custom-cursor *,
-body.has-custom-cursor *::before,
-body.has-custom-cursor *::after {
+body.has-custom-cursor *:not([data-lightbox]):not([data-lightbox] *) {
   cursor: none !important;
+}
+
+/* ── Restore native cursor inside lightboxes and preview modals ── */
+body:not(.has-custom-cursor),
+body:not(.has-custom-cursor) *,
+body.in-lightbox,
+body.in-lightbox *,
+[data-lightbox],
+[data-lightbox] *,
+[data-lightbox] *::before,
+[data-lightbox] *::after {
+  cursor: default !important;
+}
+
+body.in-lightbox button,
+body.in-lightbox [role="button"],
+body.in-lightbox a,
+[data-lightbox] button,
+[data-lightbox] [role="button"],
+[data-lightbox] a,
+[data-lightbox] .cursor-pointer {
+  cursor: pointer !important;
+}
+
+body.in-lightbox #site-cursor,
+body:not(.has-custom-cursor) #site-cursor {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 #site-cursor {
@@ -254,7 +281,7 @@ body.has-custom-cursor *::after {
   border-radius: 50%;
   background: var(--color-terracotta);
   pointer-events: none;
-  z-index: 99999;
+  z-index: 1000000;
   transform: translate(-50%, -50%);
   transition:
     width 0.35s var(--anim-spring),

@@ -103,6 +103,13 @@ export default function SiteAnimations() {
     };
 
     const onMove = (e: MouseEvent) => {
+      if (
+        document.body.classList.contains('in-lightbox') ||
+        (e.target instanceof Element && e.target.closest('[data-lightbox]'))
+      ) {
+        cursor.classList.add('is-hidden');
+        return;
+      }
       tx = e.clientX;
       ty = e.clientY;
       cursor.classList.remove('is-hidden');

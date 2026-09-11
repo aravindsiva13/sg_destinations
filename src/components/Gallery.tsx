@@ -23,13 +23,17 @@ export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryP
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Lock body scroll while lightbox is open
+  // Lock body scroll and restore native cursor while lightbox is open
   useEffect(() => {
     if (lightboxIndex === null) return;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('in-lightbox');
+    document.body.classList.remove('has-custom-cursor');
     return () => {
       document.body.style.overflow = originalOverflow;
+      document.body.classList.remove('in-lightbox');
+      document.body.classList.add('has-custom-cursor');
     };
   }, [lightboxIndex]);
 
@@ -111,7 +115,8 @@ export default function Gallery({ hero, thumbs, alt, extraPhotos = 0 }: GalleryP
         typeof document !== 'undefined' &&
         createPortal(
           <div
-            className="fixed inset-0 z-[99999] flex h-screen w-screen flex-col items-center justify-between bg-black/95 p-4 md:p-8 backdrop-blur-md animate-fadeIn"
+            data-lightbox="true"
+            className="fixed inset-0 z-[99999] flex h-screen w-screen flex-col items-center justify-between bg-black/95 p-4 md:p-8 backdrop-blur-md animate-fadeIn cursor-default"
             onClick={() => setLightboxIndex(null)}
           >
             {/* Top Bar */}

@@ -92,13 +92,17 @@ export default function Gallery() {
     }
   }, [categories, activeCategory]);
 
-  // Lock body scroll while lightbox is open
+  // Lock body scroll and restore native cursor while lightbox is open
   useEffect(() => {
     if (lightboxImg) {
       const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('in-lightbox');
+      document.body.classList.remove('has-custom-cursor');
       return () => {
         document.body.style.overflow = originalOverflow;
+        document.body.classList.remove('in-lightbox');
+        document.body.classList.add('has-custom-cursor');
       };
     }
   }, [lightboxImg]);
@@ -217,7 +221,8 @@ export default function Gallery() {
         typeof document !== 'undefined' &&
         createPortal(
           <div 
-            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-ink/95 p-6 backdrop-blur-md transition-opacity"
+            data-lightbox="true"
+            className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-ink/95 p-6 backdrop-blur-md transition-opacity cursor-default"
             onClick={() => setLightboxImg(null)}
           >
             <img

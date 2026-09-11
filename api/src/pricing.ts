@@ -1,7 +1,7 @@
 import type { Booking, DateBlock, RateRule, Stay } from '@prisma/client';
 
 /** Statuses that occupy inventory (i.e. block a unit for those nights). */
-export const OCCUPYING_STATUSES = ['PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT'];
+export const OCCUPYING_STATUSES = ['PENDING', 'RESERVED', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT'];
 
 const MS_PER_DAY = 86_400_000;
 

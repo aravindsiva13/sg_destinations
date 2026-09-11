@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageHeader from '../components/PageHeader';
 import Badge from '../components/ui/Badge';
 import AdminButton from '../components/ui/AdminButton';
 import AdminIcon from '../components/AdminIcon';
+import Drawer from '../components/ui/Drawer';
+import ImagePicker from '../components/ui/ImagePicker';
 import { EmptyState, ErrorState, LoadingState } from '../components/ui/DataState';
 import ContentForm, { type TypeConfig } from './ContentForm';
-import { useContent, useDeleteContent } from '../lib/queries';
+import { useContent, useDeleteContent, useSettings, useSaveSettings } from '../lib/queries';
 import { apiErrorMessage } from '../lib/apiClient';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import type { ContentItem } from '../types';
@@ -22,6 +24,32 @@ export default function ContentManager({ config }: Props) {
   const [editing, setEditing] = useState<ContentItem | null>(null);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { data: settingsData } = useSettings();
+  const saveSettingsMut = useSaveSettings();
+  const [editingHero, setEditingHero] = useState(false);
+  const [heroForm, setHeroForm] = useState({ photo1: '', photo2: '' });
+
+  useEffect(() => {
+    if (settingsData) {
+      setHeroForm({
+        photo1: (settingsData.diningHeroImage1 as string) || '/images/selected-images/new/water_shower.jpeg',
+        photo2: (settingsData.diningHeroImage2 as string) || '/images/selected-images/new/shra_vanam.jpeg',
+      });
+    }
+  }, [settingsData]);
+
+  async function handleSaveHero() {
+    try {
+      await saveSettingsMut.mutateAsync({
+        diningHeroImage1: heroForm.photo1,
+        diningHeroImage2: heroForm.photo2,
+      });
+      setEditingHero(false);
+    } catch (err) {
+      setError(apiErrorMessage(err, 'Could not save dining hero images'));
+    }
+  }
 
   const canWrite = hasRole('SUPER_ADMIN', 'MANAGER');
 
@@ -42,10 +70,18 @@ export default function ContentManager({ config }: Props) {
         subtitle={config.subtitle}
         actions={
           canWrite && (
-            <AdminButton onClick={() => setCreating(true)}>
-              <AdminIcon name="plus" className="h-4 w-4" />
-              New {config.singular}
-            </AdminButton>
+            <div className="flex items-center gap-2">
+              {config.type === 'DINING' && (
+                <AdminButton variant="secondary" onClick={() => setEditingHero(true)}>
+                  <AdminIcon name="media" className="h-4 w-4" />
+                  Edit Page Hero Photos
+                </AdminButton>
+              )}
+              <AdminButton onClick={() => setCreating(true)}>
+                <AdminIcon name="plus" className="h-4 w-4" />
+                New {config.singular}
+              </AdminButton>
+            </div>
           )
         }
       />
@@ -114,6 +150,47 @@ export default function ContentManager({ config }: Props) {
             setEditing(null);
           }}
         />
+      )}
+
+      {editingHero && (
+        <Drawer
+          open
+          onClose={() => setEditingHero(false)}
+          title="Dining Page Hero Photos"
+          width="max-w-xl"
+        >
+          <div className="space-y-6">
+            <p className="text-sm text-muted">
+              These two vertical photos appear prominently on the top right of the public{' '}
+              <strong className="text-ink">/dining</strong> page header next to &ldquo;Food provided on premise&rdquo;.
+            </p>
+
+            <div className="space-y-4">
+              <ImagePicker
+                label="Dining Hero Photo 1 (Left Card)"
+                folder="dining/hero"
+                value={heroForm.photo1}
+                onChange={(url) => setHeroForm((prev) => ({ ...prev, photo1: url }))}
+              />
+
+              <ImagePicker
+                label="Dining Hero Photo 2 (Right Card)"
+                folder="dining/hero"
+                value={heroForm.photo2}
+                onChange={(url) => setHeroForm((prev) => ({ ...prev, photo2: url }))}
+              />
+            </div>
+
+            <div className="flex justify-end gap-2 border-t border-line pt-4">
+              <AdminButton variant="secondary" onClick={() => setEditingHero(false)}>
+                Cancel
+              </AdminButton>
+              <AdminButton onClick={handleSaveHero} loading={saveSettingsMut.isPending}>
+                Save hero photos
+              </AdminButton>
+            </div>
+          </div>
+        </Drawer>
       )}
     </div>
   );

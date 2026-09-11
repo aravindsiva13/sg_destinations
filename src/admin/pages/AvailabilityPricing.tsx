@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageHeader from '../components/PageHeader';
 import Badge from '../components/ui/Badge';
 import AdminButton from '../components/ui/AdminButton';
@@ -22,6 +22,11 @@ import type { AvailabilityResult, RateKind, RateRule } from '../types';
 
 const today = new Date().toISOString().slice(0, 10);
 const plus = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10);
+const addDays = (d: string, n: number) => {
+  const dt = new Date(d);
+  dt.setDate(dt.getDate() + n);
+  return dt.toISOString().slice(0, 10);
+};
 
 function ruleEffect(r: Pick<RateRule, 'kind' | 'amount'>): string {
   if (r.kind === 'FIXED') return `${inr(r.amount)}/night`;
@@ -52,6 +57,10 @@ function AvailabilityChecker() {
   const [error, setError] = useState<string | null>(null);
 
   async function run() {
+    if (range.checkOut <= range.checkIn) {
+      setError('Check-out must be after check-in date');
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -63,16 +72,31 @@ function AvailabilityChecker() {
     }
   }
 
+  // Load initial availability on mount
+  useEffect(() => {
+    void run();
+  }, []);
+
   return (
     <section className="rounded-xl border border-line bg-paper p-5">
-      <h2 className="mb-4 font-serif text-lg text-ink">Availability checker</h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-serif text-lg text-ink">Availability checker</h2>
+        <span className="text-xs text-muted">Test room inventory and rate calculations for any dates</span>
+      </div>
       <div className="flex flex-wrap items-end gap-3">
         <Field label="Check-in">
           <input
             type="date"
             value={range.checkIn}
             min={today}
-            onChange={(e) => setRange((r) => ({ ...r, checkIn: e.target.value }))}
+            onChange={(e) => {
+              const nextIn = e.target.value;
+              setRange((r) => ({
+                ...r,
+                checkIn: nextIn,
+                checkOut: r.checkOut <= nextIn ? addDays(nextIn, 1) : r.checkOut,
+              }));
+            }}
             className={inputCls}
           />
         </Field>
@@ -80,7 +104,7 @@ function AvailabilityChecker() {
           <input
             type="date"
             value={range.checkOut}
-            min={range.checkIn}
+            min={addDays(range.checkIn, 1)}
             onChange={(e) => setRange((r) => ({ ...r, checkOut: e.target.value }))}
             className={inputCls}
           />
