@@ -27,8 +27,14 @@ reportsRouter.get(
       include: { stay: { select: { name: true } } },
     });
 
+    const bookingRevenue = (b: (typeof bookings)[number]) => {
+      if (b.paymentStatus === 'PAID') return b.amountPaid > 0 ? b.amountPaid : b.amount;
+      if (b.paymentStatus === 'PARTIAL') return b.amountPaid;
+      return 0;
+    };
+    const revenueContributing = bookings.filter((b) => bookingRevenue(b) > 0);
+    const revenue = revenueContributing.reduce((s, b) => s + bookingRevenue(b), 0);
     const paid = bookings.filter((b) => b.paymentStatus === 'PAID');
-    const revenue = paid.reduce((s, b) => s + b.amount, 0);
     const nights = bookings.reduce((s, b) => s + b.nights, 0);
     const cancelled = bookings.filter((b) => b.status === 'CANCELLED').length;
 
@@ -53,8 +59,8 @@ reportsRouter.get(
         avgBookingValue: paid.length ? Math.round(revenue / paid.length) : 0,
         occupancy,
       },
-      revenueBySource: group(paid, (b) => b.source, (b) => b.amount),
-      revenueByStay: group(paid, (b) => b.stay?.name ?? '—', (b) => b.amount),
+      revenueBySource: group(revenueContributing, (b) => b.source, (b) => bookingRevenue(b)),
+      revenueByStay: group(revenueContributing, (b) => b.stay?.name ?? '—', (b) => bookingRevenue(b)),
       bookingsByStatus: group(bookings, (b) => b.status, () => 1),
     });
   }),

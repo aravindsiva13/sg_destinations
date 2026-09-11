@@ -177,6 +177,7 @@ bookingsRouter.post(
         roomAmount,
         foodAmount,
         addonsAmount,
+        balanceDue: amount,
         discount,
         extras: JSON.stringify(lines),
         source: 'Website',
@@ -459,9 +460,27 @@ bookingsRouter.patch(
   requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER),
   validateBody(paymentSchema),
   asyncHandler(async (req, res) => {
+    const current = await prisma.booking.findUnique({ where: { id: req.params.id } });
+    if (!current) throw new HttpError(404, 'Booking not found');
+
+    const updateData: Record<string, unknown> = {
+      paymentStatus: req.body.paymentStatus,
+    };
+
+    if (req.body.paymentStatus === 'PAID') {
+      updateData.amountPaid = current.amount;
+      updateData.balanceDue = 0;
+      if (current.status === 'PENDING' || current.status === 'RESERVED') {
+        updateData.status = 'CONFIRMED';
+      }
+    } else if (req.body.paymentStatus === 'UNPAID') {
+      updateData.amountPaid = 0;
+      updateData.balanceDue = current.amount;
+    }
+
     const booking = await prisma.booking.update({
       where: { id: req.params.id },
-      data: { paymentStatus: req.body.paymentStatus },
+      data: updateData,
     });
     await recordAudit({
       actor: req.user,

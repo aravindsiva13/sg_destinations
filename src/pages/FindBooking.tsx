@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import SectionEyebrow from '../components/SectionEyebrow';
@@ -35,11 +35,21 @@ export default function FindBooking() {
 
   const lookup = useMutation({
     mutationFn: async () =>
-      (await publicApi.get<LookupBooking>('/api/bookings/lookup', { params: { code, email } })).data,
+      (await publicApi.get<LookupBooking>('/api/bookings/lookup', { params: { code: code.trim(), email: email.trim() } })).data,
   });
 
+  const mutateLookup = lookup.mutate;
+  useEffect(() => {
+    if (code.trim() && email.trim()) {
+      mutateLookup();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const booking = lookup.data;
-  const balance = booking ? (booking.balanceDue ?? Math.max(0, booking.amount - (booking.amountPaid ?? 0))) : 0;
+  const balance = booking
+    ? (booking.balanceDue > 0 ? booking.balanceDue : Math.max(0, booking.amount - (booking.amountPaid ?? 0)))
+    : 0;
 
   return (
     <section className="container-pad grid min-h-[70vh] place-items-center pt-28 pb-20">

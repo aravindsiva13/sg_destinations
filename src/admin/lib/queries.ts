@@ -162,7 +162,10 @@ export function useCreateStay() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: StayInput) => (await api.post<Stay>('/api/stays', input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['stays'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['stays'] });
+      qc.invalidateQueries({ queryKey: ['public', 'stays'] });
+    },
   });
 }
 
@@ -183,7 +186,11 @@ export function useDeleteStay() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/stays/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['stays'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['stays'] });
+      qc.invalidateQueries({ queryKey: ['public', 'stays'] });
+      qc.invalidateQueries({ queryKey: ['public', 'stay'] });
+    },
   });
 }
 
@@ -319,7 +326,10 @@ export function useCreateContent() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: ContentInput) => (await api.post<ContentItem>('/api/content', input)).data,
-    onSuccess: (item) => qc.invalidateQueries({ queryKey: ['content', item.type] }),
+    onSuccess: (item) => {
+      qc.invalidateQueries({ queryKey: ['content', item.type] });
+      qc.invalidateQueries({ queryKey: ['public', 'content'] });
+    },
   });
 }
 
@@ -339,7 +349,10 @@ export function useDeleteContent(type: ContentType) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/content/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['content', type] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['content', type] });
+      qc.invalidateQueries({ queryKey: ['public', 'content'] });
+    },
   });
 }
 
@@ -361,7 +374,10 @@ export function useCreateMenuCategory() {
   return useMutation({
     mutationFn: async (input: MenuCategoryInput) =>
       (await api.post<MenuCategory>('/api/menu/categories', input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 export function useUpdateMenuCategory() {
@@ -369,14 +385,20 @@ export function useUpdateMenuCategory() {
   return useMutation({
     mutationFn: async ({ id, input }: { id: string; input: Partial<MenuCategoryInput> }) =>
       (await api.patch<MenuCategory>(`/api/menu/categories/${id}`, input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 export function useDeleteMenuCategory() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/menu/categories/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 
@@ -384,7 +406,10 @@ export function useCreateMenuItem() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: MenuItemInput) => (await api.post<MenuItem>('/api/menu/items', input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 export function useUpdateMenuItem() {
@@ -392,14 +417,20 @@ export function useUpdateMenuItem() {
   return useMutation({
     mutationFn: async ({ id, input }: { id: string; input: Partial<MenuItemInput> }) =>
       (await api.patch<MenuItem>(`/api/menu/items/${id}`, input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 export function useDeleteMenuItem() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/menu/items/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['menu'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['menu'] });
+      qc.invalidateQueries({ queryKey: ['public', 'menu'] });
+    },
   });
 }
 
@@ -416,7 +447,10 @@ export function useCreateAddon() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (input: AddonInput) => (await api.post<Addon>('/api/addons', input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['addons'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['addons'] });
+      qc.invalidateQueries({ queryKey: ['public', 'addons'] });
+    },
   });
 }
 export function useUpdateAddon() {
@@ -424,14 +458,20 @@ export function useUpdateAddon() {
   return useMutation({
     mutationFn: async ({ id, input }: { id: string; input: Partial<AddonInput> }) =>
       (await api.patch<Addon>(`/api/addons/${id}`, input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['addons'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['addons'] });
+      qc.invalidateQueries({ queryKey: ['public', 'addons'] });
+    },
   });
 }
 export function useDeleteAddon() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/addons/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['addons'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['addons'] });
+      qc.invalidateQueries({ queryKey: ['public', 'addons'] });
+    },
   });
 }
 
@@ -603,7 +643,11 @@ export function useDeleteReview() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (id: string) => (await api.delete(`/api/reviews/${id}`)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['reviews'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['reviews'] });
+      qc.invalidateQueries({ queryKey: ['public', 'reviews'] });
+      qc.invalidateQueries({ queryKey: ['public', 'featured-reviews'] });
+    },
   });
 }
 

@@ -21,6 +21,13 @@ export function errorHandler(
     res.status(404).json({ error: 'Record not found' });
     return;
   }
+  // Prisma unique constraint violation (e.g. duplicate slug, code, email)
+  if (typeof err === 'object' && err && (err as { code?: string }).code === 'P2002') {
+    const target = (err as { meta?: { target?: string[] } }).meta?.target;
+    const fieldName = Array.isArray(target) && target.length > 0 ? target.join(', ') : 'value';
+    res.status(409).json({ error: `A record with that unique ${fieldName} already exists.` });
+    return;
+  }
   // Client errors raised by express/body-parser (bad JSON, oversized payload)
   // carry their own status and expose flag.
   if (

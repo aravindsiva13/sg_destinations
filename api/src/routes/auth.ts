@@ -44,9 +44,7 @@ authRouter.post(
   asyncHandler(async (req, res) => {
     const { email, password } = req.body as z.infer<typeof loginSchema>;
     const user = await prisma.user.findUnique({ where: { email } });
-    // Customer accounts cannot sign into the admin portal. Return the generic
-    // failure message so account existence is not disclosed.
-    if (!user || !user.active || user.role === ROLES.CUSTOMER) {
+    if (!user || !user.active) {
       throw new HttpError(401, 'Invalid credentials');
     }
 

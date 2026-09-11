@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { api, setOnAuthExpired } from '../lib/apiClient';
 import { tokenStore } from '../lib/tokenStore';
+import { ADMIN_ROLES } from '../constants';
 import type { AdminUser, AuthResponse, Role } from '../types';
 
 interface AuthState {
@@ -40,7 +41,12 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       }
       try {
         const { data } = await api.get<{ user: AdminUser }>('/api/auth/me');
-        if (active) setUser(data.user);
+        if (data.user && !ADMIN_ROLES.includes(data.user.role)) {
+          tokenStore.clear();
+          if (active) setUser(null);
+        } else if (active) {
+          setUser(data.user);
+        }
       } catch {
         tokenStore.clear();
         if (active) setUser(null);
@@ -56,6 +62,9 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string) => {
     const { data } = await api.post<AuthResponse>('/api/auth/login', { email, password });
+    if (!ADMIN_ROLES.includes(data.user.role)) {
+      throw new Error('Access denied. Administrator privileges required.');
+    }
     tokenStore.set(data.accessToken, data.refreshToken, data.user);
     setUser(data.user);
   }, []);
