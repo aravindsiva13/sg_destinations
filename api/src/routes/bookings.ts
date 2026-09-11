@@ -461,8 +461,15 @@ bookingsRouter.patch(
   }),
 );
 
-// Payment status (managers and above)
-const paymentSchema = z.object({ paymentStatus: z.enum(PAYMENT_STATUS) });
+// Payment status & balance updates (managers and above)
+const paymentSchema = z.object({
+  paymentStatus: z.enum(PAYMENT_STATUS).optional(),
+  amountPaid: z.coerce.number().min(0).optional(),
+  balanceDue: z.coerce.number().min(0).optional(),
+  paymentAmount: z.coerce.number().min(1).optional(),
+  paymentMethod: z.string().optional(),
+  notes: z.string().optional(),
+});
 
 bookingsRouter.patch(
   '/:id/payment',
@@ -473,35 +480,79 @@ bookingsRouter.patch(
     const current = await prisma.booking.findUnique({ where: { id: req.params.id } });
     if (!current) throw new HttpError(404, 'Booking not found');
 
-    const updateData: Record<string, unknown> = {
-      paymentStatus: req.body.paymentStatus,
-    };
+    const updateData: Record<string, unknown> = {};
+    const { paymentStatus, amountPaid, balanceDue, paymentAmount, paymentMethod, notes } = req.body;
 
-    if (req.body.paymentStatus === 'PAID') {
-      updateData.amountPaid = current.amount;
-      updateData.balanceDue = 0;
-      if (current.status === 'PENDING' || current.status === 'RESERVED') {
+    if (paymentAmount !== undefined) {
+      // Incremental payment recorded (e.g. cash, UPI, card receipt)
+      const prevPaid = current.amountPaid ?? 0;
+      const newPaid = prevPaid + paymentAmount;
+      const newBalance = Math.max(0, current.amount - newPaid);
+      updateData.amountPaid = newPaid;
+      updateData.balanceDue = newBalance;
+      updateData.paymentStatus = newBalance === 0 ? 'PAID' : 'PARTIAL';
+
+      if (newBalance === 0 && (current.status === 'PENDING' || current.status === 'RESERVED')) {
         updateData.status = 'CONFIRMED';
       }
-    } else if (req.body.paymentStatus === 'UNPAID') {
-      updateData.amountPaid = 0;
-      updateData.balanceDue = current.amount;
+
+      await prisma.payment.create({
+        data: {
+          bookingId: current.id,
+          amount: paymentAmount,
+          provider: 'manual',
+          method: paymentMethod || 'cash',
+          status: 'PAID',
+          notes: notes || `Payment recorded by ${req.user.name || 'Admin'} (${paymentMethod || 'cash'})`,
+        },
+      });
+    } else if (amountPaid !== undefined || balanceDue !== undefined) {
+      // Direct manual override of financial totals
+      const newPaid = amountPaid !== undefined ? amountPaid : (current.amountPaid ?? 0);
+      const newBalance = balanceDue !== undefined ? balanceDue : Math.max(0, current.amount - newPaid);
+      updateData.amountPaid = newPaid;
+      updateData.balanceDue = newBalance;
+      updateData.paymentStatus = paymentStatus || (newBalance === 0 ? 'PAID' : newPaid > 0 ? 'PARTIAL' : 'UNPAID');
+
+      if (updateData.paymentStatus === 'PAID' && (current.status === 'PENDING' || current.status === 'RESERVED')) {
+        updateData.status = 'CONFIRMED';
+      }
+    } else if (paymentStatus) {
+      // Direct status change
+      updateData.paymentStatus = paymentStatus;
+      if (paymentStatus === 'PAID') {
+        updateData.amountPaid = current.amount;
+        updateData.balanceDue = 0;
+        if (current.status === 'PENDING' || current.status === 'RESERVED') {
+          updateData.status = 'CONFIRMED';
+        }
+      } else if (paymentStatus === 'UNPAID') {
+        updateData.amountPaid = 0;
+        updateData.balanceDue = current.amount;
+      }
+    }
+
+    if (notes && paymentAmount === undefined) {
+      updateData.notes = current.notes ? `${current.notes} · ${notes}` : notes;
     }
 
     const booking = await prisma.booking.update({
       where: { id: req.params.id },
       data: updateData,
     });
+
     await recordAudit({
       actor: req.user,
-      action: `payment:${req.body.paymentStatus}`,
+      action: `payment:${booking.paymentStatus} (paid: ${booking.amountPaid}, due: ${booking.balanceDue})`,
       entity: 'Booking',
       entityId: booking.id,
     });
-    if (req.body.paymentStatus === 'PAID') {
+
+    if (booking.paymentStatus === 'PAID' && current.paymentStatus !== 'PAID') {
       const stay = await prisma.stay.findUnique({ where: { id: booking.stayId } });
       if (stay) void onBookingConfirmed(booking, stay);
     }
+
     res.json(booking);
   }),
 );

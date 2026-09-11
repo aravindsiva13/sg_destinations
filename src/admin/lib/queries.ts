@@ -136,14 +136,25 @@ export function useUpdateBookingStatus() {
   });
 }
 
+export interface UpdatePaymentInput {
+  id: string;
+  paymentStatus?: PaymentStatus;
+  amountPaid?: number;
+  balanceDue?: number;
+  paymentAmount?: number;
+  paymentMethod?: string;
+  notes?: string;
+}
+
 export function useUpdatePayment() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, paymentStatus }: { id: string; paymentStatus: PaymentStatus }) =>
-      (await api.patch<Booking>(`/api/bookings/${id}/payment`, { paymentStatus })).data,
-    onSuccess: () => {
+    mutationFn: async ({ id, ...payload }: UpdatePaymentInput) =>
+      (await api.patch<Booking>(`/api/bookings/${id}/payment`, payload)).data,
+    onSuccess: (_, variables) => {
       qc.invalidateQueries({ queryKey: ['bookings'] });
       qc.invalidateQueries({ queryKey: ['dashboard'] });
+      qc.invalidateQueries({ queryKey: ['booking-payments', variables.id] });
     },
   });
 }
