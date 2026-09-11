@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import SectionEyebrow from '../components/SectionEyebrow';
 import Button from '../components/Button';
 import { useCustomerAuth } from '../hooks/useCustomerAuth';
@@ -12,6 +12,11 @@ const field =
 export default function SignIn() {
   const { signIn, register, forgotPassword } = useCustomerAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirect') && searchParams.get('redirect')?.startsWith('/')
+    ? (searchParams.get('redirect') as string)
+    : '/account';
+
   const [mode, setMode] = useState<'in' | 'up' | 'forgot'>('in');
   const [f, setF] = useState({ name: '', email: '', password: '', phone: '' });
   const [error, setError] = useState<string | null>(null);
@@ -30,10 +35,10 @@ export default function SignIn() {
         setNotice("If that email is registered, we've sent a password reset link.");
       } else if (mode === 'in') {
         await signIn(f.email, f.password);
-        navigate('/account');
+        navigate(redirectTo);
       } else {
         await register({ name: f.name, email: f.email, password: f.password, phone: f.phone || undefined });
-        navigate('/account');
+        navigate(redirectTo);
       }
     } catch (err) {
       setError(apiErrorMessage(err, 'Could not sign in'));

@@ -28,7 +28,7 @@ const today = new Date().toISOString().split('T')[0];
 
 export default function BookFlow() {
   const [params] = useSearchParams();
-  const { user } = useCustomerAuth();
+  const { user, signIn, register, signOut, forgotPassword } = useCustomerAuth();
   const { data: settings } = useSettings();
   const { data: stays } = useStays();
   const { data: menu } = useMenu();
@@ -44,6 +44,13 @@ export default function BookFlow() {
   const [quote, setQuote] = useState<AvailabilityResult | null>(null);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // In-flow customer authentication state
+  const [authMode, setAuthMode] = useState<'in' | 'up' | 'forgot'>('in');
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', phone: '' });
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authNotice, setAuthNotice] = useState<string | null>(null);
+  const [authBusy, setAuthBusy] = useState(false);
 
   // Food: map of menu itemId → quantity. Add-ons: selected ids.
   const [foodQty, setFoodQty] = useState<Record<string, number>>({});
@@ -68,12 +75,38 @@ export default function BookFlow() {
     if (user) {
       setGuest((prev) => ({
         ...prev,
-        name: prev.name || user.name || '',
-        email: prev.email || user.email || '',
-        phone: prev.phone || user.phone || '',
+        name: user.name || prev.name || '',
+        email: user.email || prev.email || '',
+        phone: user.phone || prev.phone || '',
       }));
     }
   }, [user]);
+
+  async function handleInFlowAuth(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthError(null);
+    setAuthNotice(null);
+    setAuthBusy(true);
+    try {
+      if (authMode === 'forgot') {
+        await forgotPassword(authForm.email);
+        setAuthNotice("If that email is registered, we've sent a password reset link.");
+      } else if (authMode === 'in') {
+        await signIn(authForm.email, authForm.password);
+      } else {
+        await register({
+          name: authForm.name,
+          email: authForm.email,
+          password: authForm.password,
+          phone: authForm.phone || undefined,
+        });
+      }
+    } catch (err) {
+      setAuthError(apiErrorMessage(err, authMode === 'in' ? 'Could not sign in' : 'Could not create account'));
+    } finally {
+      setAuthBusy(false);
+    }
+  }
 
   // Auto-run availability if we arrived with full params.
   useEffect(() => {
@@ -166,6 +199,11 @@ export default function BookFlow() {
   }
 
   async function submitReservation() {
+    if (!user) {
+      setError('Please sign in or create an account to submit your reservation.');
+      setStep(3);
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -201,7 +239,7 @@ export default function BookFlow() {
   }
 
   const canProceedDates = quote?.available && !checking;
-  const canProceedDetails = guest.name && /\S+@\S+\.\S+/.test(guest.email);
+  const canProceedDetails = !!user && !!guest.name.trim() && /\S+@\S+\.\S+/.test(guest.email);
 
   return (
     <section className="container-pad pt-28 pb-20 md:pt-32 md:pb-28">
@@ -482,40 +520,254 @@ export default function BookFlow() {
             </div>
           )}
 
-          {/* Step 4: Details */}
+          {/* Step 4: Details / Authentication */}
           {step === 3 && (
             <div>
-              <h2 className="font-serif text-xl text-ink">Your details</h2>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                <label className="flex flex-col gap-1.5">
-                  <span className="tag-label">Full name</span>
-                  <input className={field} value={guest.name} onChange={(e) => setGuest({ ...guest, name: e.target.value })} />
-                </label>
-                <label className="flex flex-col gap-1.5">
-                  <span className="tag-label">Phone</span>
-                  <input className={field} value={guest.phone} onChange={(e) => setGuest({ ...guest, phone: e.target.value })} placeholder="+91 …" />
-                </label>
-                <label className="flex flex-col gap-1.5 sm:col-span-2">
-                  <span className="tag-label">Email</span>
-                  <input className={field} value={guest.email} onChange={(e) => setGuest({ ...guest, email: e.target.value })} placeholder="you@email.com" />
-                </label>
-                <label className="flex flex-col gap-1.5 sm:col-span-2">
-                  <span className="tag-label">Special requests</span>
-                  <textarea rows={2} className={`${field} resize-none`} value={guest.notes} onChange={(e) => setGuest({ ...guest, notes: e.target.value })} />
-                </label>
-
-                <div className="sm:col-span-2">
-                  <span className="tag-label">Coupon code</span>
-                  <div className="mt-1.5 flex gap-2">
-                    <input className={field} value={coupon} onChange={(e) => setCoupon(e.target.value.toUpperCase())} placeholder="WELCOME10" />
-                    <Button type="button" variant="outline" onClick={applyCoupon}>
-                      Apply
-                    </Button>
+              {!user ? (
+                <div className="rounded-xl border border-line bg-paper p-5 sm:p-7 shadow-sm">
+                  <div className="text-center sm:text-left">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-forest/10 px-3 py-1 text-xs font-medium text-forest">
+                      <Icon name="star" className="h-3.5 w-3.5" />
+                      Sign in or Register
+                    </span>
+                    <h2 className="mt-3 font-serif text-2xl text-ink">
+                      {authMode === 'forgot'
+                        ? 'Reset your password'
+                        : authMode === 'in'
+                        ? 'Sign in to reserve your stay'
+                        : 'Create your account to continue'}
+                    </h2>
+                    <p className="mt-1 text-sm text-muted">
+                      {authMode === 'forgot'
+                        ? 'Enter your registered email and we will send a password reset link.'
+                        : 'Please sign in or create an account to finalize your booking. Your selected stay dates, food, and add-ons will remain saved.'}
+                    </p>
                   </div>
-                  {couponResult && <p className="mt-1.5 text-xs text-forest">Applied {couponResult.code} — you save {inr(couponResult.discount)}.</p>}
-                  {couponError && <p className="mt-1.5 text-xs text-rose-600">{couponError}</p>}
+
+                  {authMode !== 'forgot' && (
+                    <div className="mt-6 flex rounded-full border border-line p-1 text-sm max-w-xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthMode('in');
+                          setAuthError(null);
+                          setAuthNotice(null);
+                        }}
+                        className={`flex-1 rounded-full py-1.5 text-center font-medium transition-colors ${
+                          authMode === 'in' ? 'bg-forest text-cream' : 'text-muted hover:text-ink'
+                        }`}
+                      >
+                        Sign in
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthMode('up');
+                          setAuthError(null);
+                          setAuthNotice(null);
+                        }}
+                        className={`flex-1 rounded-full py-1.5 text-center font-medium transition-colors ${
+                          authMode === 'up' ? 'bg-forest text-cream' : 'text-muted hover:text-ink'
+                        }`}
+                      >
+                        Create account
+                      </button>
+                    </div>
+                  )}
+
+                  <form onSubmit={handleInFlowAuth} className="mt-6 space-y-4">
+                    {authMode === 'up' && (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <label className="flex flex-col gap-1.5">
+                          <span className="tag-label">Full name</span>
+                          <input
+                            className={field}
+                            value={authForm.name}
+                            onChange={(e) => setAuthForm({ ...authForm, name: e.target.value })}
+                            placeholder="e.g. Rahul Sharma"
+                            required
+                          />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                          <span className="tag-label">Phone</span>
+                          <input
+                            className={field}
+                            value={authForm.phone}
+                            onChange={(e) => setAuthForm({ ...authForm, phone: e.target.value })}
+                            placeholder="+91 98765 43210"
+                          />
+                        </label>
+                      </div>
+                    )}
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <label className={`flex flex-col gap-1.5 ${authMode === 'forgot' ? 'sm:col-span-2' : ''}`}>
+                        <span className="tag-label">Email address</span>
+                        <input
+                          type="email"
+                          className={field}
+                          value={authForm.email}
+                          onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
+                          placeholder="you@email.com"
+                          required
+                        />
+                      </label>
+
+                      {authMode !== 'forgot' && (
+                        <label className="flex flex-col gap-1.5">
+                          <span className="tag-label">Password</span>
+                          <input
+                            type="password"
+                            className={field}
+                            value={authForm.password}
+                            onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
+                            placeholder="••••••••"
+                            minLength={6}
+                            required
+                          />
+                        </label>
+                      )}
+                    </div>
+
+                    {authMode === 'in' && (
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAuthMode('forgot');
+                            setAuthError(null);
+                            setAuthNotice(null);
+                          }}
+                          className="text-xs text-terracotta hover:underline"
+                        >
+                          Forgot password?
+                        </button>
+                      </div>
+                    )}
+
+                    {authError && (
+                      <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{authError}</p>
+                    )}
+                    {authNotice && (
+                      <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{authNotice}</p>
+                    )}
+
+                    <div className="pt-2">
+                      <Button type="submit" variant="forest" className="w-full sm:w-auto" disabled={authBusy}>
+                        {authBusy
+                          ? 'Please wait…'
+                          : authMode === 'forgot'
+                          ? 'Send reset link'
+                          : authMode === 'in'
+                          ? 'Sign in & Continue'
+                          : 'Create account & Continue'}
+                      </Button>
+                    </div>
+
+                    {authMode === 'forgot' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthMode('in');
+                          setAuthError(null);
+                          setAuthNotice(null);
+                        }}
+                        className="text-xs text-muted hover:text-ink"
+                      >
+                        ← Back to sign in
+                      </button>
+                    )}
+                  </form>
                 </div>
-              </div>
+              ) : (
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-forest/30 bg-forest/5 p-4">
+                    <div className="flex items-center gap-3">
+                      <span className="grid h-10 w-10 place-items-center rounded-full bg-forest text-cream font-medium text-sm">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-ink">{user.name}</p>
+                          <span className="rounded-full bg-forest/10 px-2 py-0.5 text-[10px] font-medium text-forest">
+                            Signed In
+                          </span>
+                        </div>
+                        <p className="text-xs text-muted">{user.email}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={signOut}
+                      className="text-xs text-terracotta hover:underline font-medium"
+                    >
+                      Sign out / Switch account
+                    </button>
+                  </div>
+
+                  <h2 className="mt-6 font-serif text-xl text-ink">Guest & Reservation Details</h2>
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                    <label className="flex flex-col gap-1.5">
+                      <span className="tag-label">Primary Guest Name</span>
+                      <input
+                        className={field}
+                        value={guest.name}
+                        onChange={(e) => setGuest({ ...guest, name: e.target.value })}
+                        required
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1.5">
+                      <span className="tag-label">Contact Phone</span>
+                      <input
+                        className={field}
+                        value={guest.phone}
+                        onChange={(e) => setGuest({ ...guest, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        required
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1.5 sm:col-span-2">
+                      <span className="tag-label">Account Email (locked to profile)</span>
+                      <input
+                        className={`${field} bg-paper/60 cursor-not-allowed opacity-80`}
+                        value={guest.email}
+                        readOnly
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1.5 sm:col-span-2">
+                      <span className="tag-label">Special requests</span>
+                      <textarea
+                        rows={2}
+                        className={`${field} resize-none`}
+                        value={guest.notes}
+                        onChange={(e) => setGuest({ ...guest, notes: e.target.value })}
+                        placeholder="Any dietary restrictions, arrival time, or special celebrations?"
+                      />
+                    </label>
+
+                    <div className="sm:col-span-2">
+                      <span className="tag-label">Coupon code</span>
+                      <div className="mt-1.5 flex gap-2">
+                        <input
+                          className={field}
+                          value={coupon}
+                          onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                          placeholder="WELCOME10"
+                        />
+                        <Button type="button" variant="outline" onClick={applyCoupon}>
+                          Apply
+                        </Button>
+                      </div>
+                      {couponResult && (
+                        <p className="mt-1.5 text-xs text-forest">
+                          Applied {couponResult.code} — you save {inr(couponResult.discount)}.
+                        </p>
+                      )}
+                      {couponError && <p className="mt-1.5 text-xs text-rose-600">{couponError}</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -623,7 +875,7 @@ export default function BookFlow() {
                   disabled={(step === 0 && !canProceedDates) || (step === 3 && !canProceedDetails)}
                   onClick={() => setStep((s) => s + 1)}
                 >
-                  Continue
+                  {step === 3 && !user ? 'Sign in above to continue' : 'Continue'}
                 </Button>
               )}
             </div>

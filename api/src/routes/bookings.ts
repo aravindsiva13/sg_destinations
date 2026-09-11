@@ -161,6 +161,16 @@ bookingsRouter.post(
       if (matchedUser) userId = matchedUser.id;
     }
 
+    if (!userId) {
+      throw new HttpError(401, 'Please sign in or create an account to book your stay.');
+    }
+
+    // Auto-link any prior unlinked bookings under this email to this user profile
+    await prisma.booking.updateMany({
+      where: { customerEmail: cleanEmail, userId: null },
+      data: { userId },
+    });
+
     const booking = await prisma.booking.create({
       data: {
         code: generateBookingCode(),
