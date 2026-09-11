@@ -31,6 +31,12 @@ const DEFAULTS: Record<string, unknown> = {
   googleMapsEmbed: '',
   footerTagline: 'A sanctuary of celebration and stays, where memories unfold amidst forty acres of lush greenery.',
 
+  // Page Hero Banners
+  eventsHeroImage: '/images/selected-images/Events/7L3A1899.JPG',
+  diningHeroImage1: '/images/selected-images/new/water_shower.jpeg',
+  diningHeroImage2: '/images/selected-images/new/shra_vanam.jpeg',
+  amenitiesHeroBanner: '/images/selected-images/new/pool_wide.jpeg',
+
   // Home Page Highlights
   homeHeadline: 'Celebrate amidst lush\ngreen gardens',
   homeSubtext: 'A sanctuary of celebration and stays, where every milestone unfolds amidst forty acres of botanical beauty and timeless Tamil warmth.',
@@ -164,6 +170,12 @@ const settingsSchema = z
     googleMapsUrl: z.string().optional().nullable(),
     googleMapsEmbed: z.string().optional().nullable(),
     footerTagline: z.string().optional().nullable(),
+
+    // Page Hero Banners
+    eventsHeroImage: z.string().optional().nullable(),
+    diningHeroImage1: z.string().optional().nullable(),
+    diningHeroImage2: z.string().optional().nullable(),
+    amenitiesHeroBanner: z.string().optional().nullable(),
 
     // Home Page Highlights
     homeHeadline: z.string().optional().nullable(),

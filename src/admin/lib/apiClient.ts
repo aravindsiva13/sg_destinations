@@ -71,7 +71,17 @@ api.interceptors.response.use(
 /** Normalize an Axios error into a readable message. */
 export function apiErrorMessage(err: unknown, fallback = 'Something went wrong'): string {
   if (axios.isAxiosError(err)) {
-    return (err.response?.data as { error?: string })?.error ?? err.message ?? fallback;
+    const data = err.response?.data as { error?: string; details?: { fieldErrors?: Record<string, string[]>; formErrors?: string[] } };
+    if (data?.details?.fieldErrors && Object.keys(data.details.fieldErrors).length > 0) {
+      const fieldList = Object.entries(data.details.fieldErrors)
+        .map(([f, msgs]) => `${f}: ${msgs.join(', ')}`)
+        .join('; ');
+      return `${data.error || 'Validation error'}: ${fieldList}`;
+    }
+    if (data?.details?.formErrors && data.details.formErrors.length > 0) {
+      return `${data.error || 'Validation error'}: ${data.details.formErrors.join(', ')}`;
+    }
+    return data?.error ?? err.message ?? fallback;
   }
   return fallback;
 }

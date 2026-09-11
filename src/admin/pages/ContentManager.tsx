@@ -29,6 +29,8 @@ export default function ContentManager({ config }: Props) {
   const saveSettingsMut = useSaveSettings();
   const [editingHero, setEditingHero] = useState(false);
   const [heroForm, setHeroForm] = useState({ photo1: '', photo2: '' });
+  const [heroError, setHeroError] = useState<string | null>(null);
+  const [heroSuccess, setHeroSuccess] = useState(false);
 
   useEffect(() => {
     if (settingsData) {
@@ -40,14 +42,20 @@ export default function ContentManager({ config }: Props) {
   }, [settingsData]);
 
   async function handleSaveHero() {
+    setHeroError(null);
+    setHeroSuccess(false);
     try {
       await saveSettingsMut.mutateAsync({
         diningHeroImage1: heroForm.photo1,
         diningHeroImage2: heroForm.photo2,
       });
-      setEditingHero(false);
+      setHeroSuccess(true);
+      setTimeout(() => {
+        setEditingHero(false);
+        setHeroSuccess(false);
+      }, 1200);
     } catch (err) {
-      setError(apiErrorMessage(err, 'Could not save dining hero images'));
+      setHeroError(apiErrorMessage(err, 'Could not save dining hero images'));
     }
   }
 
@@ -180,6 +188,13 @@ export default function ContentManager({ config }: Props) {
                 onChange={(url) => setHeroForm((prev) => ({ ...prev, photo2: url }))}
               />
             </div>
+
+            {heroError && (
+              <p className="rounded-xl bg-rose-50 px-3 py-2 text-sm text-rose-700">{heroError}</p>
+            )}
+            {heroSuccess && (
+              <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">Hero photos updated successfully!</p>
+            )}
 
             <div className="flex justify-end gap-2 border-t border-line pt-4">
               <AdminButton variant="secondary" onClick={() => setEditingHero(false)}>
