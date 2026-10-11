@@ -59,11 +59,12 @@ export async function sendMail(input: MailInput, cfgOverride?: EmailConfig): Pro
 }
 
 async function sendViaBrevo(cfg: EmailConfig, to: string[], input: MailInput): Promise<MailResult> {
+  const apiKey = cfg.apiKey.trim();
   try {
     const res = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'api-key': cfg.apiKey,
+        'api-key': apiKey,
         'content-type': 'application/json',
         accept: 'application/json',
       },
@@ -98,7 +99,7 @@ async function sendViaSmtp(cfg: EmailConfig, to: string[], input: MailInput): Pr
     greetingTimeout: 10000,
     socketTimeout: 20000,
     tls: {
-      rejectUnauthorized: false,
+      rejectUnauthorized: true,
     },
   });
 

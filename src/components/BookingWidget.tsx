@@ -54,11 +54,13 @@ export default function BookingWidget({
       </div>
 
       <div className="mt-5 grid grid-cols-2 overflow-hidden rounded-lg border border-line">
-        <label className="group relative flex flex-col gap-1 border-r border-line p-3 transition-colors hover:bg-forest/5">
+        <label htmlFor="booking-widget-checkin" className="group relative flex flex-col gap-1 border-r border-line p-3 transition-colors hover:bg-forest/5">
           <span className="tag-label !text-[0.6rem]">Check-in</span>
           <div className="relative flex items-center">
             <Icon name="calendar" className="pointer-events-none absolute left-0 h-3.5 w-3.5 text-muted transition-colors group-hover:text-forest" />
             <input
+              id="booking-widget-checkin"
+              aria-label="Check-in date"
               type="date"
               min={today}
               value={checkIn}
@@ -68,11 +70,13 @@ export default function BookingWidget({
             />
           </div>
         </label>
-        <label className="group relative flex flex-col gap-1 p-3 transition-colors hover:bg-forest/5">
+        <label htmlFor="booking-widget-checkout" className="group relative flex flex-col gap-1 p-3 transition-colors hover:bg-forest/5">
           <span className="tag-label !text-[0.6rem]">Check-out</span>
           <div className="relative flex items-center">
             <Icon name="calendar" className="pointer-events-none absolute left-0 h-3.5 w-3.5 text-muted transition-colors group-hover:text-forest" />
             <input
+              id="booking-widget-checkout"
+              aria-label="Check-out date"
               type="date"
               min={checkIn || today}
               value={checkOut}

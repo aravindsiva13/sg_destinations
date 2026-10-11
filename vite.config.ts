@@ -10,6 +10,7 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    exclude: ['api/**', '**/node_modules/**', 'dist/**'],
   },
   plugins: [react(), tailwindcss()],
   build: {

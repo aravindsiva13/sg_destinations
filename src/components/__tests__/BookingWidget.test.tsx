@@ -34,17 +34,26 @@ describe('BookingWidget', () => {
     expect(screen.getByText('2')).toBeInTheDocument();
   });
 
+  function futureDate(daysAhead: number): string {
+    const d = new Date();
+    d.setDate(d.getDate() + daysAhead);
+    return d.toISOString().split('T')[0];
+  }
+
   it('navigates to the booking flow with query params on submit', async () => {
     const user = userEvent.setup();
     render(<BookingWidget stayId="villa-1" pricePerNight={4500} stayName="Garden Villa" />);
 
-    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: '2026-09-10' } });
-    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: '2026-09-12' } });
+    const inDate = futureDate(10);
+    const outDate = futureDate(12);
+
+    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: inDate } });
+    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: outDate } });
 
     await user.click(screen.getByRole('button', { name: /check availability/i }));
 
     expect(mockNavigate).toHaveBeenCalledWith(
-      '/book?stay=villa-1&checkIn=2026-09-10&checkOut=2026-09-12&guests=2'
+      `/book?stay=villa-1&checkIn=${inDate}&checkOut=${outDate}&guests=2`
     );
   });
 
@@ -52,13 +61,18 @@ describe('BookingWidget', () => {
     const user = userEvent.setup();
     render(<BookingWidget stayId="villa-1" pricePerNight={4500} stayName="Garden Villa" />);
 
-    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: '2026-09-10' } });
-    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: '2026-09-11' } });
+    const inDate = futureDate(10);
+    const outDate = futureDate(11);
+
+    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: inDate } });
+    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: outDate } });
 
     await user.click(screen.getByRole('button', { name: 'Increase guests' }));
     await user.click(screen.getByRole('button', { name: /check availability/i }));
 
-    expect(mockNavigate).toHaveBeenCalledWith('/book?stay=villa-1&checkIn=2026-09-10&checkOut=2026-09-11&guests=3');
+    expect(mockNavigate).toHaveBeenCalledWith(
+      `/book?stay=villa-1&checkIn=${inDate}&checkOut=${outDate}&guests=3`
+    );
   });
 
   it('does not navigate when dates are missing', async () => {
@@ -75,8 +89,11 @@ describe('BookingWidget', () => {
 
     expect(screen.queryByText('From')).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: '2026-09-10' } });
-    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: '2026-09-12' } });
+    const inDate = futureDate(10);
+    const outDate = futureDate(12);
+
+    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: inDate } });
+    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: outDate } });
 
     expect(screen.getByText('₹4,500 × 2 nights')).toBeInTheDocument();
     // Total appears twice: in the cost breakdown line and the "From" row.
@@ -87,8 +104,11 @@ describe('BookingWidget', () => {
   it('does not show a total when checkout is before checkin', () => {
     render(<BookingWidget stayId="villa-1" pricePerNight={4500} stayName="Garden Villa" />);
 
-    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: '2026-09-12' } });
-    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: '2026-09-10' } });
+    const inDate = futureDate(12);
+    const outDate = futureDate(10);
+
+    fireEvent.change(screen.getByLabelText(/check-in/i), { target: { value: inDate } });
+    fireEvent.change(screen.getByLabelText(/check-out/i), { target: { value: outDate } });
 
     expect(screen.queryByText('From')).not.toBeInTheDocument();
   });

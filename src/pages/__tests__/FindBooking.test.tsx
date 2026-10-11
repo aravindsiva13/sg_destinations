@@ -78,6 +78,7 @@ describe('FindBooking', () => {
 
     expect(await screen.findByText('Garden Villa')).toBeInTheDocument();
     expect(screen.getByText('₹9,000')).toBeInTheDocument();
-    expect(await screen.findByRole('button', { name: /pay balance/i })).toBeInTheDocument();
+    expect(await screen.findByText('Pay at Check-in')).toBeInTheDocument();
+    expect(screen.getByText(/No online payment needed/i)).toBeInTheDocument();
   });
 });

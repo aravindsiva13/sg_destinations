@@ -67,7 +67,11 @@ function bookingTable(brand: Brand, booking: Booking, stay: Stay): string {
     ${row('Nights', String(booking.nights))}
     ${row('Guests', String(booking.guests))}
     <tr><td colspan="2" style="border-top:1px solid #eee;padding-top:8px;"></td></tr>
-    ${row('Total amount', rupee(booking.amount))}
+    ${booking.roomAmount ? row('Accommodation', rupee(booking.roomAmount)) : ''}
+    ${booking.discount ? row('Discount applied', `− ${rupee(booking.discount)}`) : ''}
+    ${booking.foodAmount ? row('Food & Dining', rupee(booking.foodAmount)) : ''}
+    ${booking.addonsAmount ? row('Add-ons & Extras', rupee(booking.addonsAmount)) : ''}
+    ${row('Total amount (incl. GST)', rupee(booking.amount))}
     ${paid > 0 ? row('Amount paid', rupee(paid)) : ''}
     ${balance > 0 ? row('Balance due at check-in', rupee(balance), true) : row('Payment status', 'Paid in full · Settled')}
   </table>`;
@@ -99,7 +103,7 @@ export function bookingReceived(brand: Brand, booking: Booking, stay: Stay): Ren
 
   const paymentDesc =
     balance > 0
-      ? `Your booking is received. Outstanding balance of <strong>${rupee(balance)}</strong> is payable upon arrival at the resort (Cash / UPI / Card).`
+      ? `<strong>Payment Option:</strong> Book Now, Pay Later. No advance payment is needed online. Your balance of <strong>${rupee(balance)}</strong> is payable upon arrival at the resort (Cash, UPI, or Card).`
       : `Your payment has been received in full.`;
 
   return {
@@ -107,7 +111,7 @@ export function bookingReceived(brand: Brand, booking: Booking, stay: Stay): Ren
     html: layout(
       brand,
       `Thank you, ${esc(booking.customerName.split(' ')[0])}!`,
-      p(`We've received your booking request at <strong>${esc(brand.name)}</strong>. Here are the details:`) +
+      p(`We've received your booking at <strong>${esc(brand.name)}</strong>. Here are the reservation details:`) +
         bookingTable(brand, booking, stay) +
         p(paymentDesc) +
         p(`Questions? Just reply to this email${brand.phone ? ` or call us at ${esc(brand.phone)}` : ''}.`),
@@ -125,14 +129,14 @@ export function bookingConfirmed(brand: Brand, booking: Booking, stay: Stay): Re
   const paymentNote =
     balance === 0
       ? `<strong>Payment status:</strong> Paid in full ✓`
-      : `<strong>Payment status:</strong> Advance of ${rupee(paid)} received · Balance due at check-in: <strong>${rupee(balance)}</strong>`;
+      : `<strong>Payment Mode:</strong> Pay on Arrival · Balance due at check-in: <strong>${rupee(balance)}</strong> (Cash / UPI / Card)`;
 
   return {
     subject: `Booking confirmed ✓ · ${booking.code}`,
     html: layout(
       brand,
       'Your booking is confirmed 🎉',
-      p(`Dear ${esc(booking.customerName)}, we're delighted to confirm your stay at <strong>${esc(brand.name)}</strong>. This email is your booking confirmation and receipt.`) +
+      p(`Dear ${esc(booking.customerName)}, we're delighted to confirm your stay at <strong>${esc(brand.name)}</strong>. This email is your official booking confirmation.`) +
         bookingTable(brand, booking, stay) +
         p(paymentNote) +
         p(`We look forward to welcoming you. Check-in is from ${esc(brand.checkInTime)} on ${fmtDate(booking.checkIn)}.`),

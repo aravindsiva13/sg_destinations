@@ -39,9 +39,15 @@ export default function PublicLayout() {
 
   return (
     <div id="public-root" className="flex min-h-screen flex-col bg-cream">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[999999] focus:rounded-md focus:bg-forest focus:px-4 focus:py-2 focus:text-cream focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-cream"
+      >
+        Skip to main content
+      </a>
       <SiteAnimations />
       <Header />
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
         <Suspense fallback={<PageFallback />}>
           <AnimatePresence mode="wait">
             <motion.div

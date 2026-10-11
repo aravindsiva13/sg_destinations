@@ -71,8 +71,9 @@ usersRouter.post(
     const b = req.body as z.infer<typeof createSchema>;
     const exists = await prisma.user.findUnique({ where: { email: b.email } });
     if (exists) throw new HttpError(409, 'A user with that email already exists');
+    const passwordHash = await bcrypt.hash(b.password, 10);
     const user = await prisma.user.create({
-      data: { name: b.name, email: b.email, role: b.role, phone: b.phone, passwordHash: bcrypt.hashSync(b.password, 10) },
+      data: { name: b.name, email: b.email, role: b.role, phone: b.phone, passwordHash },
     });
     await recordAudit({ actor: req.user, action: `create:${b.role}`, entity: 'User', entityId: user.id });
     res.status(201).json(publicUser(user));
@@ -103,7 +104,7 @@ usersRouter.patch(
     }
     const data: Record<string, unknown> = { ...b };
     if (b.password) {
-      data.passwordHash = bcrypt.hashSync(b.password, 10);
+      data.passwordHash = await bcrypt.hash(b.password, 10);
       delete data.password;
       // Revoke all existing sessions — the old password must no longer work.
       await prisma.refreshToken.updateMany({ where: { userId: req.params.id }, data: { revoked: true } });

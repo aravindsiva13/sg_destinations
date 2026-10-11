@@ -152,14 +152,14 @@ authRouter.post(
     const b = req.body as z.infer<typeof registerSchema>;
     const exists = await prisma.user.findUnique({ where: { email: b.email } });
     if (exists) throw new HttpError(409, 'An account with that email already exists');
-    const bcryptMod = await import('bcryptjs');
+    const passwordHash = await bcrypt.hash(b.password, 10);
     const user = await prisma.user.create({
       data: {
         name: b.name,
         email: b.email,
         phone: b.phone,
         role: 'CUSTOMER',
-        passwordHash: bcryptMod.default.hashSync(b.password, 10),
+        passwordHash,
       },
     });
     const payload = { sub: user.id, email: user.email, role: user.role as Role, name: user.name };

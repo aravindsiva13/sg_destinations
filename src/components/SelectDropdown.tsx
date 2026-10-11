@@ -54,12 +54,16 @@ export default function SelectDropdown({
   }
 
   function onTriggerKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openList();
-    } else if (e.key === 'Escape' && isOpen) {
-      setIsOpen(false);
+    if (!isOpen) {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openList();
+      }
+      return;
     }
+
+    // When open, route listbox navigation directly from the focused trigger button
+    onListKeyDown(e);
   }
 
   function onListKeyDown(e: React.KeyboardEvent) {

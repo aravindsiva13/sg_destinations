@@ -55,6 +55,19 @@ async function getOfferAppliesToPeak(): Promise<boolean> {
   }
 }
 
+/** Read the gstPercent site setting (defaults to 12). */
+async function getGstPercent(): Promise<number> {
+  const row = await prisma.siteSetting.findUnique({ where: { key: 'gstPercent' } });
+  if (!row) return 12;
+  try {
+    const val = Number(JSON.parse(row.value));
+    return Number.isFinite(val) && val >= 0 ? val : 12;
+  } catch {
+    const val = Number(row.value);
+    return Number.isFinite(val) && val >= 0 ? val : 12;
+  }
+}
+
 interface ExtraLine {
   kind: 'FOOD' | 'ADDON';
   refId: string;
@@ -127,21 +140,6 @@ bookingsRouter.post(
     const baseSubtotal = quote.nights * stay.pricePerNight;
     const couponBase = offerAppliesToPeak ? quote.subtotal : Math.min(baseSubtotal, quote.subtotal);
 
-    let discount = 0;
-    let couponCode: string | null = null;
-    if (b.couponCode) {
-      const coupon = await prisma.coupon.findUnique({ where: { code: b.couponCode.toUpperCase() } });
-      if (!coupon) throw new HttpError(404, 'Invalid coupon code');
-      const evalResult = evaluateCoupon(coupon, couponBase);
-      if ('error' in evalResult) throw new HttpError(422, evalResult.error);
-      discount = Math.min(evalResult.discount, quote.subtotal);
-      couponCode = coupon.code;
-      await prisma.coupon.update({ where: { id: coupon.id }, data: { usedCount: { increment: 1 } } });
-    }
-
-    const roomAmount = quote.subtotal - discount;
-    const amount = roomAmount + foodAmount + addonsAmount;
-
     // Associate user if signed in or if an account exists for this email
     let userId: string | null = null;
     const authHeader = req.headers.authorization;
@@ -165,34 +163,73 @@ bookingsRouter.post(
       throw new HttpError(401, 'Please sign in or create an account to book your stay.');
     }
 
-    // Auto-link any prior unlinked bookings under this email to this user profile
-    await prisma.booking.updateMany({
-      where: { customerEmail: cleanEmail, userId: null },
-      data: { userId },
-    });
+    let discount = 0;
+    let couponCode: string | null = null;
+    if (b.couponCode) {
+      const coupon = await prisma.coupon.findUnique({ where: { code: b.couponCode.toUpperCase() } });
+      if (!coupon) throw new HttpError(404, 'Invalid coupon code');
+      const evalResult = evaluateCoupon(coupon, couponBase);
+      if ('error' in evalResult) throw new HttpError(422, evalResult.error);
+      discount = Math.min(evalResult.discount, quote.subtotal);
+      couponCode = coupon.code;
+    }
 
-    const booking = await prisma.booking.create({
-      data: {
-        code: generateBookingCode(),
-        stayId: stay.id,
-        userId,
-        customerName: b.customerName.trim(),
-        customerEmail: cleanEmail,
-        customerPhone: b.customerPhone?.trim() || null,
-        checkIn,
-        checkOut,
-        nights: quote.nights,
-        guests: b.guests,
-        amount,
-        roomAmount,
-        foodAmount,
-        addonsAmount,
-        balanceDue: amount,
-        discount,
-        extras: JSON.stringify(lines),
-        source: 'Website',
-        notes: [b.notes, couponCode ? `Coupon ${couponCode} (-${discount})` : null].filter(Boolean).join(' · ') || null,
-      },
+    const gstPercent = await getGstPercent();
+    const roomAmount = quote.subtotal - discount;
+    const preTax = roomAmount + foodAmount + addonsAmount;
+    const gst = Math.round((preTax * gstPercent) / 100);
+    const amount = preTax + gst;
+
+    const booking = await prisma.$transaction(async (tx) => {
+      // Re-verify availability inside the transaction to avoid race conditions
+      const [overlap, blocks, rules] = await Promise.all([
+        tx.booking.findMany({
+          where: { stayId: stay.id, checkIn: { lt: checkOut }, checkOut: { gt: checkIn } },
+          select: { stayId: true, checkIn: true, checkOut: true, status: true },
+        }),
+        tx.dateBlock.findMany({ where: { stayId: stay.id, startDate: { lt: checkOut }, endDate: { gt: checkIn } } }),
+        tx.rateRule.findMany({ where: { active: true } }),
+      ]);
+      const freshQuote = quoteStay(stay, checkIn, checkOut, overlap, blocks, rules);
+      if (!freshQuote.available) {
+        throw new HttpError(409, freshQuote.unavailableReason ?? 'Not available for these dates');
+      }
+
+      if (couponCode) {
+        await tx.coupon.update({ where: { code: couponCode }, data: { usedCount: { increment: 1 } } });
+      }
+
+      // Auto-link any prior unlinked bookings under this email to this user profile
+      await tx.booking.updateMany({
+        where: { customerEmail: cleanEmail, userId: null },
+        data: { userId },
+      });
+
+      return tx.booking.create({
+        data: {
+          code: generateBookingCode(),
+          stayId: stay.id,
+          userId,
+          customerName: b.customerName.trim(),
+          customerEmail: cleanEmail,
+          customerPhone: b.customerPhone?.trim() || null,
+          checkIn,
+          checkOut,
+          nights: quote.nights,
+          guests: b.guests,
+          amount,
+          roomAmount,
+          foodAmount,
+          addonsAmount,
+          balanceDue: amount,
+          discount,
+          status: 'CONFIRMED',
+          paymentStatus: 'UNPAID',
+          extras: JSON.stringify(lines),
+          source: 'Website',
+          notes: [b.notes, couponCode ? `Coupon ${couponCode} (-${discount})` : null].filter(Boolean).join(' · ') || null,
+        },
+      });
     });
     await recordAudit({ actor: null, action: 'create:public', entity: 'Booking', entityId: booking.id });
     void onBookingReceived(booking, stay); // guest "received" + staff alert
@@ -202,12 +239,15 @@ bookingsRouter.post(
       id: booking.id,
       code: booking.code,
       amount: booking.amount,
+      balanceDue: booking.balanceDue,
       nights: booking.nights,
       discount,
       subtotal: quote.subtotal,
       roomAmount,
       foodAmount,
       addonsAmount,
+      status: booking.status,
+      paymentStatus: booking.paymentStatus,
     });
   }),
 );
@@ -503,7 +543,7 @@ bookingsRouter.patch(
           provider: 'manual',
           method: paymentMethod || 'cash',
           status: 'PAID',
-          notes: notes || `Payment recorded by ${req.user.name || 'Admin'} (${paymentMethod || 'cash'})`,
+          notes: notes || `Payment recorded by ${req.user?.name || 'Admin'} (${paymentMethod || 'cash'})`,
         },
       });
     } else if (amountPaid !== undefined || balanceDue !== undefined) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import SectionEyebrow from '../components/SectionEyebrow';
 import Reveal from '../components/Reveal';
 import { motion } from 'framer-motion';
@@ -68,7 +69,7 @@ export default function Reserve() {
             </li>
             <li className="flex items-center gap-3 text-sm text-ink">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-forest/10 text-forest">
-                <Icon name="dining" className="h-4 w-4" />
+                <Icon name="mail" className="h-4 w-4" />
               </span>
               {site.email}
             </li>
@@ -82,9 +83,9 @@ export default function Reserve() {
 
           <p className="mt-8 text-sm text-muted">
             Looking to book a room?{' '}
-            <a href="/book" className="text-terracotta underline">
+            <Link to="/book" className="text-terracotta underline">
               Check live availability →
-            </a>
+            </Link>
           </p>
         </div>
 

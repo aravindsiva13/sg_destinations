@@ -18,7 +18,7 @@ const connect = [
   { label: 'Offers', to: '/offers' },
   { label: 'Plan an enquiry', to: '/reserve' },
   { label: 'Find your booking', to: '/find-booking' },
-  { label: 'Guest sign in', to: '/sign-in' },
+  { label: 'Guest sign in', to: '/signin' },
 ];
 
 function Column({

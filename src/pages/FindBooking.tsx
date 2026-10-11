@@ -68,9 +68,10 @@ export default function FindBooking() {
             lookup.mutate();
           }}
         >
-          <label className="block">
+          <label htmlFor="find-booking-code" className="block">
             <span className="tag-label">Booking reference</span>
             <input
+              id="find-booking-code"
               className={`mt-1.5 ${field}`}
               placeholder="e.g. SG-7F3K9Q"
               value={code}
@@ -78,9 +79,10 @@ export default function FindBooking() {
               required
             />
           </label>
-          <label className="block">
+          <label htmlFor="find-booking-email" className="block">
             <span className="tag-label">Booking email</span>
             <input
+              id="find-booking-email"
               type="email"
               className={`mt-1.5 ${field}`}
               value={email}
