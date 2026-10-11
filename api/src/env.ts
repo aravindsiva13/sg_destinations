@@ -48,9 +48,11 @@ export const env = {
   seedAdminName: process.env.SEED_ADMIN_NAME ?? 'Administrator',
   /** Demo staff/customer accounts are seeded only in development. */
   seedDemoAccounts: (process.env.SEED_DEMO_ACCOUNTS ?? 'true').toLowerCase() !== 'false' && !IS_PROD,
-  // Absolute base used to build links in emails (e.g. unsubscribe). Point this
-  // at the public origin (tunnel/domain) in production; /api is proxied to here.
-  publicUrl: (process.env.PUBLIC_URL ?? 'http://localhost:1313').replace(/\/$/, ''),
+  // Absolute base used to build links in emails (e.g. unsubscribe, password reset).
+  // Points at the public frontend origin.
+  publicUrl: (
+    process.env.PUBLIC_URL ?? (IS_PROD ? 'https://sgdestinations.com' : 'http://localhost:5173')
+  ).replace(/\/$/, ''),
   isProduction: IS_PROD,
 };
 

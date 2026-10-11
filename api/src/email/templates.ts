@@ -49,8 +49,15 @@ function layout(brand: Brand, heading: string, bodyHtml: string): string {
 }
 
 function bookingTable(brand: Brand, booking: Booking, stay: Stay): string {
-  const row = (label: string, value: string) =>
-    `<tr><td style="padding:6px 0;color:#6b6b6b;">${esc(label)}</td><td style="padding:6px 0;text-align:right;font-weight:600;">${esc(value)}</td></tr>`;
+  const row = (label: string, value: string, isAccent?: boolean) =>
+    `<tr><td style="padding:6px 0;color:#6b6b6b;">${esc(label)}</td><td style="padding:6px 0;text-align:right;font-weight:600;${isAccent ? 'color:#a44a3f;' : ''}">${esc(value)}</td></tr>`;
+
+  const paid = booking.amountPaid ?? 0;
+  const balance =
+    booking.balanceDue !== null && booking.balanceDue !== undefined
+      ? booking.balanceDue
+      : Math.max(0, booking.amount - paid);
+
   return `
   <table style="width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 4px;">
     ${row('Booking reference', booking.code)}
@@ -61,6 +68,8 @@ function bookingTable(brand: Brand, booking: Booking, stay: Stay): string {
     ${row('Guests', String(booking.guests))}
     <tr><td colspan="2" style="border-top:1px solid #eee;padding-top:8px;"></td></tr>
     ${row('Total amount', rupee(booking.amount))}
+    ${paid > 0 ? row('Amount paid', rupee(paid)) : ''}
+    ${balance > 0 ? row('Balance due at check-in', rupee(balance), true) : row('Payment status', 'Paid in full · Settled')}
   </table>`;
 }
 
@@ -82,6 +91,17 @@ export function passwordReset(brand: Brand, name: string, resetUrl: string): Ren
 
 
 export function bookingReceived(brand: Brand, booking: Booking, stay: Stay): Rendered {
+  const paid = booking.amountPaid ?? 0;
+  const balance =
+    booking.balanceDue !== null && booking.balanceDue !== undefined
+      ? booking.balanceDue
+      : Math.max(0, booking.amount - paid);
+
+  const paymentDesc =
+    balance > 0
+      ? `Your booking is received. Outstanding balance of <strong>${rupee(balance)}</strong> is payable upon arrival at the resort (Cash / UPI / Card).`
+      : `Your payment has been received in full.`;
+
   return {
     subject: `We've received your booking · ${booking.code}`,
     html: layout(
@@ -89,21 +109,32 @@ export function bookingReceived(brand: Brand, booking: Booking, stay: Stay): Ren
       `Thank you, ${esc(booking.customerName.split(' ')[0])}!`,
       p(`We've received your booking request at <strong>${esc(brand.name)}</strong>. Here are the details:`) +
         bookingTable(brand, booking, stay) +
-        p('Your booking is currently <strong>pending payment</strong>. Once payment is confirmed, we\'ll send your final confirmation.') +
+        p(paymentDesc) +
         p(`Questions? Just reply to this email${brand.phone ? ` or call us at ${esc(brand.phone)}` : ''}.`),
     ),
   };
 }
 
 export function bookingConfirmed(brand: Brand, booking: Booking, stay: Stay): Rendered {
+  const paid = booking.amountPaid ?? 0;
+  const balance =
+    booking.balanceDue !== null && booking.balanceDue !== undefined
+      ? booking.balanceDue
+      : Math.max(0, booking.amount - paid);
+
+  const paymentNote =
+    balance === 0
+      ? `<strong>Payment status:</strong> Paid in full ✓`
+      : `<strong>Payment status:</strong> Advance of ${rupee(paid)} received · Balance due at check-in: <strong>${rupee(balance)}</strong>`;
+
   return {
     subject: `Booking confirmed ✓ · ${booking.code}`,
     html: layout(
       brand,
       'Your booking is confirmed 🎉',
-      p(`Dear ${esc(booking.customerName)}, we're delighted to confirm your stay at <strong>${esc(brand.name)}</strong>. This email is your receipt.`) +
+      p(`Dear ${esc(booking.customerName)}, we're delighted to confirm your stay at <strong>${esc(brand.name)}</strong>. This email is your booking confirmation and receipt.`) +
         bookingTable(brand, booking, stay) +
-        p(`<strong>Payment status:</strong> Paid`) +
+        p(paymentNote) +
         p(`We look forward to welcoming you. Check-in is from ${esc(brand.checkInTime)} on ${fmtDate(booking.checkIn)}.`),
     ),
   };

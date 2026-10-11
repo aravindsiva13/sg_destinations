@@ -55,6 +55,7 @@ const CATEGORIES: NavCategory[] = [
       { to: '/admin/banners', label: 'Home & Banners', icon: 'banners', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/offers', label: 'Offers', icon: 'offers', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/coupons', label: 'Coupons', icon: 'offers', roles: ['SUPER_ADMIN', 'MANAGER'] },
+      { to: '/admin/campaigns', label: 'Campaigns', icon: 'enquiries', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/reviews', label: 'Reviews', icon: 'reviews' },
     ],
   },
