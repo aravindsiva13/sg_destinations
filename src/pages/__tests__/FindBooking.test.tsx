@@ -13,12 +13,6 @@ vi.mock('../../lib/publicApi', () => ({
   apiErrorMessage: (e: unknown) => (e as { message?: string })?.message ?? 'Something went wrong',
 }));
 
-vi.mock('../../hooks/usePublic', () => ({
-  usePaymentConfig: () => ({ data: { provider: 'mock' }, isLoading: false }),
-  createPaymentOrder: vi.fn(),
-  verifyPayment: vi.fn(),
-}));
-
 function wrapper(initialEntries: string[] = ['/find-booking']) {
   return function Wrapper({ children }: { children: ReactNode }) {
     return (

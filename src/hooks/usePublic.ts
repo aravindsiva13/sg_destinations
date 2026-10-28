@@ -149,47 +149,6 @@ export async function createBooking(input: {
   };
 }
 
-/* ------------------------------- Payments ------------------------------- */
-export interface PaymentPublicConfig {
-  provider: 'mock' | 'razorpay';
-  testMode: boolean;
-  keyId: string;
-  methods: string[];
-  depositPercent: number;
-}
-
-export function usePaymentConfig() {
-  return useQuery({
-    queryKey: ['public', 'payment-config'],
-    queryFn: async () => (await publicApi.get<PaymentPublicConfig>('/api/payments/public-config')).data,
-    staleTime: 300_000,
-  });
-}
-
-export interface PaymentOrder {
-  paymentRecordId: string;
-  orderId: string;
-  amount: number;
-  currency: string;
-  provider: 'mock' | 'razorpay';
-  keyId: string;
-  methods: string[];
-  bookingCode: string;
-}
-
-export async function createPaymentOrder(bookingId: string, payFull = true): Promise<PaymentOrder> {
-  return (await publicApi.post<PaymentOrder>('/api/payments/order', { bookingId, payFull })).data;
-}
-
-export async function verifyPayment(input: {
-  paymentRecordId: string;
-  mockSuccess?: boolean;
-  razorpayPaymentId?: string;
-  razorpaySignature?: string;
-}): Promise<{ status: string; bookingCode: string }> {
-  return (await publicApi.post('/api/payments/verify', input)).data;
-}
-
 export async function subscribeNewsletter(email: string, name?: string) {
   const { data } = await publicApi.post('/api/marketing/subscribe', { email, name });
   return data as { ok: boolean };

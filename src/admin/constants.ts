@@ -31,15 +31,15 @@ export const PAYMENT_STATUS_META: Record<
   REFUNDED: { label: 'Refunded', tone: 'red' },
 };
 
-/** Allowed next statuses from a given status (mirrors the API state machine). */
-export const BOOKING_NEXT: Record<BookingStatus, BookingStatus[]> = {
-  PENDING: ['RESERVED', 'CONFIRMED', 'CANCELLED'],
-  RESERVED: ['CONFIRMED', 'CHECKED_IN', 'CANCELLED'],
-  CONFIRMED: ['CHECKED_IN', 'CANCELLED'],
-  CHECKED_IN: ['CHECKED_OUT'],
-  CHECKED_OUT: [],
-  CANCELLED: [],
-};
+/** Every booking status, in lifecycle order. Staff can set any of them. */
+export const BOOKING_STATUS_ORDER: BookingStatus[] = [
+  'PENDING',
+  'RESERVED',
+  'CONFIRMED',
+  'CHECKED_IN',
+  'CHECKED_OUT',
+  'CANCELLED',
+];
 
 /** Seeded staff names for assignment (replaced by the Users API in Phase 4). */
 export const STAFF = ['Eloise Vance', 'Marcus Hume', 'Sophia Lin'];

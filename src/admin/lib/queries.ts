@@ -29,7 +29,6 @@ import type {
   MenuItem,
   Paginated,
   Payment,
-  PaymentAdminConfig,
   PaymentStatus,
   RateRule,
   ReportSummary,
@@ -138,6 +137,7 @@ export function useUpdateBookingStatus() {
 
 export interface UpdatePaymentInput {
   id: string;
+  amount?: number;
   paymentStatus?: PaymentStatus;
   amountPaid?: number;
   balanceDue?: number;
@@ -804,43 +804,11 @@ export function useReport(from?: string, to?: string) {
 }
 
 /* ---------------- Payments ---------------- */
-export function usePaymentConfig() {
-  return useQuery({
-    queryKey: ['payment-config'],
-    queryFn: async () => (await api.get<PaymentAdminConfig>('/api/payments/config')).data,
-  });
-}
-
-export function useSavePaymentConfig() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (input: Partial<PaymentAdminConfig> & { keySecret?: string; webhookSecret?: string }) =>
-      (await api.put<PaymentAdminConfig>('/api/payments/config', input)).data,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['payment-config'] }),
-  });
-}
-
 export function useBookingPayments(bookingId: string | null) {
   return useQuery({
     queryKey: ['payments', bookingId],
     enabled: !!bookingId,
     queryFn: async () => (await api.get<Payment[]>(`/api/payments/booking/${bookingId}`)).data,
-  });
-}
-
-export function useRefund() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async (bookingId: string) =>
-      (await api.post<{ refundId: string; refundAmount: number; penalty: number }>(
-        `/api/payments/${bookingId}/refund`,
-        {},
-      )).data,
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['bookings'] });
-      qc.invalidateQueries({ queryKey: ['payments'] });
-      qc.invalidateQueries({ queryKey: ['dashboard'] });
-    },
   });
 }
 

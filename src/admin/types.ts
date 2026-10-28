@@ -325,27 +325,6 @@ export interface ReportSummary {
   bookingsByStatus: { label: string; value: number }[];
 }
 
-export interface RefundTier {
-  minDaysBefore: number;
-  refundPercent: number;
-}
-
-export interface RefundPolicy {
-  fullRefundWithinHours: number;
-  tiers: RefundTier[];
-}
-
-export interface PaymentAdminConfig {
-  provider: 'mock' | 'razorpay';
-  testMode: boolean;
-  keyId: string;
-  keySecretSet: boolean;
-  webhookSecretSet: boolean;
-  methods: string[];
-  depositPercent: number;
-  refundPolicy: RefundPolicy;
-}
-
 export interface Payment {
   id: string;
   bookingId: string;

@@ -123,7 +123,7 @@ login, and a non-admin role can never reach it.
 | ------------------- | ---------- | ---------------------------------------------------------------- |
 | `/admin/login`      | Sign in    | JWT login; demo-account quick-fill buttons                       |
 | `/admin`            | Dashboard  | KPI cards + Recharts (revenue / bookings-by-status)              |
-| `/admin/bookings`   | Bookings   | TanStack Table, search + status filter + pagination, detail drawer with the **booking status state machine** and payment actions |
+| `/admin/bookings`   | Bookings   | TanStack Table, search + status filter + pagination, detail drawer with any-status change and payment editing |
 | `/admin/availability` | Availability & Pricing | Availability checker, seasonal/dynamic **rate rules** (FIXED/PERCENT/DELTA, min-stay, priority), blocked dates |
 | `/admin/stays`      | Stays      | Card grid + create/edit drawer (RHF + Zod); delete = Super Admin |
 | `/admin/amenities` · `dining` · `events` · `offers` | Content | One reusable CRUD screen per content type |
@@ -134,7 +134,6 @@ login, and a non-admin role can never reach it.
 | `/admin/media`      | Media      | Image-URL library                                                |
 | `/admin/reports`    | Reports    | Revenue / occupancy / source breakdowns + **CSV export**         |
 | `/admin/users`      | Users & Staff | List + role-filter; create staff & change roles (Super Admin) |
-| `/admin/payments`   | Payments   | Gateway (Mock / **Razorpay**) + test/live, methods, deposit %, cancellation policy. Keys editable by Super Admin only; secrets never returned to the browser |
 | `/admin/settings`   | Settings   | GST/tax, contact, check-in/out times                             |
 | `/admin/audit`      | Audit Log  | Every admin mutation (Super Admin only)                          |
 
@@ -185,49 +184,24 @@ Base URL `http://localhost:4000`. All admin routes require
 | `GET/POST/DELETE /api/media`        | Manager+        | Media library                            |
 | `GET /api/reports/summary`          | Manager+        | Revenue/occupancy/source breakdowns      |
 | `GET /api/audit`                    | Super Admin     | Audit log                                |
-| `GET /api/payments/public-config`   | public          | Provider + key id + methods (no secrets) |
-| `POST /api/payments/order`          | public          | Create a gateway order for a booking     |
-| `POST /api/payments/verify`         | public          | Verify a payment → confirm booking (server-side) |
-| `POST /api/payments/webhook`        | Razorpay        | HMAC-verified webhook → confirm booking  |
-| `GET/PUT /api/payments/config`      | Manager+ / Super | Read / update gateway config (secrets write-only) |
-| `POST /api/payments/:bookingId/refund` | Manager+     | Policy-aware refund → cancel booking     |
+| `GET /api/payments/booking/:id`     | Staff           | Recorded payments for a booking          |
+| `PATCH /api/bookings/:id/payment`   | Manager+        | Record a payment, edit total / paid / balance, set payment status |
 
-**Booking status state machine** (enforced on the API and mirrored in the UI):
-
-```
-PENDING ──▶ CONFIRMED ──▶ CHECKED_IN ──▶ CHECKED_OUT
-   │            │
-   └──▶ CANCELLED ◀┘
-```
+**Booking status** — staff can set a booking to any status
+(`PENDING`, `RESERVED`, `CONFIRMED`, `CHECKED_IN`, `CHECKED_OUT`, `CANCELLED`) from the
+booking drawer. The one guard: re-opening a cancelled booking is refused if the
+dates have since been taken.
 
 Roles: `SUPER_ADMIN` · `MANAGER` · `FRONT_DESK` · `CUSTOMER`. Access tokens
 expire in 15m; the frontend transparently refreshes them once on a 401.
 
 ### Payments
 
-The booking flow is **server-authoritative**, like real hotel engines: the
-browser never marks a booking paid — the server does, on a verified callback /
-webhook.
-
-```
-booking (PENDING) → POST /payments/order → gateway order
-   → guest pays → POST /payments/verify (HMAC-checked)  ┐
-   → Razorpay webhook (HMAC-checked)                    ┘→ booking CONFIRMED + PAID
-```
-
-- **Two providers** behind one abstraction (`api/src/payments/`): **`mock`** (the
-  default — a fully offline test checkout, no signup) and **`razorpay`** (real
-  orders/refunds via REST + HMAC signatures, no SDK dependency).
-- **Configure in `/admin/payments`** (Super Admin): provider, test/live, Key ID,
-  Key Secret, Webhook Secret, enabled methods, deposit %, and the cancellation
-  policy. **Secrets are stored server-side only** and never returned to the
-  browser (the public config exposes only the publishable Key ID).
-- **Refunds** are **policy-aware**: full refund inside the free-cancellation
-  window, otherwise the configured penalty is withheld; issued from the booking
-  drawer, which cancels the booking and records a `Payment` row.
-- To go live with Razorpay: set provider = `razorpay`, paste your **test** keys
-  (`rzp_test_…`), point a webhook at `POST /api/payments/webhook`. Razorpay's
-  test mode + test cards exercise the whole flow with no real money.
+There is no online payment gateway. Guests book with **Book Now, Pay Later** and
+pay at the resort. Staff record what was received from the booking drawer
+(`/admin/bookings`): **Record Payment** (cash / UPI / card / bank transfer),
+**Edit Payment Details** (total, amount paid, balance) and **Set payment status**
+(Manager and Super Admin only).
 
 ### Reseeding
 
@@ -287,7 +261,7 @@ api/
     routes/        auth, stays, bookings, enquiries, dashboard
     middleware/    auth (requireAuth/requireRole), validate (Zod), error
     auth/tokens.ts JWT sign/verify + refresh expiry
-    constants.ts   roles, statuses, booking state machine
+    constants.ts   roles and statuses
     app.ts, server.ts
 ```
 

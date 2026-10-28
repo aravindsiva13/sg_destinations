@@ -7,14 +7,13 @@ import { validateBody } from '../middleware/validate.js';
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import {
   BOOKING_STATUS,
-  BOOKING_TRANSITIONS,
   PAYMENT_STATUS,
   ROLES,
   type BookingStatus,
 } from '../constants.js';
 import { generateBookingCode } from '../serialize.js';
 import { recordAudit } from '../audit.js';
-import { quoteStay } from '../pricing.js';
+import { OCCUPYING_STATUSES, quoteStay } from '../pricing.js';
 import { evaluateCoupon } from './coupons.js';
 import { onBookingReceived, onBookingConfirmed, onBookingCancelled } from '../email/notify.js';
 import { subscribeGuest } from '../email/marketing.js';
@@ -463,7 +462,8 @@ bookingsRouter.post(
   }),
 );
 
-// Status transition (state machine enforced)
+// Status change. Staff may move a booking to any status; the only guard is
+// that re-opening a cancelled booking must not overbook the stay.
 const statusSchema = z.object({ status: z.enum(BOOKING_STATUS) });
 
 bookingsRouter.patch(
@@ -474,13 +474,33 @@ bookingsRouter.patch(
     const { status } = req.body as z.infer<typeof statusSchema>;
     const current = await prisma.booking.findUnique({ where: { id: req.params.id } });
     if (!current) throw new HttpError(404, 'Booking not found');
+    if (current.status === status) {
+      res.json(current);
+      return;
+    }
 
-    const allowed = BOOKING_TRANSITIONS[current.status as BookingStatus] ?? [];
-    if (current.status !== status && !allowed.includes(status)) {
-      throw new HttpError(
-        409,
-        `Cannot move a ${current.status} booking to ${status}`,
-      );
+    if (!OCCUPYING_STATUSES.includes(current.status) && OCCUPYING_STATUSES.includes(status)) {
+      const stay = await prisma.stay.findUnique({ where: { id: current.stayId } });
+      if (!stay) throw new HttpError(404, 'Stay not found');
+      const [others, blocks, rules] = await Promise.all([
+        prisma.booking.findMany({
+          where: {
+            stayId: stay.id,
+            id: { not: current.id },
+            checkIn: { lt: current.checkOut },
+            checkOut: { gt: current.checkIn },
+          },
+          select: { stayId: true, checkIn: true, checkOut: true, status: true },
+        }),
+        prisma.dateBlock.findMany({
+          where: { stayId: stay.id, startDate: { lt: current.checkOut }, endDate: { gt: current.checkIn } },
+        }),
+        prisma.rateRule.findMany({ where: { active: true } }),
+      ]);
+      const quote = quoteStay(stay, current.checkIn, current.checkOut, others, blocks, rules);
+      if (quote.unitsLeft <= 0) {
+        throw new HttpError(409, 'These dates are no longer free, so the booking cannot be re-opened');
+      }
     }
 
     const booking = await prisma.booking.update({
@@ -493,7 +513,7 @@ bookingsRouter.patch(
       entity: 'Booking',
       entityId: booking.id,
     });
-    if (status === 'CANCELLED' && current.status !== 'CANCELLED') {
+    if (status === 'CANCELLED') {
       const stay = await prisma.stay.findUnique({ where: { id: booking.stayId } });
       if (stay) void onBookingCancelled(booking, stay);
     }
@@ -503,6 +523,7 @@ bookingsRouter.patch(
 
 // Payment status & balance updates (managers and above)
 const paymentSchema = z.object({
+  amount: z.coerce.number().int().min(0).optional(),
   paymentStatus: z.enum(PAYMENT_STATUS).optional(),
   amountPaid: z.coerce.number().min(0).optional(),
   balanceDue: z.coerce.number().min(0).optional(),
@@ -521,13 +542,15 @@ bookingsRouter.patch(
     if (!current) throw new HttpError(404, 'Booking not found');
 
     const updateData: Record<string, unknown> = {};
-    const { paymentStatus, amountPaid, balanceDue, paymentAmount, paymentMethod, notes } = req.body;
+    const { amount, paymentStatus, amountPaid, balanceDue, paymentAmount, paymentMethod, notes } = req.body;
+    const total = amount !== undefined ? amount : current.amount;
+    if (amount !== undefined) updateData.amount = amount;
 
     if (paymentAmount !== undefined) {
       // Incremental payment recorded (e.g. cash, UPI, card receipt)
       const prevPaid = current.amountPaid ?? 0;
       const newPaid = prevPaid + paymentAmount;
-      const newBalance = Math.max(0, current.amount - newPaid);
+      const newBalance = Math.max(0, total - newPaid);
       updateData.amountPaid = newPaid;
       updateData.balanceDue = newBalance;
       updateData.paymentStatus = newBalance === 0 ? 'PAID' : 'PARTIAL';
@@ -549,7 +572,7 @@ bookingsRouter.patch(
     } else if (amountPaid !== undefined || balanceDue !== undefined) {
       // Direct manual override of financial totals
       const newPaid = amountPaid !== undefined ? amountPaid : (current.amountPaid ?? 0);
-      const newBalance = balanceDue !== undefined ? balanceDue : Math.max(0, current.amount - newPaid);
+      const newBalance = balanceDue !== undefined ? balanceDue : Math.max(0, total - newPaid);
       updateData.amountPaid = newPaid;
       updateData.balanceDue = newBalance;
       updateData.paymentStatus = paymentStatus || (newBalance === 0 ? 'PAID' : newPaid > 0 ? 'PARTIAL' : 'UNPAID');
@@ -561,15 +584,30 @@ bookingsRouter.patch(
       // Direct status change
       updateData.paymentStatus = paymentStatus;
       if (paymentStatus === 'PAID') {
-        updateData.amountPaid = current.amount;
+        updateData.amountPaid = total;
         updateData.balanceDue = 0;
         if (current.status === 'PENDING' || current.status === 'RESERVED') {
           updateData.status = 'CONFIRMED';
         }
       } else if (paymentStatus === 'UNPAID') {
         updateData.amountPaid = 0;
-        updateData.balanceDue = current.amount;
+        updateData.balanceDue = total;
       }
+    }
+
+    if (
+      amount !== undefined &&
+      paymentAmount === undefined &&
+      amountPaid === undefined &&
+      balanceDue === undefined &&
+      !paymentStatus
+    ) {
+      // Total edited on its own: re-derive the balance and payment status.
+      const paidSoFar = current.amountPaid ?? 0;
+      const newBalance = Math.max(0, total - paidSoFar);
+      updateData.balanceDue = newBalance;
+      updateData.paymentStatus =
+        current.paymentStatus === 'REFUNDED' ? 'REFUNDED' : newBalance === 0 && total > 0 ? 'PAID' : paidSoFar > 0 ? 'PARTIAL' : 'UNPAID';
     }
 
     if (notes && paymentAmount === undefined) {

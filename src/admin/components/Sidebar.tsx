@@ -65,7 +65,6 @@ const CATEGORIES: NavCategory[] = [
     items: [
       { to: '/admin/enquiries', label: 'Enquiries', icon: 'enquiries' },
       { to: '/admin/users', label: 'Users & Staff', icon: 'users', roles: ['SUPER_ADMIN', 'MANAGER'] },
-      { to: '/admin/payments', label: 'Payment Settings', icon: 'offers', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/email', label: 'Email Settings', icon: 'enquiries', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/settings', label: 'General Settings', icon: 'settings', roles: ['SUPER_ADMIN', 'MANAGER'] },
       { to: '/admin/audit', label: 'Audit Log', icon: 'audit', roles: ['SUPER_ADMIN'] },

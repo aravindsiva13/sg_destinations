@@ -808,7 +808,7 @@ export default function BookFlow() {
               {error && <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>}
 
               <Button type="button" variant="forest" className="mt-6 w-full" onClick={submitReservation} disabled={submitting}>
-                {submitting ? 'Submitting your reservation…' : `Confirm Reservation · ${inr(grandTotal)}`}
+                {submitting ? 'Submitting your reservation…' : `Book Now, Pay Later · ${inr(grandTotal)}`}
               </Button>
               <p className="mt-2 text-center text-xs text-muted">
                 No online payment required. Pay upon arrival at the resort.

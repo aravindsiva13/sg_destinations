@@ -3,7 +3,6 @@ import request from 'supertest';
 import express from 'express';
 import { errorHandler, notFound } from '../middleware/error.js';
 import { ROLES } from '../constants.js';
-import { env } from '../env.js';
 
 vi.mock('../prisma.js', () => ({
   prisma: {
@@ -32,8 +31,6 @@ import { prisma } from '../prisma.js';
 import { settingsRouter } from '../routes/settings.js';
 import { reviewsRouter } from '../routes/reviews.js';
 import { bookingsRouter } from '../routes/bookings.js';
-import { assertGatewayAllowsOrders } from '../routes/payments.js';
-import { HttpError } from '../http.js';
 
 function buildApp(router: express.Router) {
   const app = express();
@@ -160,27 +157,5 @@ describe('GET /api/bookings/lookup', () => {
       .get('/lookup?code=SG-9999&email=cust@x.com')
       .expect(404);
     expect(res.body.error).toMatch(/No booking found/);
-  });
-});
-
-/* ------------------- Mock gateway hard-stop in production --------------- */
-describe('assertGatewayAllowsOrders', () => {
-  const original = env.isProduction;
-
-  afterEach(() => {
-    (env as { isProduction: boolean }).isProduction = original;
-  });
-
-  it('allows the mock provider outside production', () => {
-    (env as { isProduction: boolean }).isProduction = false;
-    expect(() => assertGatewayAllowsOrders({ provider: 'mock' })).not.toThrow();
-  });
-
-  it('refuses the mock provider in production', () => {
-    (env as { isProduction: boolean }).isProduction = true;
-    expect(() => assertGatewayAllowsOrders({ provider: 'mock' })).toThrow(HttpError);
-    expect(() =>
-      assertGatewayAllowsOrders({ provider: 'mock' }),
-    ).toThrowError(/Online payments are unavailable/);
   });
 });

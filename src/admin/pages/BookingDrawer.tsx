@@ -3,29 +3,20 @@ import Drawer from '../components/ui/Drawer';
 import Badge from '../components/ui/Badge';
 import AdminButton from '../components/ui/AdminButton';
 import {
-  BOOKING_NEXT,
   BOOKING_STATUS_META,
+  BOOKING_STATUS_ORDER,
   PAYMENT_STATUS_META,
   formatDate,
   inr,
 } from '../constants';
 import {
   useBookingPayments,
-  useRefund,
   useUpdateBookingStatus,
   useUpdatePayment,
 } from '../lib/queries';
 import { apiErrorMessage } from '../lib/apiClient';
 import { useAdminAuth } from '../auth/AdminAuthContext';
 import type { Booking, PaymentStatus } from '../types';
-
-const STATUS_ACTION_LABEL: Record<string, string> = {
-  RESERVED: 'Reserve',
-  CONFIRMED: 'Confirm',
-  CHECKED_IN: 'Check in',
-  CHECKED_OUT: 'Check out',
-  CANCELLED: 'Cancel',
-};
 
 export default function BookingDrawer({
   booking,
@@ -39,13 +30,13 @@ export default function BookingDrawer({
   const { hasRole } = useAdminAuth();
   const statusMut = useUpdateBookingStatus();
   const paymentMut = useUpdatePayment();
-  const refundMut = useRefund();
   const { data: payments } = useBookingPayments(booking?.id ?? null);
   const [error, setError] = useState<string | null>(null);
   const [recordAmount, setRecordAmount] = useState<string>('');
   const [recordMethod, setRecordMethod] = useState<'cash' | 'upi' | 'card' | 'bank_transfer'>('cash');
   const [recordNotes, setRecordNotes] = useState<string>('');
   const [showDirectEdit, setShowDirectEdit] = useState(false);
+  const [manualAmount, setManualAmount] = useState<string>('');
   const [manualPaid, setManualPaid] = useState<string>('');
   const [manualBalance, setManualBalance] = useState<string>('');
 
@@ -57,23 +48,16 @@ export default function BookingDrawer({
       ? booking.balanceDue
       : Math.max(0, booking.amount - paid);
 
-  const next = BOOKING_NEXT[booking.status] ?? [];
+  const otherStatuses = BOOKING_STATUS_ORDER.filter((st) => st !== booking.status);
   const canEditPayment = hasRole('SUPER_ADMIN', 'MANAGER');
-  const hasCapturedPayment = (payments ?? []).some((p) => p.status === 'PAID');
-
-  async function runRefund() {
-    if (!window.confirm('Issue a refund per the cancellation policy? This cancels the booking.')) return;
-    setError(null);
-    try {
-      const r = await refundMut.mutateAsync(booking!.id);
-      onUpdated?.({ ...booking!, status: 'CANCELLED', paymentStatus: 'REFUNDED' });
-      window.alert(`Refunded ₹${r.refundAmount.toLocaleString('en-IN')}${r.penalty ? ` (penalty ₹${r.penalty.toLocaleString('en-IN')})` : ''}.`);
-    } catch (err) {
-      setError(apiErrorMessage(err));
-    }
-  }
 
   async function runStatus(status: Booking['status']) {
+    if (
+      status === 'CANCELLED' &&
+      !window.confirm(`Cancel booking ${booking!.code}? The guest will be emailed.`)
+    ) {
+      return;
+    }
     setError(null);
     try {
       const updated = await statusMut.mutateAsync({ id: booking!.id, status });
@@ -118,9 +102,10 @@ export default function BookingDrawer({
 
   async function handleDirectUpdate(e: React.FormEvent) {
     e.preventDefault();
+    const t = parseFloat(manualAmount);
     const p = parseFloat(manualPaid);
     const b = parseFloat(manualBalance);
-    if (isNaN(p) || isNaN(b)) {
+    if (isNaN(t) || isNaN(p) || isNaN(b)) {
       setError('Please enter valid numeric amounts.');
       return;
     }
@@ -128,6 +113,7 @@ export default function BookingDrawer({
     try {
       const updated = await paymentMut.mutateAsync({
         id: booking!.id,
+        amount: Math.max(0, Math.round(t)),
         amountPaid: Math.max(0, Math.round(p)),
         balanceDue: Math.max(0, Math.round(b)),
       });
@@ -189,28 +175,24 @@ export default function BookingDrawer({
           <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</p>
         )}
 
-        {/* Status actions */}
+        {/* Status: staff can move a booking to any status */}
         <div>
           <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">
-            Status actions
+            Change status
           </p>
-          {next.length === 0 ? (
-            <p className="text-sm text-muted">No further status changes available.</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {next.map((status) => (
-                <AdminButton
-                  key={status}
-                  size="sm"
-                  variant={status === 'CANCELLED' ? 'danger' : 'primary'}
-                  loading={statusMut.isPending}
-                  onClick={() => runStatus(status)}
-                >
-                  {STATUS_ACTION_LABEL[status] ?? status}
-                </AdminButton>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-wrap gap-2">
+            {otherStatuses.map((status) => (
+              <AdminButton
+                key={status}
+                size="sm"
+                variant={status === 'CANCELLED' ? 'danger' : 'secondary'}
+                loading={statusMut.isPending}
+                onClick={() => runStatus(status)}
+              >
+                {BOOKING_STATUS_META[status].label}
+              </AdminButton>
+            ))}
+          </div>
         </div>
 
         {/* Payment transactions */}
@@ -245,21 +227,41 @@ export default function BookingDrawer({
               <button
                 type="button"
                 onClick={() => {
+                  setManualAmount(String(booking.amount));
                   setManualPaid(String(paid));
                   setManualBalance(String(balance));
                   setShowDirectEdit(!showDirectEdit);
                 }}
                 className="text-xs text-forest hover:underline font-medium"
               >
-                {showDirectEdit ? 'Cancel Manual Edit' : 'Edit Totals Directly'}
+                {showDirectEdit ? 'Cancel Edit' : 'Edit Payment Details'}
               </button>
             </div>
 
             {/* Direct Edit Form */}
             {showDirectEdit ? (
               <form onSubmit={handleDirectUpdate} className="rounded-xl border border-line bg-paper p-4 space-y-3">
-                <p className="text-xs font-medium text-ink">Directly Override Financial Totals</p>
-                <div className="grid grid-cols-2 gap-3">
+                <p className="text-xs font-medium text-ink">Edit total, amount paid and balance</p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <div>
+                    <label className="text-[11px] font-medium text-muted block mb-1">Total Amount (₹)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      className={inputClass}
+                      value={manualAmount}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setManualAmount(val);
+                        const total = parseFloat(val);
+                        const alreadyPaid = parseFloat(manualPaid);
+                        if (!isNaN(total) && !isNaN(alreadyPaid)) {
+                          setManualBalance(String(Math.max(0, total - alreadyPaid)));
+                        }
+                      }}
+                      required
+                    />
+                  </div>
                   <div>
                     <label className="text-[11px] font-medium text-muted block mb-1">Amount Paid (₹)</label>
                     <input
@@ -271,8 +273,9 @@ export default function BookingDrawer({
                         const val = e.target.value;
                         setManualPaid(val);
                         const num = parseFloat(val);
-                        if (!isNaN(num)) {
-                          setManualBalance(String(Math.max(0, booking.amount - num)));
+                        const total = parseFloat(manualAmount);
+                        if (!isNaN(num) && !isNaN(total)) {
+                          setManualBalance(String(Math.max(0, total - num)));
                         }
                       }}
                       required
@@ -295,7 +298,7 @@ export default function BookingDrawer({
                     Cancel
                   </AdminButton>
                   <AdminButton size="sm" variant="primary" type="submit" loading={paymentMut.isPending}>
-                    Save Overrides
+                    Save Changes
                   </AdminButton>
                 </div>
               </form>
@@ -380,15 +383,10 @@ export default function BookingDrawer({
               </form>
             )}
 
-            {/* Quick Status Toggles & Refund */}
+            {/* Payment status shortcuts */}
             <div className="pt-2">
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">Quick Status Shortcuts</p>
+              <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted">Set payment status</p>
               <div className="flex flex-wrap gap-2">
-                {hasCapturedPayment && booking.paymentStatus !== 'REFUNDED' && (
-                  <AdminButton size="sm" variant="danger" loading={refundMut.isPending} onClick={runRefund}>
-                    Refund (policy-aware)
-                  </AdminButton>
-                )}
                 {(['UNPAID', 'PARTIAL', 'PAID', 'REFUNDED'] as PaymentStatus[])
                   .filter((p) => p !== booking.paymentStatus)
                   .map((p) => (

@@ -83,9 +83,6 @@ export function createApp() {
     }),
   );
   app.use(securityHeaders);
-  // The payment webhook needs the raw body for HMAC verification — capture it
-  // before the JSON parser runs (body-parser skips paths already parsed).
-  app.use('/api/payments/webhook', express.raw({ type: '*/*', limit: '1mb' }));
   app.use('/api/media/upload', express.json({ limit: '100mb' }));
   app.use(express.json({ limit: '50mb' }));
   app.use(cookieParser());
@@ -104,7 +101,6 @@ export function createApp() {
   app.use('/api/enquiries', enquiryLimiter);
   app.use('/api/availability/check', bookingLimiter);
   app.use('/api/bookings/public', bookingLimiter);
-  app.use('/api/payments/order', bookingLimiter);
   app.use('/api/coupons/validate', couponLimiter);
 
   app.use('/api/auth', authRouter);

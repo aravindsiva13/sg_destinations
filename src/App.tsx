@@ -29,7 +29,6 @@ const Reviews = lazy(() => import('./admin/pages/Reviews'));
 const Users = lazy(() => import('./admin/pages/Users'));
 const Reports = lazy(() => import('./admin/pages/Reports'));
 const Settings = lazy(() => import('./admin/pages/Settings'));
-const PaymentSettings = lazy(() => import('./admin/pages/PaymentSettings'));
 const Media = lazy(() => import('./admin/pages/Media'));
 const GalleryManager = lazy(() => import('./admin/pages/GalleryManager'));
 const PageContentManager = lazy(() => import('./admin/pages/PageContentManager'));
@@ -79,7 +78,6 @@ export default function App() {
                       <Route path="settings" element={<Settings />} />
                       <Route path="email" element={<EmailSettings />} />
                       <Route path="campaigns" element={<Campaigns />} />
-                      <Route path="payments" element={<PaymentSettings />} />
                     </Route>
                     <Route path="enquiries" element={<Enquiries />} />
                     <Route path="reviews" element={<Reviews />} />
